@@ -43,7 +43,7 @@ export default props => {
         <Register isOpen={registration} onClose={() => setRegistration(false)} />
       )}
       <Link className="menu-item" onClick={() => auth.logOut()} to="/">
-        Sign In/Sign Out
+        Sign Out
       </Link>
     </Menu>
   );
