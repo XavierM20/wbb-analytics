@@ -194,36 +194,36 @@ const LoginPage = () => {
                     { !isRegistering ? (
                     <form onSubmit={handleLogin}>
                         {/* Login card */}
+                        <h2>Login</h2>
                         <label>
-                            Username:
-                            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)}/>
+                            <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)}/>
                         </label>
                         <label>
-                            Password:
-                            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
                         </label>
                         {incorrect === true && (
                             <a className='error'>Incorrect Username or Password</a>
                         )}
                         <button type="submit">Submit</button>
-                        <a className='switch' onClick={() => moveToRegister()}>Register here</a>
+                        <a className='switch' onClick={() => moveToRegister()}>
+                            <span className="regular-text">Don't have an account? </span>
+                            <span className="bold-text">Register </span>
+                        </a>
                     </form>
                     ) : (
                     <form onSubmit={handleRegister}>
                         {/* Register card */}
+                        <h2>Register</h2>
                         <label>
-                            Username:
-                            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)}/>
+                            <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)}/>
                         </label>
                             <a className='error'>{errorUser}</a>
                         <label>
-                            Password:
-                            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                            <input type="password" placeholder="Password"value={password} onChange={(e) => setPassword(e.target.value)} />
                         </label>
                             <a className='error'>{errorPass}</a>
                         <label>
-                            UserKey:
-                            <input type="text" value={userKey} onChange={(e) => setUserKey(e.target.value)} />
+                            <input type="text" placeholder="UserKey"value={userKey} onChange={(e) => setUserKey(e.target.value)} />
                         </label>
                             <a className='error'>{errorKey}</a>
                         <button type="submit">Submit</button>

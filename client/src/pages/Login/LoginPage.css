@@ -1,6 +1,6 @@
 .login-page-container {
-    background-color: #4f2984;
-    background-image: url('../../images/nESTlogo.png') !important;
+    background-color: rgba(255, 255, 255, .36);
+    background-image: url('../../images/hooper.jpg') !important;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center; 
@@ -18,33 +18,47 @@ form {
     align-items: center;
     justify-content: center;
     width: 100vw;
-    max-width: 400px;
+    max-width: 500px;
     margin: 0 auto;
     padding: 20px;
-    background-color: #FFDD00;
+    background-color: rgba(63, 68, 68, .7);
     border-radius: 5px;
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 5);
     
   }
   form h2 {
-    font-size: 2em;
+    font-size: 2.5em;
     margin-bottom: 20px;
   }
   form input {
-    width: 100%;
+    width: 45dvh;
     padding: 10px;
     margin: 10px 0;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 4px;
+    background-color: rgba(63, 68, 68, .5);
+    color: white;
   }
+  form input::placeholder {
+    color: white;
+    opacity: 1;
+    font-weight: bold;
+}
+
+input:focus {
+    outline: none; /* Removes the default outline */
+    border: 2px solid #ffdd00; /* Change this color to your preferred focus color */
+}
+
   form button {
     width: 100%;
     padding: 10px;
     margin: 10px 0;
     border: none;
-    border-radius: 5px;
-    background-color: #2675ad !important;
-    color: #ffffff;
+    border-radius: 8px;
+    background-color: #ffffff!important;
+    color: #000000;
+    font-size: medium;
     font-weight: bold;
     cursor: pointer;
   }
@@ -55,16 +69,26 @@ form {
     margin-top: 20px;
   }
   .error {
-    color: #ff0000;
+    color: #e80404;
+    font-weight: bold;
 }
 .error:hover {
-  color: #ff0000;
+  color: #e80404;
 }
 .switch {
   text-align: left !important;
-  color: #0000FF;
+  color: white;
+  font-weight: bold;
 }
+.regular-text {
+    font-weight: normal;
+}
+
+.bold-text {
+    font-weight: bold;
+}
+
 .switch:hover {
-  color: #0000FF;
+  color: #FFDD00;
   text-decoration: underline;
 }
