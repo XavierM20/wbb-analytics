@@ -17,9 +17,11 @@ const LoginPage = () => {
     const auth = useAuth();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     const [errorUser,setErrorUser] = useState('');
     const [errorPass,setErrorPass] = useState('');
     const [errorKey,setErrorKey] = useState('');
+    const [errorConfirmPass, setErrorConfirmPass] = useState('');
     const [userKey, setUserKey] = useState('');
     const [incorrect,setIncorrect] = useState(false);
     const [isRegistering,setIsRegistering] = useState(false);
@@ -43,6 +45,7 @@ const LoginPage = () => {
         // reset the fields
         setUsername('');
         setPassword('');
+        setConfirmPassword('');
         setIsRegistering(true);
     };
     /*
@@ -61,6 +64,7 @@ const LoginPage = () => {
         var error = false;
         setErrorUser('');
         setErrorPass('');
+        setErrorConfirmPass('');
         setErrorKey('');
 
 
@@ -88,6 +92,11 @@ const LoginPage = () => {
             setErrorPass('Password does not contain characters like !?/& and/or a capital letter');
             error = true;
 
+        }
+        if (password !== confirmPassword)
+        {
+            setErrorConfirmPass('Passwords do not match!');
+            error = true;
         }
         // Making sure the key is not empty
         if(userKey === '')
@@ -222,6 +231,10 @@ const LoginPage = () => {
                             <input type="password" placeholder="Password"value={password} onChange={(e) => setPassword(e.target.value)} />
                         </label>
                             <a className='error'>{errorPass}</a>
+                        <label>
+                            <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+                        </label>
+                        <a className="error">{errorConfirmPass}</a>
                         <label>
                             <input type="text" placeholder="UserKey"value={userKey} onChange={(e) => setUserKey(e.target.value)} />
                         </label>

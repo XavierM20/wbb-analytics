@@ -1,7 +1,7 @@
 .login-page-container {
     background-color: rgba(255, 255, 255, .36);
     background-image: url('../../images/hooper.jpg') !important;
-    background-size: contain;
+    background-size: cover;
     background-repeat: no-repeat;
     background-position: center; 
     width: 100vw; /* 100% of viewport width */
@@ -69,11 +69,11 @@ input:focus {
     margin-top: 20px;
   }
   .error {
-    color: #e80404;
+    color: #ff4f4f;
     font-weight: bold;
 }
 .error:hover {
-  color: #e80404;
+  color: #ff4f4f;    ;
 }
 .switch {
   text-align: left !important;
