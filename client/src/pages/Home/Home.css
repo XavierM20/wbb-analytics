@@ -1,5 +1,5 @@
 .home-page-container {
-  background: #E9E2CC;
+  background: url('../../images/homepageWBB.jpeg') !important;;
   background-size: cover;
   height: 100vh;
   margin: 0 auto;
