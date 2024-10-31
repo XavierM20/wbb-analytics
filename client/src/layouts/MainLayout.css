@@ -31,6 +31,7 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for a lifting effect */
 }
 
+
 .page-content {
     flex: 1;
     padding: 20px;
@@ -38,6 +39,7 @@
     overflow-y: auto; /* Allows for scrolling within content area if necessary */
     box-sizing: border-box; /* Include padding and borders in width and height */
 }
+
 
 .menu-item, a {
     color: var(--gold);
