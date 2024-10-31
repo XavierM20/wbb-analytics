@@ -4,7 +4,7 @@ import SessionOption from './SessionOption';
 import MainLayout from '../../layouts/MainLayout'; // Ensure MainLayout is used if needed
 import './Home.css';
 
-const HomePage = () => {
+const HomePage = () => { 
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
