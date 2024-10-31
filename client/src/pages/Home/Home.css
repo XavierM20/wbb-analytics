@@ -1,6 +1,6 @@
 .home-page-container {
-  background: #4f2984 url('../../images/nESTlogo.png') center no-repeat;
-  background-size: contain;
+  background: #E9E2CC;
+  background-size: cover;
   height: 100vh;
   margin: 0 auto;
   padding: 20px;
@@ -13,7 +13,7 @@
 }
 
 .stats-buttons-container {
-  display: grid;
+  display: grid; 
   grid-template-columns: 1fr 1fr;
   gap: 20px;
   width: 60%; /* This could be adjusted based on your design needs */
@@ -27,8 +27,8 @@
 
 
 .link-button {
-  background-color: #EECF08;
-  color: #000000;
+  background-color: rgba(63, 68, 68, .7);
+  color: #FFFFFF;
   border: none;
   margin: 1% 0; /* Adjusted margin for better spacing */
   padding: 40px 0; /* Increased padding for taller buttons */

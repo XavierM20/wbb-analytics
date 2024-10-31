@@ -10,7 +10,7 @@ const SessionOption = ({ isOpen, onClose }) => {
         if (sessionType ==='practice') {
             navigate('/practice');
         } else if (sessionType ==='game') {
-            navigate('/game');
+            navigate('/game'); 
         }
     };
     
