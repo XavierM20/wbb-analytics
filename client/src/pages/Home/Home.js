@@ -12,19 +12,19 @@ const HomePage = () => {
     <div className="home-page-container">
       <div className="home-button-container">
         <button onClick={() => navigate('/practice')} className="button">
-            Practice
+            PRACTICE
         </button>
         <button onClick={() => navigate('/game')} className="button">
-            Game
+            GAME
         </button>
         <button onClick={() => navigate('/playerstats')} className="button">
-            Player Stats
+            PLAYER STATS
         </button>
         <button onClick={() => navigate('/teamstats')} className="button">
-            Team Stats
+            TEAM STATS
         </button>
         <button onClick={() => navigate('/teamstats')} className="button">
-            Settings
+            SETTINGS
         </button>
       </div>
       <SessionOption isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />

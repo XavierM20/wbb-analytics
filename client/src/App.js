@@ -13,7 +13,7 @@ import SeasonPage from './pages/CreateSeason/CreateSeason';
 import LoginPage from './pages/Login/LoginPage';
 import PrivateRoute from './private/privateRoute';
 import Game from './pages/Game/Game';
-import Settings from './pages/Settings/Settings';
+//import Settings from './pages/Settings/Settings';
 
 
 

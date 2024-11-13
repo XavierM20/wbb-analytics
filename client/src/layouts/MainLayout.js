@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, useLocation, useSearchParams, useNavigate } from 'react-router-dom';
-import HamburgerMenu from '../components/HamburgerMenu/HamburgerMenu.js';
 import './MainLayout.css';
 
 const MainLayout = () => {
@@ -45,12 +44,6 @@ const MainLayout = () => {
 
   return (
     <div className="main-layout">
-      <header className="main-layout-header">
-        <div className="header-content">
-          <HamburgerMenu />
-          {isDrillPage && renderDrillOptions()}
-        </div>
-      </header>
       <div className="page-content">
         <Outlet />
       </div>

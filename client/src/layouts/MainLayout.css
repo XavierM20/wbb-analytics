@@ -4,7 +4,6 @@
     --purple: #4f2984; /* Adjust to the exact shade of purple you're using */
     --header-height: 60px; /* Header height */
 }
-
 /*.main-layout {
     display: flex;
     flex-direction: column;
@@ -13,29 +12,11 @@
     color: var(--gold);
 }
 */
-.main-layout-header {
-    background-color: var(--purple);
-    color: var(--gold);
-    padding: 10px 20px; /* Adjusted padding */
-    text-align: center;
-    width: 100%;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-    display: flex; /* Ensures flexible layout */
-    justify-content: space-between; /* Adjusted to space-between for potential additional elements like buttons or logos */
-    align-items: center;
-    height: var(--header-height); /* Using variable for header height */
-    font-size: 1.2em; /* Larger font for better readability */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for a lifting effect */
-}
+
 
 
 .page-content {
     flex: 1;
-    padding: 20px;
-    margin-top: var(--header-height); /* Ensure content starts below the header */
     overflow-y: auto; /* Allows for scrolling within content area if necessary */
     box-sizing: border-box; /* Include padding and borders in width and height */
 }
