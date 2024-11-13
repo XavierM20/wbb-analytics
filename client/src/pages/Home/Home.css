@@ -8,38 +8,38 @@
   place-items: center;
   text-align: center;
   grid-template-rows: auto auto; /* Adjusted for better spacing */
-  overflow-x: hidden;
-  overflow-y: hidden;
+  overflow: hidden;
 }
 
-.stats-buttons-container {
-  display: grid; 
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  width: 60%; /* This could be adjusted based on your design needs */
+.home-button-container{
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    max-width: 90vw;
+    padding: 40px;
+    gap: 20px;
 }
 
-.new-session-button {
-  width: 100%; /* Less than 100% to make it narrower */
-  margin: 0 auto; /* Auto margins for horizontal centering */
-  padding: 40px 0; /* Keeping the vertical size as previously adjusted */
+.button {
+    background-color: rgba(63, 68, 68, .7);
+    color: #FFFFFF;
+    border: none;
+    margin: 1% 0; /* Adjusted margin for better spacing */
+    padding: 40px 0; /* Increased padding for taller buttons */
+    width: 100%; /* Adjust width as needed within grid */
+    text-align:left;
+    border-radius: 10px;
+    transition: background-color 0.3s, transform 0.3s;
+    height: 500px;
+    width: 315px;
+    font-size: 45px;
+    cursor: pointer;
+    flex-shrink: 0;
+    display: flex;
+    padding-left: 20px;
 }
 
-
-.link-button {
-  background-color: rgba(63, 68, 68, .7);
-  color: #FFFFFF;
-  border: none;
-  margin: 1% 0; /* Adjusted margin for better spacing */
-  padding: 40px 0; /* Increased padding for taller buttons */
-  width: 100%; /* Adjust width as needed within grid */
-  text-align: center;
-  border-radius: 10px;
-  transition: background-color 0.3s, transform 0.3s;
-  font-size: 1.5em; /* Larger font size for better visibility */
-}
-
-.link-button:hover {
+.button:hover {
   background-color: #c1a90c;
   transform: scale(1.1);
 }

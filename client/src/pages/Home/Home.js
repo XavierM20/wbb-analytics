@@ -10,15 +10,21 @@ const HomePage = () => {
 
   return (
     <div className="home-page-container">
-      <button onClick={() => setIsModalOpen(true)} className="link-button new-session-button">
-        New Session
-      </button>
-      <div className="stats-buttons-container">
-        <button onClick={() => navigate('/playerstats')} className="link-button">
-          Player Stats
+      <div className="home-button-container">
+        <button onClick={() => navigate('/practice')} className="button">
+            Practice
         </button>
-        <button onClick={() => navigate('/teamstats')} className="link-button">
-          Team Stats
+        <button onClick={() => navigate('/game')} className="button">
+            Game
+        </button>
+        <button onClick={() => navigate('/playerstats')} className="button">
+            Player Stats
+        </button>
+        <button onClick={() => navigate('/teamstats')} className="button">
+            Team Stats
+        </button>
+        <button onClick={() => navigate('/teamstats')} className="button">
+            Settings
         </button>
       </div>
       <SessionOption isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
