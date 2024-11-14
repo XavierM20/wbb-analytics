@@ -1,0 +1,78 @@
+.settings-page-container {
+    background: url('../../images/homepageWBB.jpeg') !important;
+    background-size: cover;
+    height: 100vh;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    overflow: hidden;
+}
+
+.settings-button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgba(63, 68, 68, .7);
+    padding: 30px;
+    gap: 70px; /* Increased gap */
+    max-width: 80%; /* Adjusted max-width for larger container */
+    border-radius: 20px; /* Added rounded corners */
+}
+
+.settings-button-container h1 {
+    color: #FFFF; /* Change this to your desired color */
+    margin-top: 0; /* Remove top margin */
+    margin-bottom: 20px; /* Adjust bottom margin as needed */
+    text-align: center;
+    font-size: 3.0rem; /* Increased font size */
+}
+
+.button-row {
+    display: flex;
+    flex-direction: row;
+    gap: 30px; /* Increased gap */
+}
+
+.export-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Increased spacing between export buttons */
+}
+
+.btn-JSON:hover {
+    background-color: #c1a90c;
+    color: #FFFF;
+}
+
+.btn-CSV:hover {
+    background-color: #c1a90c;
+    color: #FFFF;
+}
+
+.btn {
+    display: block;
+    padding: 20px 40px; /* Increased padding for bigger buttons */
+    margin: 20px 0; /* Increased margin */
+    font-size: 1.5rem; /* Increased font size */
+    border: none;
+    border-radius: 10px; /* Increased border radius */
+    cursor: pointer;
+}
+
+.Sign-out {
+    background-color: red;
+    color: #FFFF;
+}
+
+.Sign-out:hover {
+    background-color: #b02a37;
+}
+
+.Register-btn:hover {
+    background-color: #c1a90c;
+    color: #FFFF;
+}

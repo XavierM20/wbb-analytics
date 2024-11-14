@@ -23,7 +23,7 @@ const HomePage = () => {
         <button onClick={() => navigate('/teamstats')} className="button">
             TEAM STATS
         </button>
-        <button onClick={() => navigate('/teamstats')} className="button">
+        <button onClick={() => navigate('/Settings')} className="button">
             SETTINGS
         </button>
       </div>

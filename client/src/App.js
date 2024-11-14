@@ -13,7 +13,7 @@ import SeasonPage from './pages/CreateSeason/CreateSeason';
 import LoginPage from './pages/Login/LoginPage';
 import PrivateRoute from './private/privateRoute';
 import Game from './pages/Game/Game';
-//import Settings from './pages/Settings/Settings';
+import Settings from './pages/Settings/Settings';
 
 
 
@@ -33,6 +33,7 @@ const App = () => {
               <Route path="/export" element={<ExportPage />} />
               <Route path="/game" element={<Game />} />
               <Route path="/season" element={<SeasonPage />} />
+              <Route path="/settings" element={<Settings />} />
             </Route>
             </Route>
           </Routes>
