@@ -1,19 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/AuthProvider';
+import Register from './Register.js';
 import './Settings.css';
 
 const Settings = () => {
     const navigate = useNavigate();
     const [error, setError] = useState('');
-
-    const handleSignOut = () => {
-        try {
-            // Add actual sign-out logic here
-            navigate('/login');
-        } catch (err) {
-            setError('Error signing out. Please try again.');
-        }
-    };
+    const [registration, setRegistration] = useState(false);
+    const auth = useAuth();
 
     const handleExport = (type) => {
         try {
@@ -34,14 +29,23 @@ const Settings = () => {
             <div className="settings-button-container">
                 <h1>Settings</h1>
                 <div className="button-row">
-                    <button className="btn Register-btn" type="button">
+                {sessionStorage.getItem('site') === 'Admin' && (
+                    <button className="btn Register-btn" onClick={() => { setRegistration(true);}}>
                         Create Registration Key
                     </button>
+                )}
+                {registration && (
+                    <Register isOpen={registration} onClose={() => setRegistration(false)} />
+                )}
                     <div className="export-buttons">
-                        <button className="btn btn-JSON" onClick={() => handleExport('JSON')}>Export JSON</button>
-                        <button className="btn btn-CSV" onClick={() => handleExport('CSV')}>Export CSV</button>
+                        <button className="btn btn-JSON" onClick={() => handleExport('JSON')}>
+                            Export JSON
+                        </button>
+                        <button className="btn btn-CSV" onClick={() => handleExport('CSV')}>
+                            Export CSV
+                        </button>
                     </div>
-                    <button className="btn Sign-out" onClick={handleSignOut}>Sign Out</button>
+                    <button className="btn Sign-out" onClick={() => { auth.logOut();}} to="/">Sign Out</button>
                 </div>
             </div>
         </div>

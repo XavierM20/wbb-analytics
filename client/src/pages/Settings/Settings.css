@@ -76,3 +76,67 @@
     background-color: #c1a90c;
     color: #FFFF;
 }
+
+.register-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .register-content {
+  background: #4f2984!important;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 100%;
+  position: relative;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 20px;
+  transition: opacity .5s ease !important; /* Smooth transition for opacity */
+  }
+  
+.closeReg-button {
+    position: absolute;
+    top: 3px;
+    right: 5px;
+    background: none !important;
+    border: none !important;
+    color: black !important;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.closeReg-button:hover {
+    color: grey !important;
+  }
+  
+.submitReg-button  {
+    background-color: #FFDD00; /* example color */
+    color: #000000;
+    text-decoration: none;
+    font-weight: bold;
+    border: none;
+    padding: 8px 16px; /* Adjust padding to change the size of the button */
+    text-align: center;
+    border-radius: 10px;
+    margin: 10px 20px; /* Increased margin for more space between buttons */
+    display: inline-block; /* This makes sure margins work correctly */
+    transition: background-color 0.3s, transform 0.3s; 
+
+  }
+.submitReg-button:hover {
+    background-color: #EECF08 !important;
+    transform: scale(1.01);
+}
