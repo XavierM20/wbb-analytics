@@ -1,7 +1,9 @@
 .home-page-container {
-  background: url('../../images/homepageWBB.jpeg') !important;;
+  background: url('../../images/homepageWBB.jpeg') no-repeat center center !important;;
   background-size: cover;
+  position: fixed;
   height: 100vh;
+  width: 100vw;
   margin: 0 auto;
   padding: 20px;
   display: grid;
@@ -12,32 +14,101 @@
 }
 
 .home-button-container{
+    display: grid; /* Use grid layout */
+    grid-template-columns: repeat(5, 1fr); /* 5 columns of equal width */
+    gap: 2%; /* Space between buttons as a percentage */
+    padding: 2%; /* Add padding around the container */
+    justify-content: center; /* Center the grid */
+    align-items: start; /* Align buttons at the top */
+}
+.home-button-container::-webkit-scrollbar{
+    display: none;
+}
+.button-practice {
+    background: url('../../images/practice.jpg') no-repeat center center / cover;;
+    width: 100%; /* Buttons fill their grid cell */
+    aspect-ratio: 3 / 4; /* Maintain consistent aspect ratio */
+    background-size: cover; /* Ensure images fit properly */
+    background-position: center;
     display: flex;
-    flex-direction: row;
-    overflow-x: auto;
-    max-width: 90vw;
-    padding: 40px;
-    gap: 20px;
+    justify-content: flex-start; /* Align text to the start */
+    align-items: flex-end; /* Text stays at the bottom */
+    color: white;
+    text-align: left;
+    padding: 2%; /* Add padding inside the button */
+    font-size: calc(1.5vw + 0.5em); /* Text dynamically scales with viewport width */
+    border-radius: 10px; /* Smooth edges */
+    transition: transform 0.3s, background-color 0.3s;
+    cursor: pointer;
 }
 
-.button {
-    background-color: rgba(63, 68, 68, .7);
-    font-weight: bold;
-    color: #FFFFFF;
-    border: none;
-    margin: 1% 0; /* Adjusted margin for better spacing */
-    padding: 40px 0; /* Increased padding for taller buttons */
-    width: 100%; /* Adjust width as needed within grid */
-    text-align:left;
-    border-radius: 10px;
-    transition: background-color 0.3s, transform 0.3s;
-    height: 500px;
-    width: 315px;
-    font-size: 45px;
-    cursor: pointer;
-    flex-shrink: 0;
+.button-game {
+    background: url('../../images/game.webp') no-repeat center center / cover;;
+    width: 100%; /* Buttons fill their grid cell */
+    aspect-ratio: 3 / 4; /* Maintain consistent aspect ratio */
+    background-size: cover; /* Ensure images fit properly */
+    background-position: center;
     display: flex;
-    padding-left: 20px;
+    justify-content: flex-start; /* Align text to the start */
+    align-items: flex-end; /* Text stays at the bottom */
+    color: white;
+    text-align: left;
+    padding: 2%; /* Add padding inside the button */
+    font-size: calc(1.5vw + 0.5em); /* Text dynamically scales with viewport width */
+    border-radius: 10px; /* Smooth edges */
+    transition: transform 0.3s, background-color 0.3s;
+    cursor: pointer;
+}
+.button-playerStats {
+    background: url('../../images/playerStats.jpg') no-repeat center center / cover;;
+    width: 100%; /* Buttons fill their grid cell */
+    aspect-ratio: 3 / 4; /* Maintain consistent aspect ratio */
+    background-size: cover; /* Ensure images fit properly */
+    background-position: center;
+    display: flex;
+    justify-content: flex-start; /* Align text to the start */
+    align-items: flex-end; /* Text stays at the bottom */
+    color: white;
+    text-align: left;
+    padding: 2%; /* Add padding inside the button */
+    font-size: calc(1.5vw + 0.5em); /* Text dynamically scales with viewport width */
+    border-radius: 10px; /* Smooth edges */
+    transition: transform 0.3s, background-color 0.3s;
+    cursor: pointer;
+}
+.button-teamStats {
+    background: url('../../images/teamStats.webp') no-repeat center center / cover;;
+    width: 100%; /* Buttons fill their grid cell */
+    aspect-ratio: 3 / 4; /* Maintain consistent aspect ratio */
+    background-size: cover; /* Ensure images fit properly */
+    background-position: center;
+    display: flex;
+    justify-content: flex-start; /* Align text to the start */
+    align-items: flex-end; /* Text stays at the bottom */
+    color: white;
+    text-align: left;
+    padding: 2%; /* Add padding inside the button */
+    font-size: calc(1.5vw + 0.5em); /* Text dynamically scales with viewport width */
+    border-radius: 10px; /* Smooth edges */
+    transition: transform 0.3s, background-color 0.3s;
+    cursor: pointer;
+}
+.button-settings {
+    background: url('../../images/settings.jpg') no-repeat center center / cover;;
+    width: 100%; /* Buttons fill their grid cell */
+    aspect-ratio: 3 / 4; /* Maintain consistent aspect ratio */
+    background-size: cover; /* Ensure images fit properly */
+    background-position: center;
+    display: flex;
+    justify-content: flex-start; /* Align text to the start */
+    align-items: flex-end; /* Text stays at the bottom */
+    color: white;
+    text-align: left;
+    padding: 2%; /* Add padding inside the button */
+    font-size: calc(1.5vw + 0.5em); /* Text dynamically scales with viewport width */
+    border-radius: 10px; /* Smooth edges */
+    transition: transform 0.3s, background-color 0.3s;
+    cursor: pointer;
 }
 
 .button:hover {
@@ -57,8 +128,17 @@
   align-items: center;
 }
 
+.button-image{
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ width: 200px;
+ height: 200px;
+ object-fit: contain;
+ vertical-align: middle;
+}
 .modal-content {
-  background: #4f2984!important;
+background: #4f2984!important;
 padding: 20px;
 border-radius: 8px;
 box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -111,4 +191,16 @@ transition: opacity .5s ease !important; /* Smooth transition for opacity */
 
 .submit-button:hover {
   background-color: #EECF08;
+}
+.sign-out {
+    position: absolute;
+    top: 10px; /* Adjust the distance from the top */
+    right: 10px; /* Adjust the distance from the right */
+    padding: 10px 20px; /* Add padding to the button for better appearance */
+    background-color: #FFDD00; /* Example button color */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: red;
+    color: #FFFF;
 }
