@@ -47,6 +47,13 @@
     padding: 1rem 0;
     background-color: var(--card-color);
   }
+
+  .selector-label {
+    color: #ffffff; /* Change this to your desired color */
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
   
   .stats-overview,
   .stat-cards {
@@ -61,6 +68,13 @@
     justify-content: space-evenly;
     padding: 1rem;
     background-color: var(--card-bg-color);
+  }
+
+  .player-headshot{
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    margin: 0 auto;
   }
   
   .stat-card {
@@ -148,6 +162,13 @@
     padding: 1rem;
     text-align: center;
   }
+
+  .stat-cards{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
   
   /* Responsive adjustments */
   @media (max-width: 768px) {
@@ -162,11 +183,79 @@
     .tempo-cards,
     .heatmap {
       width: 100%;
-      margin: 0.5rem 0;
+      margin: 10px;
     }
   
     .stats-grid {
       grid-template-columns: 1fr;
     }
   }
+
+.stats-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+  gap: 20px; /* Space between the cards */
+  position: relative;
+  top: 100px; /* Adjust this value to move the container up from the bottom */
+}
+  
+.unified-stats-card {
+  display: flex;
+  flex-direction: column;
+  background-color: grey;
+  color: var(--stat-card-text-color);
+  margin-top: 5px;;
+  padding: 15px 20px;
+  border-radius: 10px;
+  font-size: 1em;
+  font-weight: bold;
+}
+  
+.stat-row {
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+}
+
+.stat-row h2{
+  font-size: 1.8em;
+  font-weight: bold;
+  text-align: center;
+  color:#000000;
+}
+  
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin: 10px;
+}
+
+.stat-label {
+  font-size: 1.6em;
+  font-weight: bold;
+  margin-bottom: 5px; /* Adds space between the label and value */
+  color:black;
+}
+
+.stat-value {
+  font-size: 1.4em;
+  font-weight: 600;
+  color:#000000;
+}
+
+.tempo-label{
+  font-size: 1.8em;
+  font-weight: bold;
+  margin-bottom: 5px; /* Adds space between the label and value */
+  color:#000000;
+}
+
+.tempo-value {
+  font-size: 1.8em;
+  font-weight: 600;
+  color:#000000;
+}
   

@@ -4,6 +4,7 @@ import Selector from '../TeamStats/components/Selector';
 import Heatmap from '../TeamStats/components/Heatmap';
 import TempoCard from '../TeamStats/components/TempoCard';
 import StatCard from '../TeamStats/components/StatsDisplay';
+import Headshot from '../../images/headshot.jpg';
 
 import ShotsByClock from './components/ShotsByClock';
 import './PlayerStats.css';
@@ -14,19 +15,19 @@ const chartOptions = {
     y: {
       beginAtZero: true,
       ticks: {
-        color: '#ffffff', // White y-axis labels
+        color: 'black', // White y-axis labels
       }
     },
     x: {
       ticks: {
-        color: '#ffffff', // White x-axis labels
+        color: 'black', // White x-axis labels
       }
     }
   },
   plugins: {
     legend: {
       labels: {
-        color: '#ffffff', // White legend text
+        color: 'black', // White legend text
       }
     },
     tooltip: {
@@ -439,10 +440,12 @@ useEffect(() => {
       </div>
 
       <div className="detailed-stats">
+        {/*
         <div className="tempo-cards">
           <TempoCard title="Avg Offensive Tempo" tempo={avgOffensiveTempo} />
           <TempoCard title="Avg Defensive Tempo" tempo={avgDefensiveTempo} />
         </div>
+        */}
         <div className="charts-container">
           <div classname='bar-container'>
             <Bar
@@ -456,8 +459,11 @@ useEffect(() => {
             ))}
           </div>
         </div>
+        <div className="player-headshot">
+          <img src={Headshot} alt="Player Headshot" /> 
+        </div>
       </div>
-
+{/*
       <div className="stats-overview">
         <StatCard title="Total Points" value={shotPoints} />
         {shotPointData.map((section, index) => (
@@ -471,6 +477,58 @@ useEffect(() => {
         <StatCard title="Blocks" value={statsData.blocks || 0} />
         <StatCard title="Turnovers" value={statsData.turnovers || 0} />
         <StatCard title="Personal Fouls" value={statsData.personal_fouls || 0} />
+      </div>
+*/}
+      <div className="stats-container">
+        <div className="unified-stats-card">
+          <div className="stat-row">
+            <h2>PlayerStats: </h2>
+            <div className="stat-item">
+              <span className="stat-label">MPG</span>
+              <span className="stat-value">{statsData.mpg || 0}</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-label">FG%</span>
+              <span className="stat-value">{statsData.fg_percentage || 0}</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-label">3P%</span>
+              <span className="stat-value">{statsData.three_pt_percentage || 0}</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-label">Assists</span>
+              <span className="stat-value">{statsData.assists || 0}</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-label">Blocks</span>
+              <span className="stat-value">{statsData.blocks || 0}</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-label">Steals</span>
+              <span className="stat-value">{statsData.steals || 0}</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-label">Turnovers</span>
+              <span className="stat-value">{statsData.turnovers || 0}</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-label">Personal Fouls</span>
+              <span className="stat-value">{statsData.personal_fouls || 0}</span>
+            </div>
+          </div>
+        </div>
+        <div className="unified-stats-card">
+          <div className="stat-row">
+            <div className="stat-item">
+              <span className="tempo-label">Average Offensive Tempo </span>
+              <span className="tempo-value">{avgOffensiveTempo} seconds</span>
+            </div>
+            <div className="stat-item">
+              <span className="tempo-label">Average Defensive Tempo</span>
+              <span className="tempo-value">{avgDefensiveTempo} seconds</span>
+            </div>
+          </div>
+        </div>
       </div>
         
     </div>
