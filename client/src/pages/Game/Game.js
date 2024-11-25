@@ -328,6 +328,10 @@ const Game = () => {
             console.error('Error during game or season update:', error);
         });
     }; 
+
+    const deleteGame = () => {
+        // Need to add this functionality here
+    };
     
     // Undos the last recorded tempo, removes it from database and removes it from the list
     const undoTempo = () => {
@@ -362,10 +366,27 @@ const Game = () => {
             {gameModeOverlayVisible && (
                 <div className="game-mode-overlay">
                     <div className="game-mode-content">
-                        <div className='game-selection'>
-                            <h2>Select Game Mode</h2>
-                            <button onClick={() => { setGameMode('new'); setGameModeOverlayVisible(false); setNewGameOverlay(true); }}>Create New Game</button>
-                            <button onClick={() => { setGameMode('load'); setGameModeOverlayVisible(false); setLoadGameOverlayVisible(true); }}>Load Existing Game</button>
+                        {/* Close button in the corner */}
+                        <div className="game-selection">
+                            <h2>Select Game Mode <button className="close-overlay-button" onClick={() => setGameModeOverlayVisible(false)} >X</button></h2>
+                            <button
+                                onClick={() => {
+                                    setGameMode('new');
+                                    setGameModeOverlayVisible(false);
+                                    setNewGameOverlay(true);
+                                }}
+                            >
+                                Create New Game
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setGameMode('load');
+                                    setGameModeOverlayVisible(false);
+                                    setLoadGameOverlayVisible(true);
+                                }}
+                            >
+                                Load Existing Game
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -404,7 +425,7 @@ const Game = () => {
 
             <div className="main">
                 <h1> TN Tech vs {opponentTeam} </h1>
-                
+
                 <div className='tempo-timer'>
                     <TempoTimer 
                         isTiming={isTiming}
@@ -414,25 +435,34 @@ const Game = () => {
                         setCurrentTime={setCurrentTempo}
                     />
                 </div>
-
-                <div className='defensive-tempo-button'>
-                    <TempoButton 
-                        tempoType="Defensive"
-                        className={`TempoButton ${isTiming && tempoType !== 'defensive' ? 'disabled' : ''} ${isTiming && tempoType === 'defensive' ? 'stop' : 'start'}`}
-                        isTiming={isTiming && tempoType === 'defensive'}
-                        onClick={() => isTiming && tempoType === 'defensive' ? stopTempo('defensive') : startTempo('defensive')}
-                        disabled={isTiming && tempoType !== 'defensive'}
-                    />
-                </div>
                 
-                <div className='offensive-tempo-button'>
-                    <TempoButton 
-                        tempoType="Offensive"
-                        className={`TempoButton ${isTiming && tempoType !== 'offensive' ? 'disabled' : ''} ${isTiming && tempoType === 'offensive' ? 'stop' : 'start'}`}
-                        isTiming={isTiming && tempoType === 'offensive'}
-                        onClick={() => isTiming && tempoType === 'offensive' ? stopTempo('offensive') : startTempo('offensive')}
-                        disabled={isTiming && tempoType !== 'offensive'}
-                    />
+                <div className="button-container">
+                    <div className="offensive-tempo-button">
+                        <TempoButton
+                            tempoType="Offensive"
+                            className={`TempoButton ${isTiming && tempoType !== 'offensive' ? 'disabled' : ''} ${isTiming && tempoType === 'offensive' ? 'stop' : 'start'}`}
+                            isTiming={isTiming && tempoType === 'offensive'}
+                            onClick={() =>
+                                isTiming && tempoType === 'offensive'
+                                    ? stopTempo('offensive')
+                                    : startTempo('offensive')
+                            }
+                            disabled={isTiming && tempoType !== 'offensive'}
+                        />
+                    </div>
+                    <div className="defensive-tempo-button">
+                        <TempoButton
+                            tempoType="Defensive"
+                            className={`TempoButton ${isTiming && tempoType !== 'defensive' ? 'disabled' : ''} ${isTiming && tempoType === 'defensive' ? 'stop' : 'start'}`}
+                            isTiming={isTiming && tempoType === 'defensive'}
+                            onClick={() =>
+                                isTiming && tempoType === 'defensive'
+                                    ? stopTempo('defensive')
+                                    : startTempo('defensive')
+                            }
+                            disabled={isTiming && tempoType !== 'defensive'}
+                        />
+                    </div>
                 </div>
 
                 <div className="display-container">
@@ -444,26 +474,24 @@ const Game = () => {
                     </div>
                 </div>
 
-                <div className="ShotPopup">
+                <div className="shotContainer">
                     <ShotPopup
                         isOpen={newGameOverlay}
                         onClose={() => setNewGameOverlay(true)}
                     />
 
-                    <div className="ShotOutcomeSelection">
-                        {!shotOutcome ? (
-                            <>
-                                <div className="MadeButton" onClick={() => handleShotOutcome('made')}>Made</div>
-                                <div className="MissedButton" onClick={() => handleShotOutcome('missed')}>Missed</div>
-                            </>
-                        ) : (
-                            <div className="ClockTimeSelection">
-                                <div className="ClockButton1" onClick={() => handleClockTimeSelection('first_third')}>30-21</div>
-                                <div className="ClockButton2" onClick={() => handleClockTimeSelection('second_third')}>20-11</div>
-                                <div className="ClockButton3" onClick={() => handleClockTimeSelection('final_third')}>10-1</div>
-                            </div>
-                        )}
-                    </div>
+                    {!shotOutcome ? (
+                        <>
+                            <div className="MadeButton" onClick={() => handleShotOutcome('made')}>Made</div>
+                            <div className="MissedButton" onClick={() => handleShotOutcome('missed')}>Missed</div>
+                        </>
+                    ) : (
+                        <div className="ClockTimeSelection">
+                            <div className="ClockButton1" onClick={() => handleClockTimeSelection('first_third')}>30-21</div>
+                            <div className="ClockButton2" onClick={() => handleClockTimeSelection('second_third')}>20-11</div>
+                            <div className="ClockButton3" onClick={() => handleClockTimeSelection('final_third')}>10-1</div>
+                        </div>
+                    )}
                 </div>
 
                 {showPlayerSelection && (
@@ -472,8 +500,11 @@ const Game = () => {
                         seasonId={getSeasonByDate()._id}
                     />
                 )}
-
-                <button className="submit-game-button" onClick={submitGame}> Submit Game </button>
+                
+                <div className="submit-delete-container">
+                    <button className="submit-game-button" onClick={submitGame}> Submit Game </button>
+                    <button className="delete-game-button" onClick={deleteGame}> Delete Game </button>
+                </div>
             </div>
         </>
     );
