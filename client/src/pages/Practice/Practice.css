@@ -7,15 +7,20 @@ Layout containers
 .drills-column {
     display: flex;
     flex-direction: column;
-    height: calc(38vw);
+    height: calc(40vw);
     width: calc(30vw);
     background-color: grey;
     padding: 10px;
     border-radius: 10px;
 }
 .create-sessions-container {
+    margin-top: 4%;
+    margin-bottom: 4%;
+    margin-left: 1%;
+    margin-right: 1%;
     display: flex;
-    height: calc(100vh - 100px);  /* Adjust based on header/footer height */
+    gap: 20px;
+    height: calc(45vw);  /* Adjust based on header/footer height */
     justify-content: space-between;
     box-sizing: border-box;
     overflow: hidden;
@@ -163,7 +168,7 @@ Team Selection Lists
 
 .list h2 {
     font-size: 1.5em;
-    color: var(--text-color-dark);
+    color: white;
     margin-bottom: 15px;
     
 }
@@ -194,18 +199,22 @@ Team Selection Lists
 }
 
 .add-dropdown-button{
-    padding: 10px;
-    height: calc(3vw);
+    background-color: #27ae60;
+    color: white;
+    padding: 7px;
+    justify-content: center;
+    height: calc(3.5vw);
     width: calc(30vw);
     border: none;
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    font-size: 0.9em;
+    text-align: center;
+    font-size: 12.5px;
 }
 .remove-player-button {
     padding: 10px;
-    height: calc(2.9vw);
+    height: calc(3vw);
     width: calc(2vw);
     border: none;
     border-radius: 4px;
@@ -248,13 +257,6 @@ Team Selection Lists
 .remove-player-button:hover {
     background-color: #c0392b;
     transform: scale(1.1);
-}
-
-.add-dropdown-button {
-    background-color: #27ae60;
-    color: white;
-    text-align: center;
-    font-size: 12.5px;
 }
 
 .add-dropdown-button:hover{
@@ -327,7 +329,6 @@ Team Selection Lists
     transition: background-color 0.3s ease;
     margin-bottom: 10px; /* Space between buttons */
     width: 100%; /* Full width to utilize space */
-    box-shadow: var(--box-shadow); /* Consistent with theme shadows */
     display: flex; /* Flex display to align text properly */
     justify-content: center; /* Center text horizontally */
     align-items: center; /* Center text vertically */
@@ -340,13 +341,6 @@ Team Selection Lists
 
 .delete-drill-button {
     background-color: #e74c3c; /* Red for delete actions */
-}
-
-.add-drill-button {
-    background-color: yellow;
-    color: grey;
-    width: 100%;
-    margin-top: 10px;
 }
 
 .delete-drill-button:hover {
@@ -370,7 +364,6 @@ Team Selection Lists
     background-color: grey;
     border-radius: 8px;
     margin-bottom: 10px;
-    box-shadow: var(--box-shadow);
 }
 
 .session-information {
@@ -378,20 +371,22 @@ Team Selection Lists
     background-color: grey;
     border-radius: 8px;
     margin-bottom: 10px;
-    box-shadow: var(--box-shadow);
 }
 
 .add-drill-button {
     background-color: #27ae60;
     color: white; 
-    padding: 12px 20px;
-    font-size: 1.2em;
+    padding: 7px;
+    font-size: 12.5px;
     border: none;
-    border-radius: 8px;
+    border-radius: 4px;
+    height: calc(3.5vw);
+    width: calc(23.5vw);
     cursor: pointer;
     display: block;
-    width: auto;
     margin-top: 10px;
+    margin-left: 5%;
+    margin-right: 5%;
     transition: background-color 0.3s ease;
 }
 
@@ -414,10 +409,9 @@ Team Selection Lists
 }
 
 .drill-modal-content {
-    background: var(--card-bg-color);
+    background: grey;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: var(--box-shadow);
     max-width: 400px;
     width: 90%; /* Responsive width, max 400px */
     display: flex;
@@ -427,15 +421,15 @@ Team Selection Lists
 
 .drill-modal-content h2 {
     font-size: 1.8em;
-    color: var(--header_color); /* Use the header color variable */
+    color: white; /* Use the header color variable */
     margin-bottom: 20px;
-}
+}   
 
 .drill-modal-content label {
     font-size: 1.2em;
     margin-bottom: 10px;
     width: 100%; /* Full width for labels */
-    color: var(--text-color-dark); /* Dark color for text */
+    color: white; /* Dark color for text */
 }
 
 .drill-modal-content input[type="text"] {
@@ -451,8 +445,8 @@ Team Selection Lists
     padding: 10px 20px;
     margin-top: 10px;
     width: calc(70% - 20px); /* Half width minus padding */
-    background-color: grey;
-    color: var(--text-color-light);
+    background-color: #27ae60;
+    color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -462,7 +456,7 @@ Team Selection Lists
 }
 
 .drill-modal-content button:hover {
-    background-color: var(--hover-color); /* Darker on hover */
+    background-color: black; /* Darker on hover */
 }
 
 /* Separate styling for the cancel button to differentiate it */
@@ -477,21 +471,22 @@ Team Selection Lists
 /* Save Session Button */
 .create-session-button {
     position: fixed;
+    width: calc(27vw);
+    height: calc(8vw);
     bottom: 20px;
     right: 40px; /* Adjust this if it's too far to the right */
     background-color: grey; /* Using primary color variable */
-    color: var(--text-color-light); /* Using light text color variable for contrast */
+    color: white; /* Using light text color variable for contrast */
     border: none;
-    border-radius: 8px;
-    padding: 12px 24px; /* Adjusted padding for a better proportion */
+    border-radius: 4px;
+    padding: 30px; /* Adjusted padding for a better proportion */
     font-size: 1.2em;
     cursor: pointer;
-    box-shadow: var(--box-shadow); /* Using shadow variable for consistency */
     transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease; /* Added box-shadow to transition for a smoother effect */
 }
 
 .create-session-button:hover {
-    background-color: var(--hover-color); /* Slightly darker on hover/focus */
+    background-color: black; /* Slightly darker on hover/focus */
     transform: translateY(-3px); /* Increased the translateY effect slightly for more noticeable interaction */
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); /* Enhanced shadow for elevated effect */
 }
