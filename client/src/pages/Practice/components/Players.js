@@ -94,7 +94,7 @@ const Players = ({ listA, setListA, listB, setListB, playerData, setPlayerData }
     return (
         <>
             <div className="list">
-                <h2>Team Purple</h2>
+                <h2>Team A</h2>
                 <ul>
                     {listA.map((player, index) => (
                         <li key={index} className="player-selection">
@@ -123,7 +123,7 @@ const Players = ({ listA, setListA, listB, setListB, playerData, setPlayerData }
             </div>
 
             <div className="list">
-                <h2>Team Gray</h2>
+                <h2>Team B</h2>
                 <ul>
                     {listB.map((player, index) => (
                         <li key={index} className="player-selection">

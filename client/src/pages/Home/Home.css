@@ -33,11 +33,11 @@
     background-position: center;
     display: flex;
     justify-content: flex-start; /* Align text to the start */
-    align-items: flex-end; /* Text stays at the bottom */
+    align-items: flex-start; /* Text stays at the bottom */
     color: white;
     text-align: left;
     padding: 2%; /* Add padding inside the button */
-    font-size: calc(1.5vw + 0.5em); /* Text dynamically scales with viewport width */
+    font-size: calc(2vw + 0.5em); /* Text dynamically scales with viewport width */
     font-weight: bold; /* Make text bold */
     border-radius: 10px; /* Smooth edges */
     transition: transform 0.3s, background-color 0.3s;
@@ -53,11 +53,11 @@
     background-position: center;
     display: flex;
     justify-content: flex-start; /* Align text to the start */
-    align-items: flex-end; /* Text stays at the bottom */
+    align-items: flex-start; /* Text stays at the bottom */
     color: white;
     text-align: left;
     padding: 2%; /* Add padding inside the button */
-    font-size: calc(1.5vw + 0.5em); /* Text dynamically scales with viewport width */
+    font-size: calc(2vw + 0.5em); /* Text dynamically scales with viewport width */
     font-weight: bold; /* Make text bold */
     border-radius: 10px; /* Smooth edges */
     transition: transform 0.3s, background-color 0.3s;
@@ -71,11 +71,11 @@
     background-position: center;
     display: flex;
     justify-content: flex-start; /* Align text to the start */
-    align-items: flex-end; /* Text stays at the bottom */
+    align-items: flex-start; /* Text stays at the bottom */
     color: white;
     text-align: left;
     padding: 2%; /* Add padding inside the button */
-    font-size: calc(1.5vw + 0.5em); /* Text dynamically scales with viewport width */
+    font-size: calc(2vw + 0.5em); /* Text dynamically scales with viewport width */
     font-weight: bold; /* Make text bold */
     border-radius: 10px; /* Smooth edges */
     transition: transform 0.3s, background-color 0.3s;
@@ -89,11 +89,11 @@
     background-position: center;
     display: flex;
     justify-content: flex-start; /* Align text to the start */
-    align-items: flex-end; /* Text stays at the bottom */
+    align-items: flex-start; /* Text stays at the bottom */
     color: white;
     text-align: left;
     padding: 2%; /* Add padding inside the button */
-    font-size: calc(1.5vw + 0.5em); /* Text dynamically scales with viewport width */
+    font-size: calc(2vw + 0.5em); /* Text dynamically scales with viewport width */
     font-weight: bold; /* Make text bold */
     border-radius: 10px; /* Smooth edges */
     transition: transform 0.3s, background-color 0.3s;
@@ -107,11 +107,11 @@
     background-position: center;
     display: flex;
     justify-content: flex-start; /* Align text to the start */
-    align-items: flex-end; /* Text stays at the bottom */
+    align-items: flex-start; /* Text stays at the bottom */
     color: white;
     text-align: left;
     padding: 2%; /* Add padding inside the button */
-    font-size: calc(1.5vw + 0.5em); /* Text dynamically scales with viewport width */
+    font-size: calc(2vw + 0.5em); /* Text dynamically scales with viewport width */
     font-weight: bold; /* Make text bold */
     border-radius: 10px; /* Smooth edges */
     transition: transform 0.3s, background-color 0.3s;

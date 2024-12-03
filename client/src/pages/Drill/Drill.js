@@ -302,6 +302,23 @@ function DrillPage() {
                         </>
                     )}
                 </div>
+                <div className="TimerAndLastTempo">
+                    <TempoTimer
+                        isTiming={isTiming}
+                        resetTimer={resetTimer}
+                        setResetTimer={setResetTimer}
+                        currentTime={currentTempo}
+                        setCurrentTime={setCurrentTempo}
+                    />
+                    <LastTempoDisplay lastTempo={lastTempo} />
+                    <div className="cancel-button-container">
+                    <CancelButton
+                        onCancel={cancelTempo}
+                        lassName={!isTiming ? 'disabled' : ''}
+                        disabled={!isTiming}
+                    />
+                    </div>
+                </div>
                 <div className="court-container">
                     {/* <div style={{ position: "relative", width: '100%', height: '100%' }}> */}
                         <ImageMapper
@@ -376,23 +393,6 @@ function DrillPage() {
                     onClick={() => isTiming && tempoType === 'defensive' ? handleStopTempo('defensive') : startTempo('defensive')}
                     disabled={isTiming && tempoType !== 'defensive'}
                 />
-                <div className="TimerAndLastTempo">
-                    <TempoTimer
-                        isTiming={isTiming}
-                        resetTimer={resetTimer}
-                        setResetTimer={setResetTimer}
-                        currentTime={currentTempo}
-                        setCurrentTime={setCurrentTempo}
-                    />
-                    <LastTempoDisplay lastTempo={lastTempo} />
-                    <div className="cancel-button-container">
-                        <CancelButton
-                            onCancel={cancelTempo}
-                            className={!isTiming ? 'disabled' : ''}
-                            disabled={!isTiming}
-                        />
-                    </div>
-                </div>
                 <TempoButton
                     tempoType="Offensive"
                     className={`TempoButton ${isTiming && tempoType === 'offensive' ? 'stop' : 'start'} ${isTiming && tempoType !== 'offensive' ? 'disabled' : ''}`}

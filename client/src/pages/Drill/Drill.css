@@ -1,42 +1,13 @@
-/* Root Variables and Global Styles */
-:root {
-    --bg-color: #f4f4f9;
-    --header-color: #503291;
-    --card-bg-color: #ffffff;
-    --text-color-light: #f7f7f7;
-    --text-color-dark: #333333;
-    --card-color: #6758A0;
-    --primary-color: #503291;
-    --stat-card-bg: #FFD700;
-    --stat-card-text-color: #333333;
-    --accent-color: #FFD700;
-    --hover-color: #3d2671;
-    --box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-}
 
-/* Base Component Styles */
-.drill-container,
-.player-container,
-.court-container,
-.extra-stats-container,
-.tempo-container,
-.timer-container,
-.TempoTimer,
-.Popup,
-.ShotPopup,
-.CancelButton,
-.AvgTempoDisplay {
-    box-shadow: var(--box-shadow);
-}
 
 .player-container,
 .court-container,
 .extra-stats-container,
 .PopupPlayerCircle {
-    background: var(--card-color);
+    background: grey;
     border-radius: 8px;
     padding: 4%;
-    color: var(--text-color-dark);
+    color: white;
 
 }
 
@@ -53,17 +24,18 @@
     display: flex;
     /* background-color: yellow; */
     /* flex: 1; */
-    padding: 2%;
+    padding: 1%;
     gap: 2%;
     height: 55%;
     width: auto;
+    justify-content: center;
 }
 
 /* Player Container */
 .player-container {
     display: flex;
     /* flex: 1; */
-    width: 50%;
+    width: calc(40vw);
     height: 100%;
 }
 
@@ -74,7 +46,7 @@
     justify-content: center;
     align-items: center;
     /* Take up 1/2 of the screen */
-    width: 50%;
+    width: calc(40vw);
     height: 100%;
     padding: 0%;
     z-index: 50;
@@ -82,32 +54,37 @@
 
 /* Extra Stats Container */
 .extra-stats-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 5%;
-    margin: 0%;
-    padding: 0%;
-    height: 20%;
-    background-color: var(--primary-color);
-    /* background-color: red; */
+    display: grid; /* Use CSS Grid for layout */
+    grid-template-columns: repeat(3, 1fr); /* 3 columns */
+    grid-template-rows: repeat(2, auto); /* 2 rows */
+    gap: 5%; /* Adjust spacing between buttons */
+    justify-content: center; /* Center grid horizontally */
+    justify-items: center;
+    align-items: center; /* Center grid vertically */
+    margin: 0 auto; /* Center the container */
+    padding: 2%; /* Adjust padding as needed */
+    height: calc(15vw);
+    width: calc(80vw); /* Allow the container to grow as needed */
+    background-color: grey; /* Optional background */
 }
 
 /* Extra Stats */
 .ExtraStats {
     display: flex;
-    margin: .2%;
+    margin-top: 1%;
+    margin-bottom: 1%;
     padding: 1%;
     justify-content: center;
     align-items: center;
-    border: 1px solid #000;
-    border-radius: 2%;
-    background-color: #6758A0;
+    border: none;
+    border-radius: 7px;
+    background-color: #4f2984;
     color: white;
     cursor: pointer;
     transition: all 0.3s;
-    width: 25%;
-    font-size: 75%;
+    font-size: calc(1.3vw);
+    width: calc(20vw);
+    height: calc(4vw);
 }
 
 .ExtraStats:active {
@@ -116,9 +93,8 @@
 
 /* Tempo Container */
 .tempo-container {
-    /* background-color: pink; */
     display: flex;
-    justify-content: space-between; /* Space out the buttons evenly */
+    justify-content: center; /* Space out the buttons evenly */
     padding: 0%; /* Add padding to the container */
     height: 50%;
 }
@@ -126,47 +102,96 @@
 
 /* Tempo Timer */
 .TempoTimer {
-    
-    font-size: 150%;
-    margin: 10%;
+    font-size: calc(1.3vw);
     padding: 5%;
     border: 1px solid #000;
     border-radius: 5px;
     display: inline-block;
     background-color: #fff;
     color: #333;
-    width: 85%;
+    height: calc(5vw);
+    width: calc(10vw);
     text-align: center;
+    margin-bottom: 8%;
 }
 
+/* Last Tempo Display */
+.LastTempoDisplay {
+    font-size: calc(1.3vw); /* Adjust font size to match TempoButton */
+    color: white; /* Use the dark text color for readability */
+    padding: 3%; /* Provide some padding */
+    background-color: grey; /* Use the card background color */
+    border-radius: 8px; /* Round the corners to match the design */
+    text-align: center;
+    height: calc(5vw);
+    width: calc(10vw); /* Adjust width to content */
+}
+
+/* Container for the Cancel button */
+.cancel-button-container {
+    display: flex;
+    justify-content: center; /* Centers the button horizontally */
+    align-items: center; /* Aligns the button vertically */
+    width: calc(); /* Takes full width of its parent container */
+    margin-top: 5%; /* Adds some space above the button */
+}
+
+/* Cancel Button */
+.CancelButton {
+    padding: 10% 10%; /* Increase padding for a larger button */
+    font-size: calc(1.3vw); /* Increase font size for visibility */
+    background-color: darkgoldenrod; /* A consistent red color for cancel actions */
+    color: white; /* White text for better contrast */
+    border-radius: 8px; /* Match border-radius to other elements */
+    margin: 15% 5%; /* Consistent margin with TempoButton */;
+    width: calc(10vw); /* Adjust width to content and padding */
+    height: calc(5vw);
+    cursor: pointer;
+    transition: background-color 0.2s ease; /* Smooth transition for hover effects */
+    border: none; /* Remove the border */
+}
+
+.CancelButton:hover {
+    background-color: black; /* Darken the red on hover for feedback */
+}
+
+.CancelButton:active {
+    transform: scale(0.98); /* Press effect */
+}
+
+.CancelButton.disabled {
+    background-color: #ccc; /* Greyed out for disabled state */
+    color: #666;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
 .TempoButton {
     padding: 5% 0%; /* Adjust padding to give more space inside the button */
-    font-size: 100%; /* Adjust font size for better readability */
+    font-size: calc(1.8vw); /* Adjust font size for better readability */
     margin: .5% 1%; /* Add some margin between buttons */
     border-radius: 8px; /* Match border-radius to other elements like the player-container */
-    background-color: var(--primary-color); /* Use the primary purple color */
-    color: var(--text-color-light); /* Use the light color for text */
+    background-color: grey; /* Use the primary purple color */
+    color: white; /* Use the light color for text */
     cursor: pointer;
-    box-shadow: var(--box-shadow); /* Use the same box-shadow for consistency */
     transition: background-color 0.2s ease; /* Smooth transition for hover effects */
     border: none; /* Remove any borders */
     /* Allow the width to be determined by content and padding */
     flex-grow: 1; /* Allow the buttons to grow to fill the space */
     /* Additional styles for interaction states */
-    width: 10%;
-    height: 95%;
+    width: calc(10vw);
+    height: calc(12vw);
 }
 
 .TempoButton:hover {
-    background-color: var(--hover-color); /* Change background color on hover */
+    background-color: black; /* Change background color on hover */
 }
 
 .TempoButton.start {
-    background-color: #4CAF50; /* Use a green color for starting the tempo */
+    background-color: grey; /* Use a green color for starting the tempo */
 }
 
 .TempoButton.stop {
-    background-color: #f44336; /* Use a red color for stopping the tempo */
+    background-color: black; /* Use a red color for stopping the tempo */
 }
 
 .TempoButton:active {
@@ -182,58 +207,6 @@
     pointer-events: none; /* Disable pointer events for disabled state */
 }
 
-/* Last Tempo Display */
-.LastTempoDisplay {
-    font-size: .25%; /* Adjust font size to match TempoButton */
-    color: var(--text-color-dark); /* Use the dark text color for readability */
-    margin: 0 0; /* Standardize margin around the display */
-    padding: 1%; /* Provide some padding */
-    background-color: var(--card-bg-color); /* Use the card background color */
-    border-radius: 8px; /* Round the corners to match the design */
-    text-align: top;
-    width: 100%; /* Adjust width to content */
-    box-shadow: var(--box-shadow); /* Apply consistent box-shadow */
-}
-
-/* Container for the Cancel button */
-.cancel-button-container {
-    display: flex;
-    justify-content: center; /* Centers the button horizontally */
-    align-items: center; /* Aligns the button vertically */
-    width: 100%; /* Takes full width of its parent container */
-    margin-top: 5%; /* Adds some space above the button */
-}
-
-/* Cancel Button */
-.CancelButton {
-    padding: 10% 10%; /* Increase padding for a larger button */
-    font-size: 100%; /* Increase font size for visibility */
-    background-color: #d49b46; /* A consistent red color for cancel actions */
-    color: var(--text-color-light); /* White text for better contrast */
-    border-radius: 8px; /* Match border-radius to other elements */
-    margin: 15% 5%; /* Consistent margin with TempoButton */;
-    width: 100%; /* Adjust width to content and padding */
-    cursor: pointer;
-    transition: background-color 0.2s ease; /* Smooth transition for hover effects */
-    border: none; /* Remove the border */
-    box-shadow: var(--box-shadow); /* Consistent shadow with other elements */
-}
-
-.CancelButton:hover {
-    background-color: #d32f2f; /* Darken the red on hover for feedback */
-}
-
-.CancelButton:active {
-    transform: scale(0.98); /* Press effect */
-}
-
-.CancelButton.disabled {
-    background-color: #ccc; /* Greyed out for disabled state */
-    color: #666;
-    cursor: not-allowed;
-    opacity: 0.5;
-}
-
 /* Adjusting the container for these elements */
 .tempo-controls-container {
     display: flex;
@@ -242,16 +215,6 @@
     justify-content: space-around; /* Even spacing */
     width: 100%; /* Full width of the parent container */
     padding: 90%; /* Padding inside the container */
-}
-
-/* Specific container for the Cancel button and Last Tempo to group them */
-.cancel-and-last-tempo-container {
-    display: flex;
-    justify-content: center; /* Space out the elements inside */
-    align-items: center;
-    width: 100%; /* Ensure they take full width of their container */
-    margin-top: 1%; /* Extra margin on top for spacing */
-    height: 100%; /* Adjust height to contain the elements */
 }
 
 /* Popup Overlay */
@@ -273,9 +236,8 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: var(--card-bg-color); /* Light purple */
+    background-color: grey; /* Light purple */
     border-radius: 8px;
-    box-shadow: var(--box-shadow);
     z-index: 99;
     max-width: 80%; /* Adjusted to max-width for responsiveness */
     padding: 2%;
@@ -300,8 +262,8 @@
     width: 75px; /* Match circle size to main player list */
     height: 75px;
     border-radius: 50%;
-    background-color: var(--primary-color); /* Darker purple */
-    color: var(--text-color-light); /* White color for contrast */
+    background-color: grey; /* Darker purple */
+    color: white; /* White color for contrast */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -312,7 +274,7 @@
 /* Popup Player Name */
 .PopupPlayerName {
     font-size: 1em; /* Adjusted to match the rest of the UI */
-    color: var(--text-color-dark); /* Dark text for readability */
+    color: black; /* Dark text for readability */
     word-break: break-word; /* Ensures long names don't overflow */
     text-align: center; /* Center the names below the circles */
 }
@@ -331,7 +293,6 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    box-shadow: var(--box-shadow);
     z-index: 100;
     display: flex;
     flex-direction: column;
@@ -434,7 +395,7 @@
 
 .PlayerName {
     font-size: 1.2em; /* Adjust font size as necessary */
-    color: var(--text-color-dark);
+    color: black;
     text-align: center; /* Center text below the circle */
     width: 100%; /* Ensures the name doesn't overflow the circle width */
     margin-top: 5px; /* Space between the circle and the name */
@@ -444,6 +405,7 @@
     background-color: #ffd700;
     color: #8766b4;
 }
+
 
 /* Media Queries */
 @media (max-width: 768px) {
@@ -477,9 +439,8 @@
     }
 }
 
-.LastTempoDisplay,
 .AvgTempoDisplay {
-    font-size: 100%;
+    font-size: calc(1.3vw);
     text-align: center;
     width: 100%;
     margin: 1% 2%;
