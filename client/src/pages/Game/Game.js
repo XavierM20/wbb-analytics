@@ -2,7 +2,7 @@ import './Game.css';
 import { useNavigate } from 'react-router-dom';
 import UndoButton from './components/UndoButton';
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Dimensions } from 'react-native';
 import ShotPopup from '../Drill/components/ShotPopup';
 import GameSelection from './components/GameSelection';
 import TempoTimer from '../Drill/components/TempoTimer';
@@ -10,6 +10,9 @@ import TempoButton from '../Drill/components/TempoButton';
 import CancelButton from '../Drill/components/CancelButton';
 import LastTempoDisplay from '../Drill/components/LastTempoDisplay';
 import PlayerSelectionPopup from './components/PlayerSelectionPopup';
+
+// Get the screen height
+const { height: screenHeight } = Dimensions.get('window');
 
 const Game = () => {
     const [gameData, setGameData] = useState('');
@@ -458,25 +461,20 @@ const Game = () => {
                     <View style={styles.table}>
                         {/* Table Header */}
                         <View style={[styles.row, styles.header]}>
-                            <Text style={[styles.cell, styles.headerText]}>Last Tempo</Text>
-                            <Text style={[styles.cell, styles.headerText]}>Duration</Text>
+                        <Text style={[styles.cell, styles.headerText]}>Last Tempo</Text>
+                        <Text style={[styles.cell, styles.headerText]}>Duration</Text>
                         </View>
 
-                        {/* Table Body */}
-                        {tempoTableRows.length > 0 ? (
-                            tempoTableRows.map((row, index) => (
+                        {/* Scrollable Table Body */}
+                        <ScrollView style={[styles.scrollableBody, { height: screenHeight * 0.2 }]} showsVerticalScrollIndicator={false}>
+                        {tempoTableRows.map((row, index) => (
                             <View key={index} style={styles.row}>
-                                <Text style={styles.cell}>{row.col1}</Text>
-                                <Text style={styles.cell}>{row.col2}</Text>
+                            <Text style={styles.cell}>{row.col1}</Text>
+                            <Text style={styles.cell}>{row.col2}</Text>
                             </View>
-                            ))
-                        ) : (
-                            <View style={styles.row}>
-                            <Text style={styles.cell}>No data</Text>
-                            <Text style={styles.cell}>No data</Text>
-                            </View>
-                        )}
-                        </View>
+                        ))}
+                        </ScrollView>
+                    </View>
                     </div>
                     <div className="offensive-tempo-button">
                         <TempoButton
@@ -536,6 +534,7 @@ const Game = () => {
 
 const styles = StyleSheet.create({
     table: {
+      width: '100%',
       borderWidth: 1,
       borderColor: '#ccc',
       borderRadius: 4,
@@ -552,6 +551,10 @@ const styles = StyleSheet.create({
     headerText: {
       fontWeight: 'bold',
       textAlign: 'center',
+    },
+    scrollableBody: {
+      height: 100,
+      backgroundColor: 'white',
     },
     cell: {
       flex: 1,
