@@ -25,6 +25,7 @@ const LoginPage = () => {
     const [isRegistering, setIsRegistering] = useState(false);
     const [city, setCity] = useState('');
     const [state, setState] = useState('');
+    const [incorrect,setIncorrect] = useState(false);
     
 
     const serverUrl = process.env.REACT_APP_SERVER_URL;
@@ -34,7 +35,7 @@ const LoginPage = () => {
             navigate('/homepage');
         }
     }, [auth.token, navigate]);
-
+i
     useEffect(() => {
         // Fetch existing schools from the server
         const fetchSchools = async () => {
@@ -122,6 +123,35 @@ const LoginPage = () => {
         }
     };
 
+    const handleLogin = async (event) => {
+        const saltRounds = 10;
+        event.preventDefault();
+
+        /*
+        loginResponse:
+            This is a fetch request to check if the user exist and if the password is correct
+        */
+        const loginResponse = await fetch(serverUrl + '/api/users/userCheck',
+    {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({username: username, password: password}),
+
+    })
+
+        const loginData = await loginResponse.json();
+        // If the user does not exist or the password is incorrect, return an error
+        if(loginData.message){
+            setIncorrect(true);
+        } else {
+            auth.loginAction({username: loginData.username, password: loginData.password, token: loginData.role});
+            navigate('/homepage');
+        }
+        };
+
+
     const handleAddSchool = async () => {
         if (!newSchool || !city || !state) {
             alert("All fields (name, city, state) are required");
@@ -171,7 +201,26 @@ const LoginPage = () => {
     return (
         <div className="login-page-container">
             <div className="login-form">
-                {isRegistering ? (
+                {!isRegistering ? (
+                    <form onSubmit={handleLogin}>
+                    {/* Login card */}
+                    <h2>Login</h2>
+                    <label>
+                        <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)}/>
+                    </label>
+                    <label>
+                        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                    </label>
+                    {incorrect === true && (
+                        <a className='error'>Incorrect Username or Password</a>
+                    )}
+                    <button type="submit">Submit</button>
+                    <a className='switch' onClick={() => moveToRegister()}>
+                        <span className="regular-text">Don't have an account? </span>
+                        <span className="bold-text">Register </span>
+                    </a>
+                </form>
+                ) : (
                     <form onSubmit={handleRegister}>
                         <h2>Register</h2>
                         <label>
@@ -232,20 +281,6 @@ const LoginPage = () => {
                         <button type="submit">Submit</button>
                         <p className="switch" onClick={moveToLogin}>
                             Already have an account? <b>Login</b>
-                        </p>
-                    </form>
-                ) : (
-                    <form>
-                        <h2>Login</h2>
-                        <label>
-                            <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
-                        </label>
-                        <label>
-                            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                        </label>
-                        <button type="submit">Submit</button>
-                        <p className="switch" onClick={moveToRegister}>
-                            Don't have an account? <b>Register</b>
                         </p>
                     </form>
                 )}
