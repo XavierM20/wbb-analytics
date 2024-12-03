@@ -2,6 +2,7 @@ import './Game.css';
 import { useNavigate } from 'react-router-dom';
 import UndoButton from './components/UndoButton';
 import React, { useState, useEffect } from "react";
+import { View, Text, StyleSheet } from 'react-native';
 import ShotPopup from '../Drill/components/ShotPopup';
 import GameSelection from './components/GameSelection';
 import TempoTimer from '../Drill/components/TempoTimer';
@@ -35,6 +36,7 @@ const Game = () => {
     const [showPlayerSelection, setShowPlayerSelection] = useState(false);
     const [gameModeOverlayVisible, setGameModeOverlayVisible] = useState(true);
     const [loadGameOverlayVisible, setLoadGameOverlayVisible] = useState(false);
+    const [tempoTableRows, setTempoTableRows] = useState([]);             // Table rows for tempo table
 
     const navigate = useNavigate();
     const serverUrl = process.env.REACT_APP_SERVER_URL;
@@ -149,6 +151,7 @@ const Game = () => {
     
     const handleShotOutcome = (outcome) => {
         setShotOutcome(outcome);
+        addRowToTempoTable('Offensive', currentTempo);
     };
 
     const handleLocationClick = (location) => {
@@ -360,6 +363,20 @@ const Game = () => {
             setLastTempo(newLastTempo);
         }
     };
+
+    /* 
+        Function to add a row to the tempo table 
+        Functionality: Adds a row to a table, row contains 
+        the tempoType variable (offensive/defensive) and the
+        currentTempo variable (time elapsed in seconds)
+    */
+    const addRowToTempoTable = () => {
+        console.log(lastTempo);
+        console.log(tempoType);
+        const newRow = { col1: tempoType, col2: lastTempo };
+        setTempoTableRows([...tempoTableRows, newRow]);
+        console.log([...tempoTableRows, newRow]);
+    };
     
     return (
         <>
@@ -436,7 +453,31 @@ const Game = () => {
                     />
                 </div>
                 
-                <div className="button-container">
+                <div className="game-tempo-container">
+                    <div className="last-tempo-container">
+                    <View style={styles.table}>
+                        {/* Table Header */}
+                        <View style={[styles.row, styles.header]}>
+                            <Text style={[styles.cell, styles.headerText]}>Last Tempo</Text>
+                            <Text style={[styles.cell, styles.headerText]}>Duration</Text>
+                        </View>
+
+                        {/* Table Body */}
+                        {tempoTableRows.length > 0 ? (
+                            tempoTableRows.map((row, index) => (
+                            <View key={index} style={styles.row}>
+                                <Text style={styles.cell}>{row.col1}</Text>
+                                <Text style={styles.cell}>{row.col2}</Text>
+                            </View>
+                            ))
+                        ) : (
+                            <View style={styles.row}>
+                            <Text style={styles.cell}>No data</Text>
+                            <Text style={styles.cell}>No data</Text>
+                            </View>
+                        )}
+                        </View>
+                    </div>
                     <div className="offensive-tempo-button">
                         <TempoButton
                             tempoType="Offensive"
@@ -465,33 +506,16 @@ const Game = () => {
                     </div>
                 </div>
 
-                <div className="display-container">
-                    <div className="last-tempo">
-                        <LastTempoDisplay lastTempo={lastTempo}/>
-                    </div>
-                    <div className="undo-button">
-                        <UndoButton onUndo={undoTempo} />
-                    </div>
-                </div>
-
                 <div className="shotContainer">
                     <ShotPopup
                         isOpen={newGameOverlay}
                         onClose={() => setNewGameOverlay(true)}
                     />
 
-                    {!shotOutcome ? (
-                        <>
-                            <div className="MadeButton" onClick={() => handleShotOutcome('made')}>Made</div>
-                            <div className="MissedButton" onClick={() => handleShotOutcome('missed')}>Missed</div>
-                        </>
-                    ) : (
-                        <div className="ClockTimeSelection">
-                            <div className="ClockButton1" onClick={() => handleClockTimeSelection('first_third')}>30-21</div>
-                            <div className="ClockButton2" onClick={() => handleClockTimeSelection('second_third')}>20-11</div>
-                            <div className="ClockButton3" onClick={() => handleClockTimeSelection('final_third')}>10-1</div>
-                        </div>
-                    )}
+                    <>
+                        <div className="MadeButton" onClick={() => handleShotOutcome('made')}>Made</div>
+                        <div className="MissedButton" onClick={() => handleShotOutcome('missed')}>Missed</div>
+                    </>
                 </div>
 
                 {showPlayerSelection && (
@@ -509,5 +533,34 @@ const Game = () => {
         </>
     );
 }
+
+const styles = StyleSheet.create({
+    table: {
+      borderWidth: 1,
+      borderColor: '#ccc',
+      borderRadius: 4,
+      margin: 16,
+    },
+    row: {
+      flexDirection: 'row',
+    },
+    header: {
+      backgroundColor: '#f1f1f1',
+      borderBottomWidth: 1,
+      borderColor: '#ccc',
+    },
+    headerText: {
+      fontWeight: 'bold',
+      textAlign: 'center',
+    },
+    cell: {
+      flex: 1,
+      padding: 8,
+      textAlign: 'center',
+      borderRightWidth: 1,
+      borderColor: '#ccc',
+      backgroundColor: 'white',
+    },
+  });
 
 export default Game;
