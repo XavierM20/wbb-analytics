@@ -46,6 +46,7 @@ const Settings = () => {
                         </button>
                     </div>
                     <button className="btn Sign-out" onClick={() => { auth.logOut();}} to="/">Sign Out</button>
+                    <button className="btn season" onClick={() => navigate('/season')} to="/">Create New Season</button>
                 </div>
             </div>
         </div>
