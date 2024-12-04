@@ -35,7 +35,7 @@ const LoginPage = () => {
             navigate('/homepage');
         }
     }, [auth.token, navigate]);
-i
+    
     useEffect(() => {
         // Fetch existing schools from the server
         const fetchSchools = async () => {
