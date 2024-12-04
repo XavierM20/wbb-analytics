@@ -281,46 +281,46 @@ function DrillPage() {
 
 
     return (
-        <div className="drill-container">
-            <div className="player-and-court-container">
-                <div className="player-container">
-                    <PlayerList
-                        players={playersOnCourt}
-                        onPlayerSelectForShot={onPlayerSelectForShot}
-                        onPlayerSelectForSub={onPlayerSelectForSub}
-                    />
-                    {isPopupOpen && (
-                        <>
-                            <div className="Overlay" onClick={handleOverlayClick}></div>
-                            <SubstitutionPopup
-                                isOpen={isPopupOpen}
-                                onClose={() => setIsPopupOpen(false)}
-                                onSubstitute={handleSubstitute}
-                                playersOnCourt={playersOnCourt}
-                                allPlayers={allPlayers}
-                            />
-                        </>
-                    )}
-                </div>
-                <div className="TimerAndLastTempo">
-                    <TempoTimer
-                        isTiming={isTiming}
-                        resetTimer={resetTimer}
-                        setResetTimer={setResetTimer}
-                        currentTime={currentTempo}
-                        setCurrentTime={setCurrentTempo}
-                    />
-                    <LastTempoDisplay lastTempo={lastTempo} />
-                    <div className="cancel-button-container">
-                    <CancelButton
-                        onCancel={cancelTempo}
-                        lassName={!isTiming ? 'disabled' : ''}
-                        disabled={!isTiming}
-                    />
+        <div className="background-container">
+            <div className="drill-container">
+                <div className="player-and-court-container">
+                    <div className="player-container">
+                        <PlayerList
+                            players={playersOnCourt}
+                            onPlayerSelectForShot={onPlayerSelectForShot}
+                            onPlayerSelectForSub={onPlayerSelectForSub}
+                        />
+                        {isPopupOpen && (
+                            <>
+                                <div className="Overlay" onClick={handleOverlayClick}></div>
+                                <SubstitutionPopup
+                                    isOpen={isPopupOpen}
+                                    onClose={() => setIsPopupOpen(false)}
+                                    onSubstitute={handleSubstitute}
+                                    playersOnCourt={playersOnCourt}
+                                    allPlayers={allPlayers}
+                                />
+                            </>
+                        )}
                     </div>
-                </div>
-                <div className="court-container">
-                    {/* <div style={{ position: "relative", width: '100%', height: '100%' }}> */}
+                    <div className="TimerAndLastTempo">
+                        <TempoTimer
+                            isTiming={isTiming}
+                            resetTimer={resetTimer}
+                            setResetTimer={setResetTimer}
+                            currentTime={currentTempo}
+                            setCurrentTime={setCurrentTempo}
+                        />
+                        <LastTempoDisplay lastTempo={lastTempo} />
+                        <div className="cancel-button-container">
+                            <CancelButton
+                                onCancel={cancelTempo}
+                                lassName={!isTiming ? 'disabled' : ''}
+                                disabled={!isTiming}
+                            />
+                        </div>
+                    </div>
+                    <div className="court-container">
                         <ImageMapper
                             src={basketballCourtVector}
                             map={MAP2}
@@ -343,63 +343,63 @@ function DrillPage() {
                                 />
                             </>
                         )}
-                    {/* </div> */}
+                    </div>
                 </div>
-            </div>
-            <div className="extra-stats-container">
-                <ExtraStats
-                    setStatName={"Offensive Rebound"}
-                    className="Offensive Rebound"
-                    onClick={() => recordStats(player, 'offensiveRebound')}
-                />
-                <ExtraStats
-                    setStatName={"Assist"}
-                    className="Assist"
-                    onClick={() => recordStats(player, 'assist')}
-                />
-                <ExtraStats
-                    setStatName={"Steal"}
-                    className="Steal"
-                    onClick={() => recordStats(player, 'steal')}
-                />
-                <ExtraStats
-                    setStatName={"Defensive Rebound"}
-                    className="Defensive Rebound"
-                    onClick={() => recordStats(player, 'defensiveRebound')}
-                />
-                <ExtraStats
-                    setStatName={"Block"}
-                    className="Block"
-                    onClick={() => recordStats(player, 'block')}
-                />
-                <ExtraStats
-                    setStatName={"Turnover"}
-                    className="Turnover"
-                    onClick={() => recordStats(player, 'turnover')}
-                />
-                {isESOpen && (
-                <ExtraStatPopup
-                    isOpen={isESOpen}
-                    className={statName}
-                    onClose={handleESClose}
-                />
-                )}
-            </div>
-            <div className="tempo-container">
-                <TempoButton
-                    tempoType="Defensive"
-                    className={`TempoButton ${isTiming && tempoType !== 'defensive' ? 'disabled' : ''} ${isTiming && tempoType === 'defensive' ? 'stop' : 'start'}`}
-                    isTiming={isTiming && tempoType === 'defensive'}
-                    onClick={() => isTiming && tempoType === 'defensive' ? handleStopTempo('defensive') : startTempo('defensive')}
-                    disabled={isTiming && tempoType !== 'defensive'}
-                />
-                <TempoButton
-                    tempoType="Offensive"
-                    className={`TempoButton ${isTiming && tempoType === 'offensive' ? 'stop' : 'start'} ${isTiming && tempoType !== 'offensive' ? 'disabled' : ''}`}
-                    isTiming={isTiming && tempoType === 'offensive'}
-                    onClick={() => isTiming && tempoType === 'offensive' ? handleStopTempo('offensive') : startTempo('offensive')}
-                    disabled={isTiming && tempoType !== 'offensive'}
-                />
+                <div className="extra-stats-container">
+                    <ExtraStats
+                        setStatName={"Offensive Rebound"}
+                        className="Offensive Rebound"
+                        onClick={() => recordStats(player, 'offensiveRebound')}
+                    />
+                    <ExtraStats
+                        setStatName={"Assist"}
+                        className="Assist"
+                        onClick={() => recordStats(player, 'assist')}
+                    />
+                    <ExtraStats
+                        setStatName={"Steal"}
+                        className="Steal"
+                        onClick={() => recordStats(player, 'steal')}
+                    />
+                    <ExtraStats
+                        setStatName={"Defensive Rebound"}
+                        className="Defensive Rebound"
+                        onClick={() => recordStats(player, 'defensiveRebound')}
+                    />
+                    <ExtraStats
+                        setStatName={"Block"}
+                        className="Block"
+                        onClick={() => recordStats(player, 'block')}
+                    />
+                    <ExtraStats
+                        setStatName={"Turnover"}
+                        className="Turnover"
+                        onClick={() => recordStats(player, 'turnover')}
+                    />
+                    {isESOpen && (
+                        <ExtraStatPopup
+                            isOpen={isESOpen}
+                            className={statName}
+                            onClose={handleESClose}
+                        />
+                    )}
+                </div>
+                <div className="tempo-container">
+                    <TempoButton
+                        tempoType="Defensive"
+                        className={`TempoButton ${isTiming && tempoType !== 'defensive' ? 'disabled' : ''} ${isTiming && tempoType === 'defensive' ? 'stop' : 'start'}`}
+                        isTiming={isTiming && tempoType === 'defensive'}
+                        onClick={() => isTiming && tempoType === 'defensive' ? handleStopTempo('defensive') : startTempo('defensive')}
+                        disabled={isTiming && tempoType !== 'defensive'}
+                    />
+                    <TempoButton
+                        tempoType="Offensive"
+                        className={`TempoButton ${isTiming && tempoType === 'offensive' ? 'stop' : 'start'} ${isTiming && tempoType !== 'offensive' ? 'disabled' : ''}`}
+                        isTiming={isTiming && tempoType === 'offensive'}
+                        onClick={() => isTiming && tempoType === 'offensive' ? handleStopTempo('offensive') : startTempo('offensive')}
+                        disabled={isTiming && tempoType !== 'offensive'}
+                    />
+                </div>
             </div>
         </div>
     );
