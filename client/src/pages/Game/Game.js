@@ -388,7 +388,6 @@ const Game = () => {
                     <div className="game-mode-content">
                         {/* Close button in the corner */}
                         <div className="game-selection">
-                            <h2>Select Game Mode <button className="close-overlay-button" onClick={() => setGameModeOverlayVisible(false)} >X</button></h2>
                             <button
                                 onClick={() => {
                                     setGameMode('new');
@@ -444,7 +443,17 @@ const Game = () => {
             )}
 
             <div className="main">
-                <h1> TN Tech vs {opponentTeam} </h1>
+                <button className='btn-home top-right-button' onClick={() => navigate('/homepage')}>Home</button>
+                <Text style={{ color: 'white',
+                    fcolor: 'yellow',
+                    fontSize: 24,
+                    fontWeight: 'bold',
+                    backgroundColor: 'rgba(0, 0, 0, 0.6)', // Set the background color
+                    padding: 5,             // Add padding to space the text from the background edges
+                    borderRadius: 10,       // Optional: Add rounded corners
+                    }}>
+                    TN Tech vs {opponentTeam}
+                </Text>
 
                 <div className='tempo-timer'>
                     <TempoTimer 
