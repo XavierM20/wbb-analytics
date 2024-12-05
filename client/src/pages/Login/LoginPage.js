@@ -1,128 +1,9 @@
-/*
-LoginPage.js:
-    This is the page where the user can login or register to the system.
-    The user can only access the homepage if they are authenticated.
-    The user can register by entering a username, password, and a key.
-*/
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useAuth } from '../../hooks/AuthProvider';
 import './LoginPage.css';
 
 const LoginPage = () => {
-    let navigate = useNavigate();
-    const auth = useAuth();
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [school, setSchool] = useState('');
-    const [schools, setSchools] = useState([]);
-    const [isAddingSchool, setIsAddingSchool] = useState(false);
-    const [newSchool, setNewSchool] = useState('');
-    const [errorUser, setErrorUser] = useState('');
-    const [errorPass, setErrorPass] = useState('');
-    const [errorConfirmPass, setErrorConfirmPass] = useState('');
-    const [isRegistering, setIsRegistering] = useState(false);
-    const [city, setCity] = useState('');
-    const [state, setState] = useState('');
-    const [incorrect,setIncorrect] = useState(false);
-    
-
-    const serverUrl = process.env.REACT_APP_SERVER_URL;
-
-    useEffect(() => {
-        if (auth.token) {
-            navigate('/homepage');
-        }
-    }, [auth.token, navigate]);
-    
-    useEffect(() => {
-        // Fetch existing schools from the server
-        const fetchSchools = async () => {
-            try {
-                const response = await fetch(`${serverUrl}/api/schools`);
-                const data = await response.json();
-                setSchools(data);
-            } catch (error) {
-                console.error("Error fetching schools:", error);
-            }
-        };
-        fetchSchools();
-    }, [serverUrl]);
-
-    const moveToRegister = () => {
-        setUsername('');
-        setPassword('');
-        setConfirmPassword('');
-        setIsRegistering(true);
-    };
-
-    const moveToLogin = () => {
-        setUsername('');
-        setPassword('');
-        setIsRegistering(false);
-    };
-
-    const handleRegister = async (event) => {
-        event.preventDefault();
-        let error = false;
-        setErrorUser('');
-        setErrorPass('');
-        setErrorConfirmPass('');
-
-        if (username.length < 8) {
-            setErrorUser('Username is too short!');
-            error = true;
-        }
-
-        const regex = /[!?@#$%^&*()]/;
-        const cap = /[A-Z]/;
-        const low = /[a-z]/;
-        if (password.length < 8 || !regex.test(password) || !cap.test(password) || !low.test(password)) {
-            setErrorPass('Password must be at least 8 characters and include a special character, uppercase, and lowercase letters.');
-            error = true;
-        }
-
-        if (password !== confirmPassword) {
-            setErrorConfirmPass('Passwords do not match!');
-            error = true;
-        }
-
-        if (!school) {
-            alert('Please select or add a school.');
-            error = true;
-        }
-
-        if (!error) {
-            try {
-                const userData = {
-                    username,
-                    password,
-                    school
-                };
-                const userResponse = await fetch(`${serverUrl}/api/users`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(userData),
-                });
-                const newUser = await userResponse.json();
-                if (!newUser.message) {
-                    auth.loginAction({
-                        username: newUser.username,
-                        token: newUser.role,
-                    });
-                    navigate('/homepage');
-                } else {
-                    setErrorUser(newUser.message);
-                }
-            } catch (error) {
-                console.error(error);
-            }
-        }
-    };
-
     const handleLogin = async (event) => {
         const saltRounds = 10;
         event.preventDefault();
@@ -159,44 +40,68 @@ const LoginPage = () => {
         }
     
         try {
-            const response = await fetch(`${serverUrl}/api/schools`, {
+            const userData = {
+                username,
+                password,
+                school
+            };
+            const userResponse = await fetch(`${serverUrl}/api/users`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ name: newSchool, city: city, state: state }),
+                body: JSON.stringify(userData),
             });
-    
-            const result = await response.json();
-    
-            console.log('API Response:', result); // Log the result for debugging
-    
-            if (response.ok) {
-                setSchools([...schools, result]); // Update school list
-                setSchool(result.name); // Set selected school to newly added school
-                setNewSchool(''); // Clear input
-                setCity(''); // Clear city input
-                setState(''); // Clear state input
-                setIsAddingSchool(false); // Hide input field
+            const newUser = await userResponse.json();
+            if (!newUser.message) {
+                auth.loginAction({
+                    username: newUser.username,
+                    token: newUser.role,
+                });
+                navigate('/homepage');
             } else {
-                alert(result.message || "Error adding school");
+                setErrorUser(newUser.message);
             }
         } catch (error) {
-            console.error("Error adding school:", error);
-            alert("An unexpected error occurred. Please try again.");
+            console.error(error);
         }
-    };
-    
-    
+    }
+};
 
-    const handleSchoolChange = (value) => {
-        if (value === "add-new") {
-            setIsAddingSchool(true);
+const handleAddSchool = async () => {
+    if (!newSchool || !city || !state) {
+        alert("All fields (name, city, state) are required");
+        return;
+    }
+
+    try {
+        const response = await fetch(`${serverUrl}/api/schools`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name: newSchool, city: city, state: state }),
+        });
+
+        const result = await response.json();
+
+        console.log('API Response:', result); // Log the result for debugging
+
+        if (response.ok) {
+            setSchools([...schools, result]); // Update school list
+            setSchool(result.name); // Set selected school to newly added school
+            setNewSchool(''); // Clear input
+            setCity(''); // Clear city input
+            setState(''); // Clear state input
+            setIsAddingSchool(false); // Hide input field
         } else {
-            setSchool(value);
-            setIsAddingSchool(false);
+            alert(result.message || "Error adding school");
         }
-    };
+    } catch (error) {
+        console.error("Error adding school:", error);
+        alert("An unexpected error occurred. Please try again.");
+    }
+};
 
     return (
         <div className="login-page-container">
@@ -286,7 +191,8 @@ const LoginPage = () => {
                 )}
             </div>
         </div>
-    );
+    </div>
+);
 };
 
 export default LoginPage;

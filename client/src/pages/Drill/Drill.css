@@ -1,10 +1,28 @@
 
+.background-container{
+    background: url('../../images/homepageWBB.jpeg') no-repeat center center;
+    background-size: cover;
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    z-index: 0;
+}
+.background-container::before{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(0, 0, 0, .4);
+    z-index: -1;
+}
 
 .player-container,
 .court-container,
 .extra-stats-container,
 .PopupPlayerCircle {
-    background: grey;
+    background: rgba(63, 68, 68, .7);
     border-radius: 8px;
     padding: 4%;
     color: white;
@@ -22,8 +40,6 @@
 /* Player and Court Container */
 .player-and-court-container {
     display: flex;
-    /* background-color: yellow; */
-    /* flex: 1; */
     padding: 1%;
     gap: 2%;
     height: 55%;
@@ -65,7 +81,7 @@
     padding: 2%; /* Adjust padding as needed */
     height: calc(15vw);
     width: calc(80vw); /* Allow the container to grow as needed */
-    background-color: grey; /* Optional background */
+    background-color: rgba(63, 68, 68, .7); /* Optional background */
 }
 
 /* Extra Stats */
@@ -120,7 +136,7 @@
     font-size: calc(1.3vw); /* Adjust font size to match TempoButton */
     color: white; /* Use the dark text color for readability */
     padding: 3%; /* Provide some padding */
-    background-color: grey; /* Use the card background color */
+    background-color: rgba(63, 68, 68, .7); /* Use the card background color */
     border-radius: 8px; /* Round the corners to match the design */
     text-align: center;
     height: calc(5vw);
@@ -170,7 +186,7 @@
     font-size: calc(1.8vw); /* Adjust font size for better readability */
     margin: .5% 1%; /* Add some margin between buttons */
     border-radius: 8px; /* Match border-radius to other elements like the player-container */
-    background-color: grey; /* Use the primary purple color */
+    background-color: rgba(63, 68, 68, .7); /* Use the primary purple color */
     color: white; /* Use the light color for text */
     cursor: pointer;
     transition: background-color 0.2s ease; /* Smooth transition for hover effects */
@@ -187,7 +203,7 @@
 }
 
 .TempoButton.start {
-    background-color: grey; /* Use a green color for starting the tempo */
+    background-color: rgba(63, 68, 68, .7); /* Use a green color for starting the tempo */
 }
 
 .TempoButton.stop {
