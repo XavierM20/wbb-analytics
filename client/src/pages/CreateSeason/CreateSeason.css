@@ -14,8 +14,8 @@
 }
 .btn-home {
     padding: 10px 20px;
-    background-color: #007bff; /* Bootstrap blue */
-    color: white;
+    background-color: #007bff !important; /* Bootstrap blue */
+    color: white !important;
     border: none;
     border-radius: 5px;
     cursor: pointer;
