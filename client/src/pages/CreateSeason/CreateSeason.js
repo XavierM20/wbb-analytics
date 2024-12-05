@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { View, Text, ScrollView, StyleSheet, Dimensions } from 'react-native';
 import './CreateSeason.css';
 import { ObjectId } from 'bson';
 import { useNavigate } from 'react-router-dom';
@@ -14,13 +15,22 @@ function CreateSeason() {
 
   const navigate = useNavigate();
 
+  /*
+    When a season year is typed, parse for the end year then check if that season already exists.
+    If it does, fetch the players for that season and display them.
+  */
   useEffect(() => {
     if (year.length === 9) {
+      // Parse the inputted season for start and end year
       const startYear = year.split('-')[0];
-      fetch(`${serverUrl}/api/seasons/endYear/${startYear}`)
+      const endYear = year.split('-')[1];
+
+      // Fetch for the end year, if exists fetch players
+      fetch(`${serverUrl}/api/seasons/endYear/${endYear}`)
         .then(response => response.json())
         .then(data => {
-          fetchPlayers(data.players);
+          // Call fetch players
+          fetchPlayers(data.players)
         })
         .catch(error => {
           console.error('Error fetching the previous season:', error);
@@ -29,12 +39,17 @@ function CreateSeason() {
     }
   }, [year, serverUrl]);
 
+  /*
+    Function: fetchPlayers
+    Description: Fetches the players for the season from the server then adds them to the players state.
+    Parameters: playerIds - Array of player IDs to fetch from the server.
+  */
   const fetchPlayers = (playerIds) => {
     Promise.all(playerIds.map(id =>
       fetch(`${serverUrl}/api/players/${id}`)
         .then(response => response.json())
     )).then(players => {
-      setPreviousSeasonPlayers(players);
+      setPlayers(players);
     });
   };
 
@@ -78,7 +93,7 @@ function CreateSeason() {
     }
 
     const jerseyNumberInt = parseInt(activePlayer.jersey_number, 10);
-    if (isNaN(jerseyNumberInt)) {
+    if (isNaN(jerseyNumberInt) || jerseyNumberInt < 0) {
         setJerseyError('Jersey number must be a valid number.');
         return;
     }
@@ -234,6 +249,9 @@ function CreateSeason() {
         </form>
       </div>
       <div className="player-list-container">
+        <View style={styles.container}>
+          <Text style={styles.title}>Season Players:</Text>
+        </View>
         {players.map((player, index) => (
           <div key={index} className="player-list-item">
             {player.name} - {player.jersey_number}
@@ -245,5 +263,19 @@ function CreateSeason() {
     </div>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1, // Ensures the container takes the full screen
+    justifyContent: 'center', // Centers content vertically
+    alignItems: 'center', // Centers content horizontally
+  },
+  title: {
+    color: 'white', // Sets the text color to white
+    fontSize: 24, // Adjust the font size
+    fontWeight: 'bold', // Makes the text bold
+    textAlign: 'center', // Centers the text within its container
+  },
+});
 
 export default CreateSeason;
