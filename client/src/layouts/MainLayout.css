@@ -4,14 +4,14 @@
     --purple: grey; /* Adjust to the exact shade of purple you're using */
     --header-height: 60px; /* Header height */
 }
-/*.main-layout {
+
+.main-layout {
+    background: url(../images/homepageWBB.jpeg) no-repeat center center/cover;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;  Full viewport height 
-    background-color: var(--purple);
-    color: var(--gold);
+    min-height: 100vh;  /* Full viewport height */
 }
-*/
+
 
 
 

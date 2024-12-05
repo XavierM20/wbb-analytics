@@ -90,8 +90,6 @@ function ShotPopup({ isOpen, onClose, gameOrDrill_id, onModel, player_id, zone }
                 <div className="ShotOutcomeSelection">
                     {!shotOutcome ? (
                         <>
-                            <div className="MadeButton" onClick={() => handleShotOutcome('made')}>Made</div>
-                            <div className="MissedButton" onClick={() => handleShotOutcome('missed')}>Missed</div>
                         </>
                     ) : (
                         <div className="ClockTimeSelection">

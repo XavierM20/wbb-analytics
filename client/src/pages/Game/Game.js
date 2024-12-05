@@ -2,6 +2,7 @@ import './Game.css';
 import { useNavigate } from 'react-router-dom';
 import UndoButton from './components/UndoButton';
 import React, { useState, useEffect } from "react";
+import { View, Text, ScrollView, StyleSheet, Dimensions } from 'react-native';
 import ShotPopup from '../Drill/components/ShotPopup';
 import GameSelection from './components/GameSelection';
 import TempoTimer from '../Drill/components/TempoTimer';
@@ -9,6 +10,9 @@ import TempoButton from '../Drill/components/TempoButton';
 import CancelButton from '../Drill/components/CancelButton';
 import LastTempoDisplay from '../Drill/components/LastTempoDisplay';
 import PlayerSelectionPopup from './components/PlayerSelectionPopup';
+
+// Get the screen height
+const { height: screenHeight } = Dimensions.get('window');
 
 const Game = () => {
     const [gameData, setGameData] = useState('');
@@ -35,6 +39,7 @@ const Game = () => {
     const [showPlayerSelection, setShowPlayerSelection] = useState(false);
     const [gameModeOverlayVisible, setGameModeOverlayVisible] = useState(true);
     const [loadGameOverlayVisible, setLoadGameOverlayVisible] = useState(false);
+    const [tempoTableRows, setTempoTableRows] = useState([]);             // Table rows for tempo table
 
     const navigate = useNavigate();
     const serverUrl = process.env.REACT_APP_SERVER_URL;
@@ -149,6 +154,7 @@ const Game = () => {
     
     const handleShotOutcome = (outcome) => {
         setShotOutcome(outcome);
+        addRowToTempoTable('Offensive', currentTempo);
     };
 
     const handleLocationClick = (location) => {
@@ -328,6 +334,10 @@ const Game = () => {
             console.error('Error during game or season update:', error);
         });
     }; 
+
+    const deleteGame = () => {
+        // Need to add this functionality here
+    };
     
     // Undos the last recorded tempo, removes it from database and removes it from the list
     const undoTempo = () => {
@@ -356,16 +366,46 @@ const Game = () => {
             setLastTempo(newLastTempo);
         }
     };
+
+    /* 
+        Function to add a row to the tempo table 
+        Functionality: Adds a row to a table, row contains 
+        the tempoType variable (offensive/defensive) and the
+        currentTempo variable (time elapsed in seconds)
+    */
+    const addRowToTempoTable = () => {
+        console.log(lastTempo);
+        console.log(tempoType);
+        const newRow = { col1: tempoType, col2: lastTempo };
+        setTempoTableRows([...tempoTableRows, newRow]);
+        console.log([...tempoTableRows, newRow]);
+    };
     
     return (
         <>
             {gameModeOverlayVisible && (
                 <div className="game-mode-overlay">
                     <div className="game-mode-content">
-                        <div className='game-selection'>
-                            <h2>Select Game Mode</h2>
-                            <button onClick={() => { setGameMode('new'); setGameModeOverlayVisible(false); setNewGameOverlay(true); }}>Create New Game</button>
-                            <button onClick={() => { setGameMode('load'); setGameModeOverlayVisible(false); setLoadGameOverlayVisible(true); }}>Load Existing Game</button>
+                        {/* Close button in the corner */}
+                        <div className="game-selection">
+                            <button
+                                onClick={() => {
+                                    setGameMode('new');
+                                    setGameModeOverlayVisible(false);
+                                    setNewGameOverlay(true);
+                                }}
+                            >
+                                Create New Game
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setGameMode('load');
+                                    setGameModeOverlayVisible(false);
+                                    setLoadGameOverlayVisible(true);
+                                }}
+                            >
+                                Load Existing Game
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -403,8 +443,18 @@ const Game = () => {
             )}
 
             <div className="main">
-                <h1> TN Tech vs {opponentTeam} </h1>
-                
+                <button className='btn-home top-right-button' onClick={() => navigate('/homepage')}>Home</button>
+                <Text style={{ color: 'white',
+                    fcolor: 'yellow',
+                    fontSize: 24,
+                    fontWeight: 'bold',
+                    backgroundColor: 'rgba(0, 0, 0, 0.6)', // Set the background color
+                    padding: 5,             // Add padding to space the text from the background edges
+                    borderRadius: 10,       // Optional: Add rounded corners
+                    }}>
+                    TN Tech vs {opponentTeam}
+                </Text>
+
                 <div className='tempo-timer'>
                     <TempoTimer 
                         isTiming={isTiming}
@@ -414,56 +464,65 @@ const Game = () => {
                         setCurrentTime={setCurrentTempo}
                     />
                 </div>
-
-                <div className='defensive-tempo-button'>
-                    <TempoButton 
-                        tempoType="Defensive"
-                        className={`TempoButton ${isTiming && tempoType !== 'defensive' ? 'disabled' : ''} ${isTiming && tempoType === 'defensive' ? 'stop' : 'start'}`}
-                        isTiming={isTiming && tempoType === 'defensive'}
-                        onClick={() => isTiming && tempoType === 'defensive' ? stopTempo('defensive') : startTempo('defensive')}
-                        disabled={isTiming && tempoType !== 'defensive'}
-                    />
-                </div>
                 
-                <div className='offensive-tempo-button'>
-                    <TempoButton 
-                        tempoType="Offensive"
-                        className={`TempoButton ${isTiming && tempoType !== 'offensive' ? 'disabled' : ''} ${isTiming && tempoType === 'offensive' ? 'stop' : 'start'}`}
-                        isTiming={isTiming && tempoType === 'offensive'}
-                        onClick={() => isTiming && tempoType === 'offensive' ? stopTempo('offensive') : startTempo('offensive')}
-                        disabled={isTiming && tempoType !== 'offensive'}
-                    />
+                <div className="game-tempo-container">
+                    <div className="last-tempo-container">
+                    <View style={styles.table}>
+                        {/* Table Header */}
+                        <View style={[styles.row, styles.header]}>
+                        <Text style={[styles.cell, styles.headerText]}>Last Tempo</Text>
+                        <Text style={[styles.cell, styles.headerText]}>Duration</Text>
+                        </View>
+
+                        {/* Scrollable Table Body */}
+                        <ScrollView style={[styles.scrollableBody, { height: screenHeight * 0.2 }]} showsVerticalScrollIndicator={false}>
+                        {tempoTableRows.map((row, index) => (
+                            <View key={index} style={styles.row}>
+                            <Text style={styles.cell}>{row.col1}</Text>
+                            <Text style={styles.cell}>{row.col2}</Text>
+                            </View>
+                        ))}
+                        </ScrollView>
+                    </View>
+                    </div>
+                    <div className="offensive-tempo-button">
+                        <TempoButton
+                            tempoType="Offensive"
+                            className={`TempoButton ${isTiming && tempoType !== 'offensive' ? 'disabled' : ''} ${isTiming && tempoType === 'offensive' ? 'stop' : 'start'}`}
+                            isTiming={isTiming && tempoType === 'offensive'}
+                            onClick={() =>
+                                isTiming && tempoType === 'offensive'
+                                    ? stopTempo('offensive')
+                                    : startTempo('offensive')
+                            }
+                            disabled={isTiming && tempoType !== 'offensive'}
+                        />
+                    </div>
+                    <div className="defensive-tempo-button">
+                        <TempoButton
+                            tempoType="Defensive"
+                            className={`TempoButton ${isTiming && tempoType !== 'defensive' ? 'disabled' : ''} ${isTiming && tempoType === 'defensive' ? 'stop' : 'start'}`}
+                            isTiming={isTiming && tempoType === 'defensive'}
+                            onClick={() =>
+                                isTiming && tempoType === 'defensive'
+                                    ? stopTempo('defensive')
+                                    : startTempo('defensive')
+                            }
+                            disabled={isTiming && tempoType !== 'defensive'}
+                        />
+                    </div>
                 </div>
 
-                <div className="display-container">
-                    <div className="last-tempo">
-                        <LastTempoDisplay lastTempo={lastTempo}/>
-                    </div>
-                    <div className="undo-button">
-                        <UndoButton onUndo={undoTempo} />
-                    </div>
-                </div>
-
-                <div className="ShotPopup">
+                <div className="shotContainer">
                     <ShotPopup
                         isOpen={newGameOverlay}
                         onClose={() => setNewGameOverlay(true)}
                     />
 
-                    <div className="ShotOutcomeSelection">
-                        {!shotOutcome ? (
-                            <>
-                                <div className="MadeButton" onClick={() => handleShotOutcome('made')}>Made</div>
-                                <div className="MissedButton" onClick={() => handleShotOutcome('missed')}>Missed</div>
-                            </>
-                        ) : (
-                            <div className="ClockTimeSelection">
-                                <div className="ClockButton1" onClick={() => handleClockTimeSelection('first_third')}>30-21</div>
-                                <div className="ClockButton2" onClick={() => handleClockTimeSelection('second_third')}>20-11</div>
-                                <div className="ClockButton3" onClick={() => handleClockTimeSelection('final_third')}>10-1</div>
-                            </div>
-                        )}
-                    </div>
+                    <>
+                        <div className="MadeButton" onClick={() => handleShotOutcome('made')}>Made</div>
+                        <div className="MissedButton" onClick={() => handleShotOutcome('missed')}>Missed</div>
+                    </>
                 </div>
 
                 {showPlayerSelection && (
@@ -472,11 +531,48 @@ const Game = () => {
                         seasonId={getSeasonByDate()._id}
                     />
                 )}
-
-                <button className="submit-game-button" onClick={submitGame}> Submit Game </button>
+                
+                <div className="submit-delete-container">
+                    <button className="submit-game-button" onClick={submitGame}> Submit Game </button>
+                    <button className="delete-game-button" onClick={deleteGame}> Delete Game </button>
+                </div>
             </div>
         </>
     );
 }
+
+const styles = StyleSheet.create({
+    table: {
+      width: '100%',
+      borderWidth: 1,
+      borderColor: '#ccc',
+      borderRadius: 4,
+      margin: 16,
+    },
+    row: {
+      flexDirection: 'row',
+    },
+    header: {
+      backgroundColor: '#f1f1f1',
+      borderBottomWidth: 1,
+      borderColor: '#ccc',
+    },
+    headerText: {
+      fontWeight: 'bold',
+      textAlign: 'center',
+    },
+    scrollableBody: {
+      height: 100,
+      backgroundColor: 'white',
+    },
+    cell: {
+      flex: 1,
+      padding: 8,
+      textAlign: 'center',
+      borderRightWidth: 1,
+      borderColor: '#ccc',
+      backgroundColor: 'white',
+    },
+  });
 
 export default Game;

@@ -121,7 +121,7 @@ router.get('/endYear/:endYear', async (req, res) => {
     try {
         // Assuming year is stored as "startYear-endYear"
         const endYearPattern = `-${req.params.endYear}`;
-        console.log(endYearPattern);
+        console.log('endYearPattern: ' + endYearPattern);
         const season = await Season.findOne({ year: { $regex: endYearPattern } });
         if (!season) {
             return res.status(404).json({ message: 'Season not found for the given year' });
