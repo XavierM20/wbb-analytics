@@ -26,6 +26,7 @@ const Settings = () => {
 
     return (
         <div className="settings-page-container">
+        <button className='btn-home top-right-button' onClick={() => navigate('/homepage')}>Home</button>
             <div className="settings-button-container">
                 <h1>Settings</h1>
                 <div className="button-row">

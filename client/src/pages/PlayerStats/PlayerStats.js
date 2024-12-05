@@ -4,6 +4,7 @@ import Selector from '../TeamStats/components/Selector';
 import Heatmap from '../TeamStats/components/Heatmap';
 import TempoCard from '../TeamStats/components/TempoCard';
 import StatCard from '../TeamStats/components/StatsDisplay';
+import { useNavigate } from 'react-router-dom';
 
 import ShotsByClock from './components/ShotsByClock';
 import './PlayerStats.css';
@@ -37,6 +38,7 @@ const chartOptions = {
     mode: null // Disable hover effects
   },
 };
+
 
 function PlayerStats() {
   /* 
@@ -81,6 +83,8 @@ function PlayerStats() {
   const playerID  = urlParams.get('playerID');
   const [selectedPlayer, setSelectedPlayer] = useState(''); //
   const serverUrl = process.env.REACT_APP_SERVER_URL;
+
+  const navigate = useNavigate();
 
 useEffect(() => {
   const fetchInitialData = async () => {
@@ -416,6 +420,7 @@ useEffect(() => {
   
   return (
     <div className="team-stats-container">
+    <button className='btn-home top-right-button' onClick={() => navigate('/homepage')}>Home</button>
       <div className="selectors">
       <Selector
           options={allPlayers}

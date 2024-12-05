@@ -12,6 +12,8 @@ import basketballCourtVector from './components/basketball-court-vector.jpg';
 import ExtraStats from './components/ExtraStats';
 import ExtraStatPopup from './components/ExtraStatPopup';
 import { set } from 'mongoose';
+import { useNavigate } from 'react-router-dom';
+
 
 function DrillPage() {
     // State hooks for timing and tempo tracking
@@ -25,6 +27,8 @@ function DrillPage() {
     const [tempoCount, setTempoCount] = useState(1);
     const [totalTempo, setTotalTempo] = useState(0);
 
+    const navigate = useNavigate();
+    
     // State hooks for player and popup management
     const [playersOnCourt, setPlayersOnCourt] = useState([]);
     const [allPlayers, setAllPlayers] = useState([]);
@@ -282,6 +286,7 @@ function DrillPage() {
 
     return (
         <div className="background-container">
+            <button className='btn-home top-right-button' onClick={() => navigate('/homepage')}>Home</button>
             <div className="drill-container">
                 <div className="player-and-court-container">
                     <div className="player-container">

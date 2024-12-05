@@ -189,6 +189,7 @@ const Practice = () => {
 
     return (
         <div className="practice-container">
+            <button className='btn-home top-right-button' onClick={() => navigate('/homepage')}>Home</button>
             <div className="create-sessions-container">
                 <div className="drills-column">
                     <div className="drill-buttons">
