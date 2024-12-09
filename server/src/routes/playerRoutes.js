@@ -85,15 +85,27 @@ router.post('/', isAuthenticated, async (req, res) => {
         return res.status(400).json({ message: error.details[0].message });
     }
 
-    const player = new Player(value);
-
     try {
+        const player = new Player(value);
         await player.save();
+
+        // If a season ID is provided, associate the player with the season
+        if (req.body.seasonId) {
+            const Season = require('../models/season'); // Ensure correct path to Season model
+            const season = await Season.findById(req.body.seasonId);
+            if (!season) {
+                return res.status(404).json({ message: 'Season not found' });
+            }
+            season.players.push(player._id);
+            await season.save();
+        }
+
         res.status(201).json(player);
     } catch (err) {
         res.status(500).json({ message: 'Failed to create player', error: err.message });
     }
 });
+
 
 // PATCH to update a player with validation
 router.patch('/:id', isAuthenticated, async (req, res) => {

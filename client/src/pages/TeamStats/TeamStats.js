@@ -8,6 +8,7 @@ import TempoCard from './components/TempoCard'; // Displays tempo stats
 import ShotsByClock from './components/ShotsByClock';
 import StatCard from './components/StatsDisplay'; // Displays various statistics
 import './TeamStats.css'; // Stylesheet for the TeamStats component
+import { useNavigate } from 'react-router-dom';
 
 // Configuration options for Chart.js bar charts
 const chartOptions = {
@@ -59,6 +60,8 @@ function TeamStats() {
   const [shotClockData, setShotClockData] = useState([]);
 
   const sectionLabels = ["0-10", "10-20", "20-30"]; //This is for the shot clock data
+
+  const navigate = useNavigate();   
 
   // Initial state for bar chart data, with dummy values replaced later
   const [barChartData, setBarChartData] = useState({
@@ -372,6 +375,7 @@ function TeamStats() {
 
   return (
     <div className="team-stats-container">
+    <button className='btn-home top-right-button' onClick={() => navigate('/homepage')}>Home</button>
       <div className="selectors">
         <Selector
           options={seasons.map(season => ({ label: `Season: ${season.year}`, value: season._id }))}

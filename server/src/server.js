@@ -14,6 +14,7 @@ const gameRoutes = require('./routes/gameRoutes');
 const userRoutes = require('./routes/usersRoutes');
 const statsRoutes = require('./routes/statsRoutes');
 const keyRoutes = require('./routes/keyRoutes');
+const schoolRoutes = require('./routes/schoolRoutes');
 
 const app = express();
 
@@ -56,6 +57,7 @@ app.use('/api/shots', shotRoutes);
 app.use('/api/games', gameRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/stats', statsRoutes);
+app.use('/api/schools', schoolRoutes);
 
 const port = process.env.PORT || 3001; // Use environment variable or default to 3001
 // Start the server on a single port

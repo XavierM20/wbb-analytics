@@ -67,6 +67,8 @@ function PlayerStats() {
   const [selectedPlayer, setSelectedPlayer] = useState(''); //
   const serverUrl = process.env.REACT_APP_SERVER_URL;
 
+  const navigate = useNavigate();
+
 useEffect(() => {
   const fetchInitialData = async () => {
     try {

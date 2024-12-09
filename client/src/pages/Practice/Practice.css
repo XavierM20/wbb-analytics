@@ -1,41 +1,58 @@
-/* Global colors and theming */
-:root {
-    --bg-color: #f4f4f9;
-    --header-color: #503291;
-    --card-bg-color: #ffffff;
-    --text-color-light: #f7f7f7;
-    --text-color-dark: #333333;
-    --card-color: #6758A0;
-    --primary-color: #503291;
-    --stat-card-bg: #FFD700;
-    --stat-card-text-color: #333333;
-    --accent-color: #FFD700;
-    --hover-color: #3d2671;
-    --box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-}
 
 /* 
 
 Layout containers 
 
 */
-.create-sessions-container {
-    display: flex;
-    height: calc(100vh - 100px);  /* Adjust based on header/footer height */
-    justify-content: space-between;
-    box-sizing: border-box;
-    overflow: hidden;
+.practice-container{
+    background: url('../../images/homepageWBB.jpeg') no-repeat center center;
+    background-size: cover;
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    z-index: 0;
 }
-
+.practice-container::before{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(0, 0, 0, .4);
+    z-index: -1;
+  }
+  
+  .btn-home {
+    padding: 10px 20px;
+    background-color: #007bff; /* Bootstrap blue */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
 .drills-column {
     display: flex;
     flex-direction: column;
-    height: 100%;
-    width: 30%;
-    background-color: var(--card-color);
+    height: calc(40vw);
+    width: calc(30vw);
+    background-color: rgba(63, 68, 68, .7);
     padding: 10px;
-    border-radius: 8px;
-    box-shadow: var(--box-shadow);
+    border-radius: 10px;
+}
+.create-sessions-container {
+    margin-top: 4%;
+    margin-bottom: 4%;
+    margin-left: 1%;
+    margin-right: 1%;
+    display: flex;
+    gap: 20px;
+    height: calc(45vw);  /* Adjust based on header/footer height */
+    justify-content: space-between;
+    box-sizing: border-box;
+    overflow: hidden;
+    flex-direction: row-reverse;
 }
 
 /* Ensures that the session information stays at the bottom */
@@ -49,24 +66,50 @@ Layout containers
     flex-direction: row;
     justify-content: space-around;
     align-items: flex-start;
-    width: 68%;
-    background-color: var(--card-color);
+    width: calc(68vw);
+    background-color: rgba(63, 68, 68, .7);
     padding: 10px;
     border-radius: 8px;
-    box-shadow: var(--box-shadow);
 }
-
-
-
 
 /* 
 
 Session Information
 
 */
-.session-inputs, .add-session-info, .date, .create-session-button {
-    background-color: var(--primary-color);
-    color: var(--text-color-light);
+.session-inputs{
+    background-color: rgba(63, 68, 68, .7);
+    color: grey;
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.9em;
+    margin-bottom: 20px;
+}
+
+.create-session-button {
+    background-color: rgba(63, 68, 68, .7);
+    color: grey;
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.9em;
+    margin-bottom: 20px;
+}
+
+.date {
+    background-color: rgba(63, 68, 68, .7);
+    color: grey;
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.9em;
+    margin-bottom: 20px;
+}
+
+.add-session-info{
+    background-color: rgba(63, 68, 68, .7);
+    color: grey;
     padding: 8px;
     border: none;
     border-radius: 4px;
@@ -78,8 +121,8 @@ Session Information
     position: fixed;
     bottom: 20px;
     right: 20px;
-    background-color: #3498db;
-    color: white;
+    background-color: rgba(63, 68, 68, .7);
+    color: grey;
     border: none;
     border-radius: 8px;
     padding: 10px 20px;
@@ -89,8 +132,13 @@ Session Information
     transition: background-color 0.3s ease, transform 0.1s ease;
 }
 
-.create-session-button:hover, .create-session-button:focus {
-    background-color: #2675ad;
+.create-session-button:hover{
+    background-color: grey;
+    transform: translateY(-2px);
+}
+
+.create-session-button:focus {
+    background-color: grey;
     transform: translateY(-2px);
 }
 
@@ -108,13 +156,13 @@ Session Information
 }
 
 .input-field:focus {
-    border-color: #503291;
+    border-color: grey;
     box-shadow: 0 0 5px rgba(80, 50, 145, 0.5);
 }
 
 .add-button {
-    background-color: #503291;
-    color: white;
+    background-color: rgba(63, 68, 68, .7);
+    color: grey;
     border: none;
     border-radius: 4px;
     padding: 10px 20px;
@@ -123,7 +171,7 @@ Session Information
 }
 
 .add-button:hover {
-    background-color: #3d2671;
+    background-color: grey;
 }
 
 .input-icon {
@@ -139,7 +187,7 @@ Team Selection Lists
 */
 .list {
     width: 50%; /* Adjusted for side-by-side layout */
-    background-color: #fff;
+    background-color: rgba(63, 68, 68, .9);
     padding: 10px;
     border-radius: 8px;
     margin: 0 10px; /* Space between lists */
@@ -148,7 +196,7 @@ Team Selection Lists
 
 .list h2 {
     font-size: 1.5em;
-    color: var(--text-color-dark);
+    color: white;
     margin-bottom: 15px;
     
 }
@@ -160,17 +208,42 @@ Team Selection Lists
     margin-bottom: 10px;
 }
 
-.dropdown, .remove-player-button {
+.dropdown {
     flex-grow: 1;
     margin-right: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid grey;
     border-radius: 4px;
     padding: 10px;
     width: 100%;
 }
 
-.add-dropdown-button, .remove-player-button {
-    padding: 10px 20px;
+.remove-player-button {
+    flex-grow: 1;
+    margin-right: 10px;
+    border: 1px solid grey;
+    border-radius: 4px;
+    padding: 10px;
+    width: 100%;
+}
+
+.add-dropdown-button{
+    background-color: #27ae60;
+    color: white;
+    padding: 7px;
+    justify-content: center;
+    height: calc(3.5vw);
+    width: calc(30vw);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    font-size: 12.5px;
+}
+.remove-player-button {
+    padding: 10px;
+    height: calc(3vw);
+    width: calc(2vw);
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -180,7 +253,7 @@ Team Selection Lists
 
 .dropdown {
     width: 100%;
-    padding: 12px 10px;
+    padding: 12px;
     font-size: 1.2em;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -193,8 +266,8 @@ Team Selection Lists
     padding: 8px 12px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    background-color: #fff;
-    color: var(--text-color-dark);
+    background-color: grey;
+    color: grey;
     text-align: center;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
@@ -214,15 +287,13 @@ Team Selection Lists
     transform: scale(1.1);
 }
 
-.add-dropdown-button {
-    background-color: #27ae60;
-    color: white;
+.add-dropdown-button:hover{
+    background-color: black;
 }
 
-.add-dropdown-button:hover, .remove-player-button:hover {
-    background-color: #219952;
+.remove-player-button:hover{
+    background-color: black;
 }
-
 
 
 
@@ -250,12 +321,22 @@ Team Selection Lists
 }
 
 .drill-card:focus {
-    border-color: #503291;
+    border-color: grey;
     box-shadow: 0 0 5px rgba(80, 50, 145, 0.5);
 }
 
 /* Drill Buttons */
-.delete-drill-button, .edit-drill-button {
+.delete-drill-button {
+    width: auto;
+    padding: 8px 10px;
+    font-size: 0.9em;
+    margin-left: 10px;
+    border-radius: 15%;
+    vertical-align: middle;
+    color: white;
+}
+
+.edit-drill-button {
     width: auto;
     padding: 8px 10px;
     font-size: 0.9em;
@@ -266,8 +347,8 @@ Team Selection Lists
 }
 
 .drill-button {
-    background-color: var(--primary-color);
-    color: var(--text-color-light);
+    background-color: rgba(63, 68, 68, .7);
+    color: grey;
     padding: 20px 30px; /* Increase padding for larger button size */
     font-size: 1.5em; /* Increase font size for better readability */
     border: none;
@@ -276,7 +357,6 @@ Team Selection Lists
     transition: background-color 0.3s ease;
     margin-bottom: 10px; /* Space between buttons */
     width: 100%; /* Full width to utilize space */
-    box-shadow: var(--box-shadow); /* Consistent with theme shadows */
     display: flex; /* Flex display to align text properly */
     justify-content: center; /* Center text horizontally */
     align-items: center; /* Center text vertically */
@@ -291,19 +371,15 @@ Team Selection Lists
     background-color: #e74c3c; /* Red for delete actions */
 }
 
-.add-drill-button {
-    background-color: var(--accent-color);
-    color: white;
-    width: 100%;
-    margin-top: 10px;
+.delete-drill-button:hover {
+    background-color: black;
 }
 
-.add-drill-button:hover, .drill-button:hover, .delete-drill-button:hover {
-    background-color: var(--hover-color);
+.drill-button:hover{
+    background-color: black;
 }
-
-.drill-button:hover, .add-drill-button:hover {
-    background-color: var(--hover-color);
+.add-drill-button:hover{
+    background-color: black;
 }
 
 .delete-drill-button:hover {
@@ -311,30 +387,39 @@ Team Selection Lists
 }
 
 /* Drill Cards and Session Information Styling */
-.drill-buttons, .session-information {
+.drill-buttons {
     padding: 20px;
-    background-color: var(--card-color);
+    background-color: rgba(63, 68, 68, .9);
     border-radius: 8px;
     margin-bottom: 10px;
-    box-shadow: var(--box-shadow);
+}
+
+.session-information {
+    padding: 20px;
+    background-color: rgba(63, 68, 68, .9);
+    border-radius: 8px;
+    margin-bottom: 10px;
 }
 
 .add-drill-button {
-    background-color: var(--primary-color);
+    background-color: #27ae60;
     color: white; 
-    padding: 12px 20px;
-    font-size: 1.2em;
+    padding: 7px;
+    font-size: 12.5px;
     border: none;
-    border-radius: 8px;
+    border-radius: 4px;
+    height: calc(3.5vw);
+    width: calc(23.5vw);
     cursor: pointer;
     display: block;
-    width: auto;
     margin-top: 10px;
+    margin-left: 5%;
+    margin-right: 5%;
     transition: background-color 0.3s ease;
 }
 
 .add-drill-button:hover {
-    background-color: var(--hover-color);
+    background-color: black;
     transform: translateY(-2px);
 }
 
@@ -352,10 +437,9 @@ Team Selection Lists
 }
 
 .drill-modal-content {
-    background: var(--card-bg-color);
+    background: rgba(63, 68, 68, .7);
     padding: 20px;
     border-radius: 8px;
-    box-shadow: var(--box-shadow);
     max-width: 400px;
     width: 90%; /* Responsive width, max 400px */
     display: flex;
@@ -365,15 +449,15 @@ Team Selection Lists
 
 .drill-modal-content h2 {
     font-size: 1.8em;
-    color: var(--header_color); /* Use the header color variable */
+    color: white; /* Use the header color variable */
     margin-bottom: 20px;
-}
+}   
 
 .drill-modal-content label {
     font-size: 1.2em;
     margin-bottom: 10px;
     width: 100%; /* Full width for labels */
-    color: var(--text-color-dark); /* Dark color for text */
+    color: white; /* Dark color for text */
 }
 
 .drill-modal-content input[type="text"] {
@@ -389,8 +473,8 @@ Team Selection Lists
     padding: 10px 20px;
     margin-top: 10px;
     width: calc(70% - 20px); /* Half width minus padding */
-    background-color: var(--primary-color);
-    color: var(--text-color-light);
+    background-color: #27ae60;
+    color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -400,7 +484,7 @@ Team Selection Lists
 }
 
 .drill-modal-content button:hover {
-    background-color: var(--hover-color); /* Darker on hover */
+    background-color: black; /* Darker on hover */
 }
 
 /* Separate styling for the cancel button to differentiate it */
@@ -415,20 +499,27 @@ Team Selection Lists
 /* Save Session Button */
 .create-session-button {
     position: fixed;
+    width: calc(27vw);
+    height: calc(8vw);
     bottom: 20px;
     right: 40px; /* Adjust this if it's too far to the right */
-    background-color: var(--primary-color); /* Using primary color variable */
-    color: var(--text-color-light); /* Using light text color variable for contrast */
+    background-color: rgba(63, 68, 68, .7); /* Using primary color variable */
+    color: white; /* Using light text color variable for contrast */
     border: none;
-    border-radius: 8px;
-    padding: 12px 24px; /* Adjusted padding for a better proportion */
+    border-radius: 4px;
+    padding: 30px; /* Adjusted padding for a better proportion */
     font-size: 1.2em;
     cursor: pointer;
-    box-shadow: var(--box-shadow); /* Using shadow variable for consistency */
     transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease; /* Added box-shadow to transition for a smoother effect */
 }
 
-.create-session-button:hover, .create-session-button:focus {
+.create-session-button:hover {
+    background-color: black; /* Slightly darker on hover/focus */
+    transform: translateY(-3px); /* Increased the translateY effect slightly for more noticeable interaction */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); /* Enhanced shadow for elevated effect */
+}
+
+create-session-button:focus {
     background-color: var(--hover-color); /* Slightly darker on hover/focus */
     transform: translateY(-3px); /* Increased the translateY effect slightly for more noticeable interaction */
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); /* Enhanced shadow for elevated effect */
@@ -441,18 +532,37 @@ Team Selection Lists
 
 /* Responsive styles for smaller screens */
 @media (max-width: 768px) {
-    .create-sessions-container, .drills-column, .lists-column {
+    .create-sessions-container {
+        flex-direction: column;
+    }
+    .drills-column {
+        flex-direction: column;
+    }
+    .lists-column {
         flex-direction: column;
     }
 
-    .drills-column, .lists-column {
+    .drills-column {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .lists-column {
         width: 100%;
         margin-top: 10px;
     }
 }
 
 @media (max-width: 480px) {
-    .tab-list-item, .create-session-button, .drill-modal-content {
+    .tab-list-item {
+        padding: 5px;
+        font-size: 0.8em;
+    }
+    .create-session-button {
+        padding: 5px;
+        font-size: 0.8em;
+    }
+    .drill-modal-content {
         padding: 5px;
         font-size: 0.8em;
     }
