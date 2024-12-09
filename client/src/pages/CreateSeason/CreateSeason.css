@@ -1,7 +1,7 @@
 .create-season {
   background-size: cover;
   position: fixed;
-  height: calc(100vw);
+  height: calc(100vh);
   width: calc(100vw);
   z-index: 0;
   display: flex;
