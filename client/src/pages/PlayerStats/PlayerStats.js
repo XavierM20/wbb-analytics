@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Bar } from 'react-chartjs-2'; // For displaying bar charts
+import { useNavigate } from 'react-router-dom';
 import Selector from '../TeamStats/components/Selector';
 import Heatmap from '../TeamStats/components/Heatmap';
 import TempoCard from '../TeamStats/components/TempoCard';
@@ -40,6 +41,7 @@ function PlayerStats() {
   const [isESOpen, setIsESOpen] = useState(false);
   const [statName, setStatName] = useState("");
   const drillID = urlParams.get('DrillID');
+  const navigate = useNavigate();
 
 
   const [sessions, setSessions] = useState([]);
@@ -471,6 +473,7 @@ const handleCourtClick = (area) => {
   
   return (
     <div className="main-container">
+      <button className='btn-home top-right-button' onClick={() => navigate('/homepage')}>Home</button>
       <div className="player-stats-container">
           <div className="selectors">
             <Selector
