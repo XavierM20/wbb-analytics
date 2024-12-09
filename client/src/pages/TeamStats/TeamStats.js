@@ -61,7 +61,7 @@ function TeamStats() {
 
   const sectionLabels = ["0-10", "10-20", "20-30"]; //This is for the shot clock data
 
-  const navigate = useNavigate();
+  const navigate = useNavigate();   
 
   // Initial state for bar chart data, with dummy values replaced later
   const [barChartData, setBarChartData] = useState({

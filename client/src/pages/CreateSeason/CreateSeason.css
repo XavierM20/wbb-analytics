@@ -1,15 +1,13 @@
 .create-season {
-  /*background: url('../../images/homepageWBB.jpeg') no-repeat center center;*/
   background-size: cover;
   position: fixed;
-  height: 100vh;
-  width: 100vw;
+  height: calc(100vw);
+  width: calc(100vw);
   z-index: 0;
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   gap: 20px;
-  margin: auto;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
@@ -49,7 +47,7 @@
 .create-season input,
 .create-season button :not(.btn-home),
 .player-list-item {
-  color: white; /* Ensure all text is Tennessee Tech Purple */
+  color: white;
 }
 
 .create-season input::placeholder {
