@@ -36,6 +36,8 @@ function CreateSeason() {
           console.error('Error fetching the previous season:', error);
           setPreviousSeasonPlayers([]);
         });
+    } else {
+      setPlayers([]);
     }
   }, [year, serverUrl]);
 
@@ -73,6 +75,8 @@ function CreateSeason() {
 
       input = startYear + (endYear.length > 0 ? '-' + endYear : '');
       setYear(input);
+    } else {
+      setYear('');
     }
   };
 
@@ -136,67 +140,89 @@ function CreateSeason() {
     setEditIndex(-1);
   };
 
-  const handleSubmit = (event) => {
-    const seasonId = '';
+  /*
+    Function: handleSubmit
+    Parameters: event - Form submission event.
+    Description: Handles the form submission for creating a new season.
+    If a season already exists for the year, update the players for that season.
+    If a season does not exist, create the season with all the players in the players state.
+  */
+  const handleSubmit = async (event) => {
     event.preventDefault();
     console.log('Submitting:', year, players);
-    // check for player in players that doesn't have an _id
-    // if found, create the player
-    // then create the season with the player ids
-    const newPlayers = players.filter(p => !p._id);
-    const existingPlayers = players.filter(p => p._id);
-    const playerPromises = newPlayers.map(player => {
-        return fetch(`${serverUrl}/api/players`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(player)
-        })
-            .then(response => response.json());
-    });
-    // update players so newPlayers have _id
-    Promise.all(playerPromises)
-        .then(newPlayers => {
-            const updatedPlayers = [...existingPlayers, ...newPlayers];
-            console.log('All players created:', updatedPlayers);
-            return fetch(`${serverUrl}/api/seasons`, {
+
+    try {
+        // If no season exists, create new players and a new season
+        const newPlayers = players.filter((p) => !p._id);
+        const existingPlayers = players.filter((p) => p._id);
+
+        // Create new players
+        const playerPromises = newPlayers.map((player) => {
+            return fetch(`${serverUrl}/api/players`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ year, players: updatedPlayers.map(p => p._id) })
-            });
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Season created:', data);
-            console.log('season id:', data._id);
-            // Update players with the new season ID
-            const seasonId = data._id;
-            const playerUpdatePromises = players.map(player => {
-                return fetch(`${serverUrl}/api/players/${player._id}`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ seasons: [...player.seasons, ObjectId(seasonId)] })
-                })
-                    .then(response => response.json());
-            });
-            return Promise.all(playerUpdatePromises);
-        })
-        .then(() => {
-            // Reset form state
-            setYear('');
-            setPlayers([]);
-            setActivePlayer({ name: '', jersey_number: '' });
-            setEditIndex(-1);
-        })
-        .catch(error => {
-            console.error('Error creating season:', error);
+                body: JSON.stringify(player),
+            }).then((response) => response.json());
         });
+
+        const newlyCreatedPlayers = await Promise.all(playerPromises);
+
+        const allPlayers = [...existingPlayers, ...newlyCreatedPlayers];
+
+        // Check if the season already exists
+        const endYear = year.split('-')[1];
+        const seasonResponse = await fetch(`${serverUrl}/api/seasons/endYear/${endYear}`);
+        const existingSeason = await seasonResponse.json();
+
+        if (existingSeason.message !== 'Season not found for the given year') {
+            console.log('Season already exists:', existingSeason);
+            console.log('Season ID: ' + existingSeason._id);
+
+            // Update players for the existing season using the PATCH endpoint
+            const updateResponse = await fetch(`${serverUrl}/api/seasons/${existingSeason._id}/players`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ players: allPlayers.map((p) => p._id) }),
+            });
+
+            if (!updateResponse.ok) {
+                throw new Error(`Failed to update season players: ${updateResponse.statusText}`);
+            }
+
+            const updatedSeason = await updateResponse.json();
+            console.log('Updated season:', updatedSeason);
+        } else {
+            // Create a new season
+            const createSeasonResponse = await fetch(`${serverUrl}/api/seasons`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ year, players: allPlayers.map((p) => p._id) }),
+            });
+
+            if (!createSeasonResponse.ok) {
+                throw new Error(`Failed to create season: ${createSeasonResponse.statusText}`);
+            }
+
+            const newSeason = await createSeasonResponse.json();
+            console.log('Created new season:', newSeason);
+        }
+
+        // Reset form state
+        setYear('');
+        setPlayers([]);
+        setActivePlayer({ name: '', jersey_number: '' });
+        setEditIndex(-1);
+    } catch (error) {
+        console.error('Error handling submission:', error);
+    }
 };
+  
 
 
   return (
@@ -245,7 +271,7 @@ function CreateSeason() {
               {editIndex >= 0 ? 'Update Player' : 'Add Player'}
             </button>
           </div>
-          <button type="submit">Create Season</button>
+          <button type="submit">Create/Edit Season</button>
         </form>
       </div>
       <div className="player-list-container">
@@ -254,9 +280,13 @@ function CreateSeason() {
         </View>
         {players.map((player, index) => (
           <div key={index} className="player-list-item">
-            {player.name} - {player.jersey_number}
-            <button onClick={() => editPlayer(index)}>Edit</button>
-            <button onClick={() => deletePlayer(index)}>Delete</button>
+            <div className="player-info">
+              {player.name} - {player.jersey_number}
+            </div>
+            <div className="player-actions">
+              <button className="btnEdit" onClick={() => editPlayer(index)}>Edit</button>
+              <button className="btnDelete" onClick={() => deletePlayer(index)}>Delete</button>
+            </div>
           </div>
         ))}
       </div>
@@ -272,9 +302,10 @@ const styles = StyleSheet.create({
   },
   title: {
     color: 'white', // Sets the text color to white
-    fontSize: 24, // Adjust the font size
+    fontSize: 20, // Adjust the font size
     fontWeight: 'bold', // Makes the text bold
     textAlign: 'center', // Centers the text within its container
+    letterSpacing: 1.4, // Adds spacing between letters
   },
 });
 
