@@ -54,36 +54,28 @@
 }
 
 .btn-JSON:hover {
-    background-color: #c1a90c;
+    background-color: #EECF08;
     color: #FFFF;
 }
 
 .btn-CSV:hover {
-    background-color: #c1a90c;
+    background-color: #EECF08;
     color: #FFFF;
 }
 
 .btn {
+    border: 1px solid #fff;
+    color: #fff;
+    background-color: rgba(63, 68, 68, .7);;
     display: block;
     padding: 20px 40px; /* Increased padding for bigger buttons */
-    margin: 20px 0; /* Increased margin */
     font-size: 1.5rem; /* Increased font size */
-    border: none;
     border-radius: 10px; /* Increased border radius */
     cursor: pointer;
 }
 
-.Sign-out {
-    background-color: red;
-    color: #FFFF;
-}
-
-.Sign-out:hover {
-    background-color: #b02a37;
-}
-
 .Register-btn:hover {
-    background-color: #c1a90c;
+    background-color: #EECF08;
     color: #FFFF;
 }
 
@@ -100,13 +92,11 @@
   }
   
   .register-content {
-  background: #4f2984!important;
-  padding: 20px;
+  background-color: rgba(63, 68, 68, .7) !important;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   max-width: 400px;
   width: 100%;
-  position: relative;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -123,7 +113,7 @@
     right: 5px;
     background: none !important;
     border: none !important;
-    color: black !important;
+    color: white !important;
     font-size: 20px;
     cursor: pointer;
 }
@@ -148,5 +138,10 @@
   }
 .submitReg-button:hover {
     background-color: #EECF08 !important;
+    transform: scale(1.01);
+}
+
+.season:hover{
+    background-color: #EECF08;
     transform: scale(1.01);
 }
