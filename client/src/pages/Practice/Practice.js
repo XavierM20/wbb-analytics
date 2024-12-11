@@ -225,6 +225,7 @@ const Practice = () => {
                 </div>
             </div>
             <button onClick={() => navigate('/drill')} className="create-session-button">
+                Create Practice
             </button>
             {/*onClick={updatePractice}>//
             //</div>Create Practice*/}
