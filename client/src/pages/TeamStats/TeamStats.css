@@ -161,3 +161,43 @@ body, html {
   font-weight: bold;
   color: #000;
 }
+
+
+
+
+/* Container for positioning */
+/* .stats-container {
+  display: flex;
+  justify-content: flex-start; /* Align to the left */
+  /* align-items: center; /* Center vertically */
+  /* height: 100vh; /* Make the container take up the full height of the viewport */
+  /* padding-left: 20px; /* Adjust padding as needed */
+/* } */ 
+
+/* Style for the new stats card */
+/* .new-stats-card {
+  background-color: var(--card-bg-color);
+  padding: 20px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  box-shadow: var(--box-shadow);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 200px; /* Set width of the card */
+  /* margin-right: 20px; /* Space between boxes */
+/* } */ 
+
+/* Tempo label style */
+/* .new-stats-card .tempo-label {
+  font-weight: bold;
+  font-size: 18px;
+  color: var(--primary-color);
+} */
+
+/* Tempo value style */
+/* .new-stats-card .tempo-value {
+  font-size: 24px;
+  color: var(--text-color-dark);
+} */

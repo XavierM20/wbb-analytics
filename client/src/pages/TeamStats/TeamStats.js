@@ -190,6 +190,8 @@ function TeamStats() {
     fetchShots(newSelectedDrill);
   };
 
+
+
   return (
   <div className="team-stats-container">
     <div className="selectors">
@@ -268,6 +270,19 @@ function TeamStats() {
         <div className="tempo-label">Average Defensive Tempo</div>
         <div className="tempo-value">{avgDefensiveTempo}</div>
       </div>
+
+
+      {/* /* New Stats Cards
+    <div className="new-stats-card">
+      <div className="tempo-label">Stat 1</div>
+      <div className="tempo-value">123</div>
+    </div>
+    <div className="new-stats-card">
+      <div className="tempo-label">Stat 2</div>
+      <div className="tempo-value">456</div>
+    </div> */}
+
+    
     </div>
   </div>
 );
