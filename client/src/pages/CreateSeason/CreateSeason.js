@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './CreateSeason.css';
 import { ObjectId } from 'bson';
+import { useNavigate } from 'react-router-dom';
 
 function CreateSeason() {
   const [year, setYear] = useState('');
@@ -10,6 +11,8 @@ function CreateSeason() {
   const [jerseyError, setJerseyError] = useState('');
   const [previousSeasonPlayers, setPreviousSeasonPlayers] = useState([]);
   const serverUrl = process.env.REACT_APP_SERVER_URL;
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (year.length === 9) {
@@ -183,6 +186,7 @@ function CreateSeason() {
 
   return (
     <div className="create-season">
+    <button className='btn-home top-right-button' onClick={() => navigate('/homepage')}>Home</button>
       <div className="form-container">
         <form onSubmit={handleSubmit}>
           <div>

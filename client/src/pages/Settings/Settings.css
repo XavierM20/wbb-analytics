@@ -12,6 +12,16 @@
     overflow: hidden;
 }
 
+.btn-home {
+    padding: 10px 20px;
+    background-color: #007bff; /* Bootstrap blue */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
 .settings-button-container {
     display: flex;
     flex-direction: column;

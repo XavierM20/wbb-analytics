@@ -121,7 +121,7 @@ router.get('/endYear/:endYear', async (req, res) => {
     try {
         // Assuming year is stored as "startYear-endYear"
         const endYearPattern = `-${req.params.endYear}`;
-        console.log(endYearPattern);
+        console.log('endYearPattern: ' + endYearPattern);
         const season = await Season.findOne({ year: { $regex: endYearPattern } });
         if (!season) {
             return res.status(404).json({ message: 'Season not found for the given year' });
@@ -146,16 +146,24 @@ router.get('/:id/practices', async (req, res) => {
 });
 
 // POST a new season with validation
-router.post('/', isAuthenticated, async (req, res) => {
-    const { error, value } = seasonSchema.validate(req.body);
-    if (error) {
-        return res.status(400).json({ message: error.details[0].message });
+router.post('/', async (req, res) => {
+    const { year, players } = req.body;
+
+    if (!year || !Array.isArray(players)) {
+        return res.status(400).json({ message: 'Year and players are required.' });
     }
 
-    const season = new Season(value);
-
     try {
+        const season = new Season({ year, players });
         await season.save();
+
+        // Optionally update players with this season
+        const Player = require('../models/player'); // Ensure correct path to Player model
+        await Player.updateMany(
+            { _id: { $in: players } },
+            { $push: { seasons: season._id } }
+        );
+
         res.status(201).json(season);
     } catch (err) {
         res.status(500).json({ message: 'Failed to create season', error: err.message });

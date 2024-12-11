@@ -12,6 +12,15 @@
   --hover-color: #50497C; /* Lightened Dark Purple for hover states */
 }
 
+.btn-home {
+    padding: 10px 20px;
+    background-color: #007bff; /* Bootstrap blue */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
   
   * {
     box-sizing: border-box;
