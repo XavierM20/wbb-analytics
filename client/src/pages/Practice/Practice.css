@@ -502,7 +502,7 @@ Team Selection Lists
 /* Save Session Button */
 .create-session-button {
     position: fixed;
-    width: calc(30vw);
+    width: calc(28vw);
     height: calc(8vw);
     bottom: 40px;
     right: 20px; /* Adjust this if it's too far to the right */
