@@ -35,11 +35,12 @@ Layout containers
 .drills-column {
     display: flex;
     flex-direction: column;
-    height: calc(40vw);
+    height: calc(35vw);
     width: calc(30vw);
     background-color: rgba(63, 68, 68, .7);
     padding: 10px;
     border-radius: 10px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 5);
 }
 .create-sessions-container {
     margin-top: 4%;
@@ -53,6 +54,7 @@ Layout containers
     box-sizing: border-box;
     overflow: hidden;
     flex-direction: row-reverse;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 5);
 }
 
 /* Ensures that the session information stays at the bottom */
@@ -70,6 +72,7 @@ Layout containers
     background-color: rgba(63, 68, 68, .7);
     padding: 10px;
     border-radius: 8px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 5);
 }
 
 /* 
@@ -499,10 +502,10 @@ Team Selection Lists
 /* Save Session Button */
 .create-session-button {
     position: fixed;
-    width: calc(27vw);
+    width: calc(30vw);
     height: calc(8vw);
-    bottom: 20px;
-    right: 40px; /* Adjust this if it's too far to the right */
+    bottom: 40px;
+    right: 20px; /* Adjust this if it's too far to the right */
     background-color: rgba(63, 68, 68, .7); /* Using primary color variable */
     color: white; /* Using light text color variable for contrast */
     border: none;
@@ -511,6 +514,7 @@ Team Selection Lists
     font-size: 1.2em;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease; /* Added box-shadow to transition for a smoother effect */
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 5);
 }
 
 .create-session-button:hover {
