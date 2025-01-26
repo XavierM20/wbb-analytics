@@ -67,7 +67,7 @@ router.get('/byPlayer/:playerId', isAuthenticated, async (req, res) => {
 router.get('/byTempoType/:tempoType', isAuthenticated, async (req, res) => {
     try {
         const tempos = await Tempo.find({ tempo_type: req.params.tempoType })
-                                  .populate(['gameOrPractice_id', 'player_ids']);
+                                  .populate(['gameOrDrill_id', 'player_ids']);
         res.json(tempos);
     } catch (err) {
         res.status(500).json({ message: 'Internal server error', error: err.message });
@@ -78,7 +78,7 @@ router.get('/byTempoType/:tempoType', isAuthenticated, async (req, res) => {
 router.get('/byTimestamp/:timestamp', isAuthenticated, async (req, res) => {
     try {
         const tempos = await Tempo.find({ timestamp: req.params.timestamp })
-                                  .populate(['gameOrPractice_id', 'player_ids']);
+                                  .populate(['gameOrDrill_id', 'player_ids']);
         res.json(tempos);
     } catch (err) {
         res.status(500).json({ message: 'Internal server error', error: err.message });
@@ -111,7 +111,7 @@ router.patch('/:id', isAuthenticated, async (req, res) => {
 
     try {
         const updatedTempo = await Tempo.findByIdAndUpdate(req.params.id, value, { new: true })
-                                        .populate(['gameOrPractice_id', 'player_ids']);
+                                        .populate(['gameOrDrill_id', 'player_ids']);
         if (!updatedTempo) {
             return res.status(404).json({ message: 'Tempo event not found' });
         }
