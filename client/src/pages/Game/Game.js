@@ -219,7 +219,41 @@ const Game = () => {
             console.error('Error fetching game details:', error);
         }
     };
+
+    /*
+        When tempoEventIds changes, add a row to the tempo table
+    */
+    // Wrap the logic in an async function (e.g., within useEffect or a handler)
+    async function fetchTempoEvents() {
+        for (const tempoId of tempoEventIds) {
+        console.log('Fetching tempo details for ID:', tempoId);
+        try {
+            const response = await fetch(`${serverUrl}/api/tempos/${tempoId}`);
+            if (!response.ok) {
+            throw new Error('Failed to fetch tempo details');
+            }
+            const tempoDetails = await response.json();
+            const newRow = {
+            col1: tempoDetails.tempo_type,
+            col2: tempoDetails.transition_time,
+            };
+            // Update state row by row
+            setTempoTableRows((prevRows) => [...prevRows, newRow]);
+        } catch (error) {
+            console.error('Error fetching tempo details:', error);
+            // Optionally handle errors (e.g., show a notification)
+        }
+        }
+    }
     
+    // For React, call the async function (for example, inside a useEffect)
+    useEffect(() => {
+        fetchTempoEvents();
+    }, [tempoEventIds]);
+
+    /*
+        Submits the shot to the shots database
+    */
     const submitShot = (shotOutcome, shotClockTime) => {
         const shotData = {
             gameOrDrill_id: gameData,

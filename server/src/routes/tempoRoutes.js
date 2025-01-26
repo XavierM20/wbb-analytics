@@ -33,7 +33,7 @@ router.get('/', isAuthenticated, async (req, res) => {
 // GET a tempo event by ID
 router.get('/:id', isAuthenticated, async (req, res) => {
     try {
-        const tempo = await Tempo.findById(req.params.id).populate(['gameOrPractice_id', 'player_ids']);
+        const tempo = await Tempo.findById(req.params.id).populate(['gameOrDrill_id', 'player_ids']);
         if (!tempo) {
             return res.status(404).json({ message: 'Tempo event not found' });
         }
