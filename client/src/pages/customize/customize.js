@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './customize.css';
 
 function PickColors() {
@@ -6,6 +7,8 @@ function PickColors() {
   const [activeColor, setActiveColor] = useState('');
   const [editIndex, setEditIndex] = useState(-1);
   const [error, setError] = useState('');
+
+  const navigate = useNavigate();
 
   const handleColorChange = (event) => {
     setActiveColor(event.target.value);
@@ -61,6 +64,7 @@ function PickColors() {
 
   return (
     <div className="pick-colors">
+    <button className='btn-home top-right-button' onClick={() => navigate('/homepage')}>Home</button>
       <div className="form-container">
         <label htmlFor="colorInput">Pick a Color (Hex Code):</label>
         <input
