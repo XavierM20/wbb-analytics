@@ -10,6 +10,7 @@ import TempoButton from '../Drill/components/TempoButton';
 import CancelButton from '../Drill/components/CancelButton';
 import LastTempoDisplay from '../Drill/components/LastTempoDisplay';
 import PlayerSelectionPopup from './components/PlayerSelectionPopup';
+import ImagePicker from './components/ImagePicker';
 
 // Get the screen height
 const { height: screenHeight } = Dimensions.get('window');
@@ -456,7 +457,7 @@ const Game = () => {
                             value={opponentTeamValue}
                             onChange={(e) => setOpponentTeamValue(e.target.value)}
                         />
-
+                        <ImagePicker />
                         <h3>Location</h3>
                         <button onClick={() => handleLocationClick('home')} className={tempLocation === 'home' ? '' : 'disabled'} disabled={tempLocation === 'home'}>Home</button>
                         <button onClick={() => handleLocationClick('away')} className={tempLocation === 'away' ? '' : 'disabled'} disabled={tempLocation === 'away'}>Away</button>
