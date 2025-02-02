@@ -1,0 +1,144 @@
+.pick-colors {
+    background-size: cover;
+    position: fixed;
+    height: calc(100vw);
+    width: calc(100vw);
+    z-index: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .btn-home {
+    padding: 10px 20px;
+    background-color: #007bff !important;  
+    color: white !important;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .pick-colors::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: calc(100vw);
+    height: calc(100vw);
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: -1;
+  }
+  
+  .pick-colors h1{
+    color: white;
+  }
+
+  .pick-colors label{
+    color: white;
+  }
+
+  .pick-colors small{
+    color: red;
+  }
+  
+  .pick-colors input{
+    color: black;
+  }
+  .pick-colors button{
+    color: red;
+  }
+
+  color-list-item{
+    color: red;
+  }
+  .pick-colors input::placeholder {
+    color: black; /* Darker placeholder text for contrast */
+    opacity: 1; /* Make placeholder fully visible */
+  }
+  
+  .form-container {
+    margin-top: 20%;
+    margin-right: 10%;
+    height: calc(100vw);
+    width: calc(100vw);
+  }
+  
+  .color-list-container {
+    flex-basis: 50%;
+    border-left: 2px solid red;
+    padding-left: 20px;
+  }
+  
+  .color-list-item {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .color-input label,
+  .color-input input,
+  .color-input button {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .color-input {
+    margin-bottom: 15px;
+    background: red;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  .pick-colors input[type="text"],
+  .pick-colors input[type="color"] {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  
+  .pick-colors input:focus {
+    outline: none; /* Removes the default outline */
+    border: 2px solid #ffdd00; /* Bright green focus border for color selection */
+  }
+  
+  .pick-colors button {
+    padding: 10px 20px;
+    margin-top: 20px;
+    background-color: white; /* Purple background for color theme */
+    color: black; /* White text for contrast */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .pick-colors button:hover {
+    background-color: #0056b3; /* Darker purple on hover */
+  }
+  
+  /* Additional styles for delete and edit buttons for better visibility */
+  .pick-colors .delete-button,
+  .pick-colors .edit-button {
+    background-color: #ff0000; /* Red background for delete button */
+    color: white; /* White text for contrast */
+    padding: 5px 10px;
+    margin-left: 10px;
+  }
+  
+  .pick-colors .edit-button {
+    background-color: #f0ad4e; /* Orange background for edit button */
+  }
+  
+  .color-error {
+    color: #ff0000; /* Red color for error messages */
+    margin-top: 5px;
+    margin-bottom: 10px;
+  }
+  

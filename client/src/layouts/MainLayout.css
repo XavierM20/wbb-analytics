@@ -1,7 +1,7 @@
 /* MainLayout.css */
 :root {
     --gold: #ecd852; /* Adjust to the exact shade of gold you're using */
-    --purple: #4f2984; /* Adjust to the exact shade of purple you're using */
+    --purple: grey; /* Adjust to the exact shade of purple you're using */
     --header-height: 60px; /* Header height */
 }
 

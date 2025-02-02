@@ -26,6 +26,7 @@ const Settings = () => {
 
     return (
         <div className="settings-page-container">
+        <button className='btn-home top-right-button' onClick={() => navigate('/homepage')}>Home</button>
             <div className="settings-button-container">
                 <h1>Settings</h1>
                 <div className="button-row">
@@ -45,7 +46,10 @@ const Settings = () => {
                             Export CSV
                         </button>
                     </div>
-                    <button className="btn Sign-out" onClick={() => { auth.logOut();}} to="/">Sign Out</button>
+                    <button className="btn season" onClick={() => navigate('/season')} to="/">Create New Season</button>
+                    <button className="btn customize-team-colors" onClick={() => navigate('/customize')}>
+                        Customize Team Colors
+                    </button>
                 </div>
             </div>
         </div>

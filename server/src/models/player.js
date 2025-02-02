@@ -6,13 +6,13 @@
  * comprehensive tracking of a player's career over time within the team, including their contributions in
  * various seasons.
  */
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+ const mongoose = require('mongoose');
 
-const playerSchema = new Schema({
-    name: { type: String, required: true },
-    jersey_number: { type: Number, required: true },
-    seasons: [{ type: Schema.Types.ObjectId, ref: 'Season' }], // Array of Season document references
-});
-
-module.exports = mongoose.model('Player', playerSchema);
+ const playerSchema = new mongoose.Schema({
+     name: { type: String, required: true },
+     jersey_number: { type: Number, required: true },
+     seasons: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Season' }] // References seasons
+ });
+ 
+ module.exports = mongoose.model('Player', playerSchema);
+ 
