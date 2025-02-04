@@ -2,7 +2,7 @@ import './Game.css';
 import { useNavigate } from 'react-router-dom';
 import UndoButton from './components/UndoButton';
 import React, { useState, useEffect } from "react";
-import { View, Text, ScrollView, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Dimensions, Image } from 'react-native';
 import ShotPopup from '../Drill/components/ShotPopup';
 import GameSelection from './components/GameSelection';
 import TempoTimer from '../Drill/components/TempoTimer';
@@ -41,6 +41,9 @@ const Game = () => {
     const [gameModeOverlayVisible, setGameModeOverlayVisible] = useState(true);
     const [loadGameOverlayVisible, setLoadGameOverlayVisible] = useState(false);
     const [tempoTableRows, setTempoTableRows] = useState([]);             // Table rows for tempo table
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [filePreview, setFilePreview] = useState(null);
+    const [imageId, setImageId] = useState(null);
 
     const navigate = useNavigate();
     const serverUrl = process.env.REACT_APP_SERVER_URL;
@@ -209,12 +212,15 @@ const Game = () => {
             }
 
             const gameDetails = await response.json();
+            const teamLogo = await fetch(`${serverUrl}/api/games/image/${gameDetails.team_logo}`);
+            console.log(teamLogo);
             setGameData(gameDetails._id);
             setOpponentTeam(gameDetails.opponent);
             setLocation(gameDetails.location);
             setTempoEventIds(gameDetails.tempo_events || []);
             setShotEvents(gameDetails.shot_events || []);
             setLoadGameOverlayVisible(false);
+            setFilePreview(teamLogo.url);
 
         } catch (error) {
             console.error('Error fetching game details:', error);
@@ -310,7 +316,8 @@ const Game = () => {
     
     // Submits the game to the games database and also stores the gameID in the 
     // seasons table, only posts to the season table if the gameID does not exist there.
-    const submitGame = () => {
+    const submitGame = async () =>{
+        const uploadedImageId = await uploadImage();
         const seasonData = getSeasonByDate();
     
         const gameDataUpdated = {
@@ -320,7 +327,12 @@ const Game = () => {
             location: location,
             tempo_events: tempoEventIds,
             shot_events: shotEvents,
+            team_logo: uploadedImageId
         };
+
+        console.log("Game Data: " + gameData);
+        console.log("UploadedImageID: " +  uploadedImageId);
+        console.log(gameDataUpdated);
     
         fetch(`${serverUrl}/api/games/${gameData}`, {
             method: 'PATCH',
@@ -415,6 +427,31 @@ const Game = () => {
         setTempoTableRows([...tempoTableRows, newRow]);
         console.log([...tempoTableRows, newRow]);
     };
+
+    const uploadImage = async() => {
+        if (!selectedFile) {
+            console.log('No file selected');
+            return null;
+        }
+
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+
+        try {
+            const response = await fetch(`${serverUrl}/api/games/uploadLogo`, {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+            console.log('Image uploaded:', data.id);
+            setImageId(data.id);
+            return data.id;
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            return null;
+        }
+    }
     
     return (
         <>
@@ -457,7 +494,7 @@ const Game = () => {
                             value={opponentTeamValue}
                             onChange={(e) => setOpponentTeamValue(e.target.value)}
                         />
-                        <ImagePicker />
+                        <ImagePicker setSelectedFile={setSelectedFile} setFilePreview={setFilePreview}/>
                         <h3>Location</h3>
                         <button onClick={() => handleLocationClick('home')} className={tempLocation === 'home' ? '' : 'disabled'} disabled={tempLocation === 'home'}>Home</button>
                         <button onClick={() => handleLocationClick('away')} className={tempLocation === 'away' ? '' : 'disabled'} disabled={tempLocation === 'away'}>Away</button>
@@ -488,6 +525,13 @@ const Game = () => {
                     borderRadius: 10,       // Optional: Add rounded corners
                     }}>
                     TN Tech vs {opponentTeam}
+                    {filePreview && (
+                        <Image 
+                            source={{ uri: filePreview }}  
+                            style={styles.teamLogo} 
+                            onError={(error) => console.error("Image Load Error:", error.nativeEvent)}
+                        />
+                    )}
                 </Text>
 
                 <div className='tempo-timer'>
@@ -607,6 +651,11 @@ const styles = StyleSheet.create({
       borderRightWidth: 1,
       borderColor: '#ccc',
       backgroundColor: 'white',
+    },
+    teamLogo: {
+        width: 50,
+        height: 50,
+        marginLeft: 10,
     },
   });
 
