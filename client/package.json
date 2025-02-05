@@ -3,68 +3,70 @@
     "version": "0.1.0",
     "private": true,
     "dependencies": {
-      "@emotion/react": "^11.11.1",
-      "@emotion/styled": "^11.11.0",
-      "@mui/material": "^5.14.18",
-      "@react-navigation/material-top-tabs": "^6.6.5",
-      "@testing-library/jest-dom": "^5.17.0",
-      "@testing-library/react": "^13.4.0",
-      "@testing-library/user-event": "^13.5.0",
-      "chart.js": "^4.4.1",
-      "cors": "^2.8.5",
-      "express": "^4.18.2",
-      "mongoose": "^8.0.1",
-      "react": "^18.2.0",
-      "react-bootstrap": "^2.10.2",
-      "react-burger-menu": "^3.0.9",
-      "react-chartjs-2": "^5.2.0",
-      "react-click-away-listener": "^2.2.3",
-      "react-datepicker": "^6.6.0",
-      "react-dom": "^18.2.0",
-      "react-icons": "^5.0.1",
-      "react-img-mapper": "^1.5.1",
-      "react-native": "^0.72.7",
-      "react-native-pager-view": "^6.2.2",
-      "react-native-tab-view": "^3.5.2",
-      "react-native-web": "^0.19.9",
-      "react-router-dom": "^6.19.0",
-      "react-scripts": "^5.0.1",
-      "react-use": "^17.5.0",
-      "styled-components": "^6.1.1",
-      "web-vitals": "^2.1.4"
+        "@emotion/react": "^11.11.1",
+        "@emotion/styled": "^11.11.0",
+        "@mui/material": "^5.14.18",
+        "@react-navigation/material-top-tabs": "^6.6.5",
+        "@testing-library/jest-dom": "^5.17.0",
+        "@testing-library/react": "^13.4.0",
+        "@testing-library/user-event": "^13.5.0",
+        "chart.js": "^4.4.1",
+        "cors": "^2.8.5",
+        "express": "^4.18.2",
+        "mongoose": "^8.0.1",
+        "multer": "^1.4.5-lts.1",
+        "react": "^18.2.0",
+        "react-bootstrap": "^2.10.2",
+        "react-burger-menu": "^3.0.9",
+        "react-chartjs-2": "^5.2.0",
+        "react-click-away-listener": "^2.2.3",
+        "react-datepicker": "^6.6.0",
+        "react-dom": "^18.2.0",
+        "react-dropzone": "^14.3.5",
+        "react-icons": "^5.0.1",
+        "react-img-mapper": "^1.5.1",
+        "react-native": "^0.72.7",
+        "react-native-pager-view": "^6.2.2",
+        "react-native-tab-view": "^3.5.2",
+        "react-native-web": "^0.19.9",
+        "react-router-dom": "^6.19.0",
+        "react-scripts": "^5.0.1",
+        "react-use": "^17.5.0",
+        "styled-components": "^6.1.1",
+        "web-vitals": "^2.1.4"
     },
     "scripts": {
-      "start": "react-scripts start",
-      "build": "react-scripts build",
-      "test": "react-scripts test",
-      "eject": "react-scripts eject",
-      "start-server": "node src/server.js",
-      "dev": "concurrently \"npm run start\" \"npm run start-server\"",
-      "dev_offcampus": "concurrently \"cross-env NODE_ENV=development_offcampus npm run start\" \"cross-env NODE_ENV=development_offcampus npm run start-server\"",
-      "prod": "npm run build && cross-env NODE_ENV=production node src/server.js",
-      "prod_offcampus": "npm run build && cross-env NODE_ENV=production_offcampus node src/server.js"
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject",
+        "start-server": "node src/server.js",
+        "dev": "concurrently \"npm run start\" \"npm run start-server\"",
+        "dev_offcampus": "concurrently \"cross-env NODE_ENV=development_offcampus npm run start\" \"cross-env NODE_ENV=development_offcampus npm run start-server\"",
+        "prod": "npm run build && cross-env NODE_ENV=production node src/server.js",
+        "prod_offcampus": "npm run build && cross-env NODE_ENV=production_offcampus node src/server.js"
     },
     "eslintConfig": {
-      "extends": [
-        "react-app",
-        "react-app/jest"
-      ]
+        "extends": [
+            "react-app",
+            "react-app/jest"
+        ]
     },
     "browserslist": {
-      "production": [
-        ">0.2%",
-        "not dead",
-        "not op_mini all"
-      ],
-      "development": [
-        "last 1 chrome version",
-        "last 1 firefox version",
-        "last 1 safari version"
-      ]
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
     },
     "devDependencies": {
-      "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-      "concurrently": "^8.2.2",
-      "cross-env": "^7.0.3"
+        "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+        "concurrently": "^8.2.2",
+        "cross-env": "^7.0.3"
     }
-  }
+}
