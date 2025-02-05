@@ -494,7 +494,7 @@ const Game = () => {
                             value={opponentTeamValue}
                             onChange={(e) => setOpponentTeamValue(e.target.value)}
                         />
-                        <ImagePicker setSelectedFile={setSelectedFile} setFilePreview={setFilePreview}/>
+                        <ImagePicker setSelectedFile={setSelectedFile} setFilePreview={setFilePreview} buttonText='Upload Team Logo'/>
                         <h3>Location</h3>
                         <button onClick={() => handleLocationClick('home')} className={tempLocation === 'home' ? '' : 'disabled'} disabled={tempLocation === 'home'}>Home</button>
                         <button onClick={() => handleLocationClick('away')} className={tempLocation === 'away' ? '' : 'disabled'} disabled={tempLocation === 'away'}>Away</button>
