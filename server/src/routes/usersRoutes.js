@@ -48,6 +48,7 @@ router.post('/', async (req, res) => {
   
   const existingUser = await User.findOne({ username });
   if (existingUser) {
+    /*
     const keyFound = await Key.findOne({ key });
     if (!keyFound)
     {
@@ -57,19 +58,24 @@ router.post('/', async (req, res) => {
     {
       return res.status(400).json({ user: true, message: 'Username is already taken' });
     }
+    */
+    return res.status(400).json({ user: true, message: 'Username is already taken' });
   }
-  const keyFound = await Key.findOneAndDelete({ key });
+  
+  /*const keyFound = await Key.findOneAndDelete({ key });
   if (!keyFound)
   {
     return res.status(400).json({ key: true, message: 'Could not find the userKey' });
   }
+    */
   const hashedPassword = await bcrypt.hash(password, saltRounds);
   
   const newUser = new User({
     _id: new mongoose.Types.ObjectId(),
     username,
     password: hashedPassword,
-    role: keyFound.role
+    //role: keyFound.role
+    role: 'Admin'
   });
   
     await newUser.save();
