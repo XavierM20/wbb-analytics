@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 
-function ImagePicker({ setSelectedFile, setFilePreview, buttonText="Select an Image" }) {
+function ImagePicker({ setSelectedFile, setFilePreview, buttonText="Select an Image", displayFileName=false }) {
     const [fileName, setFileName] = React.useState(null);
 
   const onDrop = useCallback((acceptedFiles) => {
@@ -79,10 +79,10 @@ function ImagePicker({ setSelectedFile, setFilePreview, buttonText="Select an Im
 
   return (
     <div>
-      <button type="button" onClick={open}>{buttonText}</button>
+      <button type="button" onClick={open} style={{ fontSize: "1.15em", fontWeight: 500}}>{buttonText}</button>
       <input {...getInputProps()} style={{ display: 'none' }} />
 
-      {fileName && <p style={{ marginTop: 10, fontSize: 14, color: 'gray' }}>Selected: {fileName}</p>}
+      {fileName && displayFileName && <p style={{ marginTop: 10, fontSize: 14, color: 'gray' }}>Selected: {fileName}</p>}
     </div>
   );
 }
