@@ -156,10 +156,15 @@ const Game = () => {
         return finalYear;
     };
     
-    const handleShotOutcome = (outcome) => {
+    const handleShotOutcome = async (outcome) => {
         setShotOutcome(outcome);
-        addRowToTempoTable('Offensive', currentTempo);
+        setIsTiming(false);
+        setLastTempo(parseFloat(currentTempo.toFixed(2)));
+        setTempoEvents((prevTempoEvents) => [...prevTempoEvents, parseFloat(currentTempo.toFixed(2))]);
+        setCurrentTempo(0);
+        setTempoFlag(true);
     };
+    
 
     const handleLocationClick = (location) => {
         setTempLocation(location);
@@ -233,25 +238,26 @@ const Game = () => {
     // Wrap the logic in an async function (e.g., within useEffect or a handler)
     async function fetchTempoEvents() {
         for (const tempoId of tempoEventIds) {
-        console.log('Fetching tempo details for ID:', tempoId);
-        try {
-            const response = await fetch(`${serverUrl}/api/tempos/${tempoId}`);
-            if (!response.ok) {
-            throw new Error('Failed to fetch tempo details');
+            try {
+                const response = await fetch(`${serverUrl}/api/tempos/${tempoId}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch tempo details');
+                }
+                const tempoDetails = await response.json();
+                const newRow = {
+                    col1: tempoDetails.tempo_type,
+                    col2: tempoDetails.transition_time,
+                };
+    
+                setTempoTableRows((prevRows) => {
+                    const exists = prevRows.some(row => row.col1 === newRow.col1 && row.col2 === newRow.col2);
+                    return exists ? prevRows : [...prevRows, newRow];
+                });
+            } catch (error) {
+                console.error('Error fetching tempo details:', error);
             }
-            const tempoDetails = await response.json();
-            const newRow = {
-            col1: tempoDetails.tempo_type,
-            col2: tempoDetails.transition_time,
-            };
-            // Update state row by row
-            setTempoTableRows((prevRows) => [...prevRows, newRow]);
-        } catch (error) {
-            console.error('Error fetching tempo details:', error);
-            // Optionally handle errors (e.g., show a notification)
         }
-        }
-    }
+    }    
     
     // For React, call the async function (for example, inside a useEffect)
     useEffect(() => {
@@ -421,12 +427,14 @@ const Game = () => {
         currentTempo variable (time elapsed in seconds)
     */
     const addRowToTempoTable = () => {
-        console.log(lastTempo);
-        console.log(tempoType);
         const newRow = { col1: tempoType, col2: lastTempo };
-        setTempoTableRows([...tempoTableRows, newRow]);
-        console.log([...tempoTableRows, newRow]);
-    };
+    
+        setTempoTableRows((prevRows) => {
+            // Check if the row already exists in the table
+            const exists = prevRows.some(row => row.col1 === newRow.col1 && row.col2 === newRow.col2);
+            return exists ? prevRows : [...prevRows, newRow];
+        });
+    };        
 
     const uploadImage = async() => {
         if (!selectedFile) {
