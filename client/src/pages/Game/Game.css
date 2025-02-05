@@ -393,7 +393,6 @@
     margin: 0 auto; /* Center the container horizontally */
     height: 200px; /* Container takes up 20% of the screen */
     width: 100%; /* Container takes up 100% of the screen */
-    margin-top: 2%;
 }
 
 .submit-delete-container{
