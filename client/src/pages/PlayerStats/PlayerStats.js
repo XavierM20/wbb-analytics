@@ -633,7 +633,6 @@ const handleCourtClick = (area) => {
             </div>
           </div>
         </div>
-
       </div>
     </div>
   );

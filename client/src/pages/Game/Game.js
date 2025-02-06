@@ -478,7 +478,7 @@ const Game = () => {
                 <div className="new-game-overlay">
                     <div className="new-game-overlay-content">
                         <h3>Opponent Team Name</h3>
-                        <input id="opponent-team-input" type="text" value={opponentTeamValue} onChange={(e) => setOpponentTeamValue(e.target.value)}/>
+                        <input id="opponent-team-input" aria-label="input for opponent team name" type="text" value={opponentTeamValue} onChange={(e) => setOpponentTeamValue(e.target.value)}/>
                         <ImagePicker setSelectedFile={setSelectedFile} setFilePreview={setFilePreview} buttonText='Upload Team Logo' displayFileName/>
                         <h3>Location</h3>
                         <button onClick={() => handleLocationClick('home')} className={tempLocation === 'home' ? '' : 'disabled'} disabled={tempLocation === 'home'}>Home</button>
