@@ -252,9 +252,7 @@ function CreateSeason() {
             <label>Jersey Number:</label>
             <input type="number" value={activePlayer.jersey_number} onChange={(e) => handlePlayerChange('jersey_number', e.target.value)}/>
             {jerseyError && <div className="jersey-error">{jerseyError}</div>}
-            <button type="button" onClick={addOrUpdatePlayer}>
-              {editIndex >= 0 ? 'Update Player' : 'Add Player'}
-            </button>
+            <button type="button" onClick={addOrUpdatePlayer}>{editIndex >= 0 ? 'Update Player' : 'Add Player'}</button>
           </div>
           <button type="submit">Create/Edit Season</button>
         </form>
@@ -265,9 +263,7 @@ function CreateSeason() {
         </View>
         {players.map((player, index) => (
           <div key={index} className="player-list-item">
-            <div className="player-info">
-              {player.name} - {player.jersey_number}
-            </div>
+            <div className="player-info">{player.name} - {player.jersey_number}</div>
             <div className="player-actions">
               <button className="btnEdit" onClick={() => editPlayer(index)}>Edit</button>
               <button className="btnDelete" onClick={() => deletePlayer(index)}>Delete</button>
