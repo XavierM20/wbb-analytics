@@ -7,6 +7,7 @@ import Selector from './components/Selector'; // Custom component for selection 
 import TempoCard from './components/TempoCard'; // Displays tempo stats
 import ShotsByClock from './components/ShotsByClock';
 import StatCard from './components/StatsDisplay'; 
+import { useNavigate } from 'react-router-dom';
 import './TeamStats.css';
 
 const chartOptions = {
@@ -48,6 +49,7 @@ function TeamStats() {
   const [selectedDrill, setSelectedDrill] = useState('');
   const [avgOffensiveTempo, setAvgOffensiveTempo] = useState(0);
   const [avgDefensiveTempo, setAvgDefensiveTempo] = useState(0);
+  const navigate = useNavigate();
   const [barChartData, setBarChartData] = useState({
     labels: ['0', '20', '40', '60', '80', '100'],
     datasets: [{
@@ -194,6 +196,7 @@ function TeamStats() {
 
   return (
   <div className="team-stats-container">
+    <button className='btn-home top-right-button' onClick={() => navigate('/homepage')}>Home</button>
     <div className="selectors">
       <Selector
         options={seasons}
@@ -213,7 +216,9 @@ function TeamStats() {
         onChange={handleDrillChange}
         label="Drill"
       />
+
     </div>
+  
     
 
     <div class="team-leaders">
@@ -270,8 +275,11 @@ function TeamStats() {
         <div className="tempo-label">Average Defensive Tempo</div>
         <div className="tempo-value">{avgDefensiveTempo}</div>
       </div>
+      
 
 
+
+    
       {/* /* New Stats Cards
     <div className="new-stats-card">
       <div className="tempo-label">Stat 1</div>
@@ -285,6 +293,10 @@ function TeamStats() {
     
     </div>
   </div>
+
+
+
+
 );
 }
 

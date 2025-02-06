@@ -1,4 +1,3 @@
-
 :root {
   --bg-color: #9797ef;
   --header-color: #df6e6e;
@@ -27,28 +26,34 @@ body, html {
 }
 
 .team-stats-container {
+  background: url('../../images/homepageWBB.jpeg') no-repeat center center;
+  background-size: cover;
+  height: 95vh;
+  width: 100vw;
+  z-index: 0;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
-  padding: 20px;
+  min-height: 10vh;
+  padding: 150px;
   position: relative;
 }
+
 
 .content-wrapper {
   display: flex;
   justify-content: flex-end; /* Aligns content to the right */
-  margin-bottom: 60px; /* Space for tempo cards at bottom */
+  margin-bottom: 100px; /* Space for tempo cards at bottom */
 }
 
 .charts-container {
   width: 30%; /* Reduced from 40% */
-  max-width: 350px; /* Added max-width for better control */
+  max-width: 390px; /* Added max-width for better control */
   margin-left: auto; /* Keeps it on the right side */
-  margin-top: 5px;
+  margin-top: 1px;
   background-color: var(--card-bg-color);
-  padding: 15px;
+  padding: 20px;
   border-radius: 8px;
-  margin-bottom: 20px; /* Reduced from 40px to bring tempo cards closer */
+  margin-bottom: 60px; /* Reduced from 40px to bring tempo cards closer */
   height: 340px; /* Reduced height */
 }
 
@@ -58,29 +63,30 @@ body, html {
   padding: 10px;
   display: flex;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-top: -70px;
+  margin-bottom: 40px;
   background-color: var(--header-color);
   color: var(--text-color-light);
-  border-radius: 8px;
+  border-radius: 10px;
 }
 
 .charts-container {
-  flex: 2;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  max-width: calc(80% - 10px);
+  gap: 10px;
+  max-width: calc(80% - 20px);
 }
 
 .tempo-stats {
   position: fixed;
-  bottom: 10px;
-  left: 20px;
-  right: 20px;
+  bottom: 50px;
+  left: 150px;
+  right: 150px;
   display: flex;
   justify-content: space-between;
   background-color: rgb(220, 220, 220); /* Keep original color */
-  padding: 15px;
+  padding: 3px;
   border-radius: 10px;
 }
 
@@ -102,17 +108,17 @@ body, html {
 
 /* Container for the whole section */
 .team-leaders {
-  margin: 1px 0;
+  margin: 10px;
   padding: 10px;
-  border: 2px solid #ccc;
-  border-radius: 8px;
+  border: 0px solid #ccc;
+  border-radius: 10px;
   background-color: #f9f9f9;
 }
 
 /* Section header */
 .team-leaders h3 {
-  margin-bottom: 3px;
-  font-size: 1.5rem;
+  margin-bottom: 1px;
+  font-size: 1.2rem;
   color: #333;
 }
 
@@ -120,7 +126,7 @@ body, html {
 .leader-container {
   display: flex;
   justify-content: space-between;
-  gap: 10px;
+  gap: 15px;
 }
 
 /* Individual leader box */
@@ -128,16 +134,17 @@ body, html {
   flex: 1;
   text-align: center;
   background-color: #ddd;
-  border-radius: 8px;
-  padding: 10px;
+  border-radius: 20px;
+  padding: 5px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Category title */
 .leader-category h4 {
-  margin-bottom: 3px;
+  margin-bottom: 1px;
   font-size: 1.1rem;
   color: #444;
+  margin-right: 150px;
 }
 
 /* Player profile image */
@@ -145,13 +152,14 @@ body, html {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  margin-bottom: 8px;
+  margin-right: 90px;
 }
 
 /* Player name */
 .leader-category p {
   margin: 0;
   font-size: 1rem;
+  margin-left: 100px;
   color: #555;
 }
 
@@ -160,6 +168,18 @@ body, html {
   font-size: 1.2rem;
   font-weight: bold;
   color: #000;
+}
+
+
+/*home button*/
+.btn-home {
+  padding: 10px 20px;
+  background-color: #007bff; /* Bootstrap blue */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
 }
 
 
