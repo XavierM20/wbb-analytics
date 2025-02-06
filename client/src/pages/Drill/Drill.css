@@ -262,7 +262,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: grey; /* Light purple */
+    background-color: green; /* Light purple */
     border-radius: 8px;
     z-index: 99;
     max-width: 80%; /* Adjusted to max-width for responsiveness */
@@ -300,7 +300,7 @@
 /* Popup Player Name */
 .PopupPlayerName {
     font-size: 1em; /* Adjusted to match the rest of the UI */
-    color: black; /* Dark text for readability */
+    color: white; /* Dark text for readability */
     word-break: break-word; /* Ensures long names don't overflow */
     text-align: center; /* Center the names below the circles */
 }
@@ -421,7 +421,7 @@
 
 .PlayerName {
     font-size: 1.2em; /* Adjust font size as necessary */
-    color: black;
+    color: white;
     text-align: center; /* Center text below the circle */
     width: 100%; /* Ensures the name doesn't overflow the circle width */
     margin-top: 5px; /* Space between the circle and the name */
