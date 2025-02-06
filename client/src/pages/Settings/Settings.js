@@ -31,25 +31,17 @@ const Settings = () => {
                 <h1>Settings</h1>
                 <div className="button-row">
                 {sessionStorage.getItem('site') === 'Admin' && (
-                    <button className="btn Register-btn" onClick={() => { setRegistration(true);}}>
-                        Create Registration Key
-                    </button>
+                    <button className="btn Register-btn" onClick={() => { setRegistration(true);}}>Create Registration Key</button>
                 )}
                 {registration && (
                     <Register isOpen={registration} onClose={() => setRegistration(false)} />
                 )}
                     <div className="export-buttons">
-                        <button className="btn btn-JSON" onClick={() => handleExport('JSON')}>
-                            Export JSON
-                        </button>
-                        <button className="btn btn-CSV" onClick={() => handleExport('CSV')}>
-                            Export CSV
-                        </button>
+                        <button className="btn btn-JSON" onClick={() => handleExport('JSON')}>Export JSON</button>
+                        <button className="btn btn-CSV" onClick={() => handleExport('CSV')}>Export CSV</button>
                     </div>
                     <button className="btn season" onClick={() => navigate('/season')} to="/">Create New Season</button>
-                    <button className="btn customize-team-colors" onClick={() => navigate('/customize')}>
-                        Customize Team Colors
-                    </button>
+                    <button className="btn customize-team-colors" onClick={() => navigate('/customize')}>Customize Team Colors</button>
                 </div>
             </div>
         </div>
