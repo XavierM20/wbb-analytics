@@ -5,7 +5,6 @@ import Selector from '../TeamStats/components/Selector';
 import Heatmap from '../TeamStats/components/Heatmap';
 import TempoCard from '../TeamStats/components/TempoCard';
 import StatCard from '../TeamStats/components/StatsDisplay';
-import Headshot from '../../images/KD.png';
 import ShotPopup from './components/ShotPopup';
 import ImageMapper from "react-img-mapper";
 import basketballCourtVector from './components/basketball-court-vector.jpg';
@@ -66,7 +65,9 @@ function PlayerStats() {
   const session = urlParams.get('session');
   const drillIdParam = urlParams.get('drillId');
   const playerID  = urlParams.get('playerID');
-  const [selectedPlayer, setSelectedPlayer] = useState(''); //
+  const [selectedPlayer, setSelectedPlayer] = useState(() => {
+    return allPlayers.length > 0 ? allPlayers[0] : null;
+  });
   const serverUrl = process.env.REACT_APP_SERVER_URL;
 
 
@@ -123,6 +124,13 @@ useEffect(() => {
   //submitTempo();
 }, []);
 
+useEffect(() => {
+  if (allPlayers.length > 0 && !selectedPlayer) {
+    const firstPlayer = allPlayers[0];
+    setSelectedPlayer(firstPlayer);
+    fetchPlayerData(firstPlayer.value); // Ensure stats load for first player
+  }
+}, [allPlayers]);
 
 useEffect(() => {
   if (!Array.isArray(allDrills)) {
@@ -150,10 +158,12 @@ useEffect(() => {
 
   const handlePlayerChange = (event) => {
     const newPlayerID = event.target.value;
-    setSelectedPlayer(newPlayerID);
+    const newSelectedPlayer = allPlayers.find(player => player.value === newPlayerID); 
 
-    setSelectedPlayer(allPlayers.find(player => player._id === playerID))
-
+    if (newSelectedPlayer) {
+      setSelectedPlayer(newSelectedPlayer);
+    }
+  
     const urlParams = new URLSearchParams(window.location.search);
     urlParams.set('playerID', newPlayerID);
     window.history.pushState(null, '', `${window.location.pathname}?${urlParams}`);
@@ -480,7 +490,7 @@ const handleCourtClick = (area) => {
                 options={allPlayers}
                 onChange={handlePlayerChange}
                 label="Player"
-                value={selectedPlayer}
+                value={selectedPlayer ? selectedPlayer.value : ""}
               />
               <Selector
                 options={sessions}
@@ -498,10 +508,13 @@ const handleCourtClick = (area) => {
         </div>
         <div className='layout-container'>
           <div className="player-headshot">
-            <img src={Headshot} alt="Player Headshot" />
+          <img src={selectedPlayer && selectedPlayer.label ? require(`../../images/${(selectedPlayer.label || "").toLowerCase().replace(/ /g, "_")}.png`): require('../../images/default.png')}
+            alt={selectedPlayer ? selectedPlayer.label : "Default Player"} 
+            onError={(e) => e.target.src = require('../../images/default.png')} 
+          />
           </div>
           <div className="bio-text">
-              <p><strong>Name:</strong> Kevin Durant</p>
+              <p><strong>Name:</strong> {selectedPlayer ? selectedPlayer.label : "Select a player"}</p>
               <p><strong>Position:</strong> PF</p>
               <p><strong>Born:</strong> 9/29/1988</p>
               <p><strong>From:</strong> Suitland, MD</p>
