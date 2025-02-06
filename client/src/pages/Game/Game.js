@@ -2,7 +2,7 @@ import './Game.css';
 import { useNavigate } from 'react-router-dom';
 import UndoButton from './components/UndoButton';
 import React, { useState, useEffect } from "react";
-import { View, Text, ScrollView, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Dimensions, Image } from 'react-native';
 import ShotPopup from '../Drill/components/ShotPopup';
 import GameSelection from './components/GameSelection';
 import TempoTimer from '../Drill/components/TempoTimer';
@@ -10,6 +10,7 @@ import TempoButton from '../Drill/components/TempoButton';
 import CancelButton from '../Drill/components/CancelButton';
 import LastTempoDisplay from '../Drill/components/LastTempoDisplay';
 import PlayerSelectionPopup from './components/PlayerSelectionPopup';
+import ImagePicker from './components/ImagePicker';
 
 // Get the screen height
 const { height: screenHeight } = Dimensions.get('window');
@@ -40,6 +41,9 @@ const Game = () => {
     const [gameModeOverlayVisible, setGameModeOverlayVisible] = useState(true);
     const [loadGameOverlayVisible, setLoadGameOverlayVisible] = useState(false);
     const [tempoTableRows, setTempoTableRows] = useState([]);             // Table rows for tempo table
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [filePreview, setFilePreview] = useState(null);
+    const [imageId, setImageId] = useState(null);
 
     const navigate = useNavigate();
     const serverUrl = process.env.REACT_APP_SERVER_URL;
@@ -152,10 +156,15 @@ const Game = () => {
         return finalYear;
     };
     
-    const handleShotOutcome = (outcome) => {
+    const handleShotOutcome = async (outcome) => {
         setShotOutcome(outcome);
-        addRowToTempoTable('Offensive', currentTempo);
+        setIsTiming(false);
+        setLastTempo(parseFloat(currentTempo.toFixed(2)));
+        setTempoEvents((prevTempoEvents) => [...prevTempoEvents, parseFloat(currentTempo.toFixed(2))]);
+        setCurrentTempo(0);
+        setTempoFlag(true);
     };
+    
 
     const handleLocationClick = (location) => {
         setTempLocation(location);
@@ -208,18 +217,56 @@ const Game = () => {
             }
 
             const gameDetails = await response.json();
+            const teamLogo = await fetch(`${serverUrl}/api/games/image/${gameDetails.team_logo}`);
+            console.log(teamLogo);
             setGameData(gameDetails._id);
             setOpponentTeam(gameDetails.opponent);
             setLocation(gameDetails.location);
             setTempoEventIds(gameDetails.tempo_events || []);
             setShotEvents(gameDetails.shot_events || []);
             setLoadGameOverlayVisible(false);
+            setFilePreview(teamLogo.url);
 
         } catch (error) {
             console.error('Error fetching game details:', error);
         }
     };
+
+    /*
+        When tempoEventIds changes, add a row to the tempo table
+    */
+    // Wrap the logic in an async function (e.g., within useEffect or a handler)
+    async function fetchTempoEvents() {
+        for (const tempoId of tempoEventIds) {
+            try {
+                const response = await fetch(`${serverUrl}/api/tempos/${tempoId}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch tempo details');
+                }
+                const tempoDetails = await response.json();
+                const newRow = {
+                    col1: tempoDetails.tempo_type,
+                    col2: tempoDetails.transition_time,
+                };
     
+                setTempoTableRows((prevRows) => {
+                    const exists = prevRows.some(row => row.col1 === newRow.col1 && row.col2 === newRow.col2);
+                    return exists ? prevRows : [...prevRows, newRow];
+                });
+            } catch (error) {
+                console.error('Error fetching tempo details:', error);
+            }
+        }
+    }    
+    
+    // For React, call the async function (for example, inside a useEffect)
+    useEffect(() => {
+        fetchTempoEvents();
+    }, [tempoEventIds]);
+
+    /*
+        Submits the shot to the shots database
+    */
     const submitShot = (shotOutcome, shotClockTime) => {
         const shotData = {
             gameOrDrill_id: gameData,
@@ -275,7 +322,8 @@ const Game = () => {
     
     // Submits the game to the games database and also stores the gameID in the 
     // seasons table, only posts to the season table if the gameID does not exist there.
-    const submitGame = () => {
+    const submitGame = async () =>{
+        const uploadedImageId = await uploadImage();
         const seasonData = getSeasonByDate();
     
         const gameDataUpdated = {
@@ -285,7 +333,12 @@ const Game = () => {
             location: location,
             tempo_events: tempoEventIds,
             shot_events: shotEvents,
+            team_logo: uploadedImageId
         };
+
+        console.log("Game Data: " + gameData);
+        console.log("UploadedImageID: " +  uploadedImageId);
+        console.log(gameDataUpdated);
     
         fetch(`${serverUrl}/api/games/${gameData}`, {
             method: 'PATCH',
@@ -374,12 +427,39 @@ const Game = () => {
         currentTempo variable (time elapsed in seconds)
     */
     const addRowToTempoTable = () => {
-        console.log(lastTempo);
-        console.log(tempoType);
         const newRow = { col1: tempoType, col2: lastTempo };
-        setTempoTableRows([...tempoTableRows, newRow]);
-        console.log([...tempoTableRows, newRow]);
-    };
+    
+        setTempoTableRows((prevRows) => {
+            // Check if the row already exists in the table
+            const exists = prevRows.some(row => row.col1 === newRow.col1 && row.col2 === newRow.col2);
+            return exists ? prevRows : [...prevRows, newRow];
+        });
+    };        
+
+    const uploadImage = async() => {
+        if (!selectedFile) {
+            console.log('No file selected');
+            return null;
+        }
+
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+
+        try {
+            const response = await fetch(`${serverUrl}/api/games/uploadLogo`, {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+            console.log('Image uploaded:', data.id);
+            setImageId(data.id);
+            return data.id;
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            return null;
+        }
+    }
     
     return (
         <>
@@ -422,7 +502,7 @@ const Game = () => {
                             value={opponentTeamValue}
                             onChange={(e) => setOpponentTeamValue(e.target.value)}
                         />
-
+                        <ImagePicker setSelectedFile={setSelectedFile} setFilePreview={setFilePreview} buttonText='Upload Team Logo' displayFileName/>
                         <h3>Location</h3>
                         <button onClick={() => handleLocationClick('home')} className={tempLocation === 'home' ? '' : 'disabled'} disabled={tempLocation === 'home'}>Home</button>
                         <button onClick={() => handleLocationClick('away')} className={tempLocation === 'away' ? '' : 'disabled'} disabled={tempLocation === 'away'}>Away</button>
@@ -453,6 +533,13 @@ const Game = () => {
                     borderRadius: 10,       // Optional: Add rounded corners
                     }}>
                     TN Tech vs {opponentTeam}
+                    {filePreview && (
+                        <Image 
+                            source={{ uri: filePreview }}  
+                            style={styles.teamLogo} 
+                            onError={(error) => console.error("Image Load Error:", error.nativeEvent)}
+                        />
+                    )}
                 </Text>
 
                 <div className='tempo-timer'>
@@ -572,6 +659,11 @@ const styles = StyleSheet.create({
       borderRightWidth: 1,
       borderColor: '#ccc',
       backgroundColor: 'white',
+    },
+    teamLogo: {
+        width: 50,
+        height: 50,
+        marginLeft: 10,
     },
   });
 

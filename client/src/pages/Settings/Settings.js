@@ -47,6 +47,9 @@ const Settings = () => {
                         </button>
                     </div>
                     <button className="btn season" onClick={() => navigate('/season')} to="/">Create New Season</button>
+                    <button className="btn customize-team-colors" onClick={() => navigate('/customize')}>
+                        Customize Team Colors
+                    </button>
                 </div>
             </div>
         </div>
