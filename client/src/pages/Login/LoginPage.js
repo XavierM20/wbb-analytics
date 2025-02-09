@@ -69,12 +69,12 @@ const LoginPage = () => {
         setErrorUser('');
         setErrorPass('');
         setErrorConfirmPass('');
-
+    
         if (username.length < 8) {
             setErrorUser('Username is too short!');
             error = true;
         }
-
+    
         const regex = /[!?@#$%^&*()]/;
         const cap = /[A-Z]/;
         const low = /[a-z]/;
@@ -82,23 +82,23 @@ const LoginPage = () => {
             setErrorPass('Password must be at least 8 characters and include a special character, uppercase, and lowercase letters.');
             error = true;
         }
-
+    
         if (password !== confirmPassword) {
             setErrorConfirmPass('Passwords do not match!');
             error = true;
         }
-
+    
         if (!school) {
             alert('Please select or add a school.');
             error = true;
         }
-
+    
         if (!error) {
             try {
                 const userData = {
                     username,
                     password,
-                    school
+                    school  // Send school with the request
                 };
                 const userResponse = await fetch(`${serverUrl}/api/users`, {
                     method: 'POST',
@@ -107,6 +107,7 @@ const LoginPage = () => {
                     },
                     body: JSON.stringify(userData),
                 });
+    
                 const newUser = await userResponse.json();
                 if (!newUser.message) {
                     auth.loginAction({
@@ -122,7 +123,7 @@ const LoginPage = () => {
             }
         }
     };
-
+    
     const handleLogin = async (event) => {
         const saltRounds = 10;
         event.preventDefault();
