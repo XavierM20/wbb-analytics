@@ -42,7 +42,7 @@ This will also delete the key in the database
 */
 router.post('/', async (req, res) => {
   const saltRounds = 10;
-  const { username, password, key, school } = req.body; // Include school
+  const { username, password, key, schoolId } = req.body; // Include schoolId
   console.log(key + '!');
 
   try {
@@ -58,7 +58,7 @@ router.post('/', async (req, res) => {
       username,
       password: hashedPassword,
       role: 'Admin',
-      school // Save the school
+      schoolId // Save the school
     });
 
     await newUser.save();

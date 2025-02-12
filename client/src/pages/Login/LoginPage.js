@@ -15,7 +15,7 @@ const LoginPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [school, setSchool] = useState('');
+    const [schoolId, setSchoolId] = useState('');
     const [schools, setSchools] = useState([]);
     const [isAddingSchool, setIsAddingSchool] = useState(false);
     const [newSchool, setNewSchool] = useState('');
@@ -42,6 +42,7 @@ const LoginPage = () => {
             try {
                 const response = await fetch(`${serverUrl}/api/schools`);
                 const data = await response.json();
+                console.log(data);
                 setSchools(data);
             } catch (error) {
                 console.error("Error fetching schools:", error);
@@ -88,7 +89,7 @@ const LoginPage = () => {
             error = true;
         }
     
-        if (!school) {
+        if (!schoolId) {
             alert('Please select or add a school.');
             error = true;
         }
@@ -98,7 +99,7 @@ const LoginPage = () => {
                 const userData = {
                     username,
                     password,
-                    school  // Send school with the request
+                    schoolId  // Send school with the request
                 };
                 const userResponse = await fetch(`${serverUrl}/api/users`, {
                     method: 'POST',
@@ -174,7 +175,7 @@ const LoginPage = () => {
     
             if (response.ok) {
                 setSchools([...schools, result]); // Update school list
-                setSchool(result.name); // Set selected school to newly added school
+                setSchoolId(result._id); // Set selected school to newly added school
                 setNewSchool(''); // Clear input
                 setCity(''); // Clear city input
                 setState(''); // Clear state input
@@ -194,7 +195,8 @@ const LoginPage = () => {
         if (value === "add-new") {
             setIsAddingSchool(true);
         } else {
-            setSchool(value);
+            console.log(value);
+            setSchoolId(value);
             setIsAddingSchool(false);
         }
     };
@@ -237,10 +239,10 @@ const LoginPage = () => {
                             {errorConfirmPass && <p className="error">{errorConfirmPass}</p>}
                         </label>
                         <label>
-                            <select value={school} onChange={(e) => handleSchoolChange(e.target.value)}>
+                            <select value={schoolId} onChange={(e) => handleSchoolChange(e.target.value)}>
                                 <option value="">Select a school</option>
                                 {schools.map((s) => (
-                                    <option key={s.id} value={s.name}>
+                                    <option key={s.id} value={s._id}> {/* Use s.id as the value */}
                                         {s.name}
                                     </option>
                                 ))}
