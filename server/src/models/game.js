@@ -14,7 +14,8 @@ const gameSchema = new Schema({
     opponent: { type: String, required: true },
     location: { type: String, required: true },
     tempo_events: [{ type: Schema.Types.ObjectId, ref: 'Tempo', default: [] }],
-    shot_events: [{ type: Schema.Types.ObjectId, ref: 'Shot', default: [] }]
+    shot_events: [{ type: Schema.Types.ObjectId, ref: 'Shot', default: [] }],
+    team_logo: { type: String, ref: 'Image', default: '' }
 });
 
 module.exports = mongoose.model('Game', gameSchema);

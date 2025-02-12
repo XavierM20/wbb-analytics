@@ -13,24 +13,12 @@ const HomePage = () => {
   return (
     <div className="home-page-container">
       <div className="home-button-container">
-        <button className='sign-out'onClick={() => { auth.logOut();}} to='/'>
-            SIGN OUT
-        </button>
-        <button onClick={() => navigate('/practice')} className="button-practice">
-            PRACTICE
-        </button>
-        <button onClick={() => navigate('/game')} className="button-game">
-            GAME
-        </button>
-        <button onClick={() => navigate('/playerstats')} className="button-playerStats">
-            PLAYER STATS
-        </button>
-        <button onClick={() => navigate('/teamstats')} className="button-teamStats">
-            TEAM STATS
-        </button>
-        <button onClick={() => navigate('/Settings')} className="button-settings">
-            SETTINGS
-        </button>
+        <button className='sign-out'onClick={() => { auth.logOut();}} to='/'>SIGN OUT</button>
+        <button onClick={() => navigate('/practice')} className="button-practice">PRACTICE</button>
+        <button onClick={() => navigate('/game')} className="button-game">GAME</button>
+        <button onClick={() => navigate('/playerstats')} className="button-playerStats">PLAYER STATS</button>
+        <button onClick={() => navigate('/teamstats')} className="button-teamStats">TEAM STATS</button>
+        <button onClick={() => navigate('/Settings')} className="button-settings">SETTINGS</button>
       </div>
       <SessionOption isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>

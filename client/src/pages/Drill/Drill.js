@@ -326,6 +326,8 @@ function DrillPage() {
                         </div>
                     </div>
                     <div className="court-container">
+                        <button className="MadeButton">Made</button>
+                        <button className="MissedButton">Miss</button>
                         <ImageMapper
                             src={basketballCourtVector}
                             map={MAP2}

@@ -201,4 +201,39 @@ router.delete('/:id', isAuthenticated, async (req, res) => {
     }
 });
 
+// PATCH to update the players in a season
+router.patch('/:id/players', isAuthenticated, async (req, res) => {
+    const { players } = req.body;
+    if (!Array.isArray(players)) {
+        return res.status(400).json({ message: 'Players must be an array of player IDs' });
+    }
+
+    try {
+        console.log(req.params.id);
+        const season = await Season.findById(req.params.id);
+        if (!season) {
+            return res.status(404).json({ message: 'Season not found' });
+        }
+
+        // Update players in the season
+        season.players = players;
+        await season.save();
+
+        // Update players with this season
+        const Player = require('../models/player'); // Ensure correct path to Player model
+        await Player.updateMany(
+            { _id: { $nin: players } },
+            { $pull: { seasons: season._id } }
+        );
+        await Player.updateMany(
+            { _id: { $in: players } },
+            { $addToSet: { seasons: season._id } }
+        );
+
+        res.json(season);
+    } catch (err) {
+        res.status(500).json({ message: 'Internal server error', error: err.message });
+    }
+});
+
 module.exports = router;

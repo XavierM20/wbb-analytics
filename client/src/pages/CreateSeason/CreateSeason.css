@@ -1,7 +1,7 @@
 .create-season {
   background-size: cover;
   position: fixed;
-  height: calc(100vw);
+  height: calc(100vh);
   width: calc(100vw);
   z-index: 0;
   display: flex;
@@ -12,22 +12,31 @@
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
-.btn-home {
-    padding: 10px 20px;
-    background-color: #007bff !important; /* Bootstrap blue */
-    color: white !important;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
+
+.create-season .btn-home {
+  padding: 10px 20px;
+  background-color: #007bff !important; /* Bootstrap blue */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
 }
+
+.top-right-button {
+  position: absolute; /* Allows precise placement */
+  top: 10px;          /* Distance from the top */
+  right: 10px;        /* Distance from the right */
+  z-index: 1000;      /* Ensures it stays on top of other elements */
+}
+
 .create-season::before{
     content: "";
     position: absolute;
     top: 0;
     left: 0;
     width: calc(100vw);
-    height: calc(100vw);
+    height: calc(100vh);
     background-color: rgb(0, 0, 0, .4);
     z-index: -1;
 }
@@ -36,7 +45,7 @@
 .create-season label,
 .create-season small,
 .create-season input,
-.create-season button,
+.create-season button :not(.btn-home),
 .player-list-item {
   color: white;
 }
@@ -46,25 +55,75 @@
   opacity: 1; /* Make placeholder fully visible */
 }
 
-.form-container {
-  margin-top: 20%;
-  margin-right: 10%;
-  height: calc(100vw);
-  width: calc(100vw);
+.form-container-season {
+  flex-basis: 50%;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
 }
+
+.form-container-season form {
+  font-weight: bold;
+  text-align: center;
+  background-color: rgba(63, 68, 68, .7);
+  border-radius: 5px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 5);
+  height: calc(62vh)
+}
+
+/* Styling for the player list container */
 
 .player-list-container {
   flex-basis: 50%;
-  border-left: 2px solid #ddd;
-  padding-left: 20px;
+  margin: auto;
+  padding: 20px;
+  background-color: rgba(63, 68, 68, .7);
+  border-radius: 5px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 5);
+  height: calc(62vh);
 }
 
 .player-list-item {
   margin-bottom: 10px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  border-bottom: #ccc solid 1px;
 }
+
+.player-info {
+  flex: 1;
+}
+
+.player-actions {
+  display: flex;
+  gap: 10px; /* Add spacing between buttons */
+}
+
+/*
+  Styling for the edit and delete button in player-list-item
+*/
+.btnEdit,
+.btnDelete {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+div.player-actions .btnEdit {
+  background-color: #f0ad4e;
+}
+div.player-actions .btnDelete {
+  background-color: #ff0000;
+}
+
+div.player-actions .btnEdit:hover {
+  background-color: #f0ad4e;
+  opacity: 0.4;
+}
+div.player-actions .btnDelete:hover {
+  background-color: #ff0000;
+  opacity: 0.4;
+}
+/* End of player-list-item styling */
 
 .player-input label,
 .player-input input,
@@ -93,7 +152,7 @@
     outline: none; /* Removes the default outline */
     border: 2px solid #ffdd00; /* Change this color to your preferred focus color */
 }
-.create-season button {
+.create-season button :not(.btn-home) {
   padding: 10px 20px;
   margin-top: 20px;
   background-color: grey; /* Blue background for the button */
@@ -103,7 +162,7 @@
   cursor: pointer;
 }
 
-.create-season button:hover {
+.create-season button:hover :not(.btn-home) {
   background-color: #0056b3;
 }
 

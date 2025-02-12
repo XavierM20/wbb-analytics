@@ -195,6 +195,7 @@ Team Selection Lists
     border-radius: 8px;
     margin: 0 10px; /* Space between lists */
     overflow-y: auto; /* Allow vertical scrolling */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
 }
 
 .list h2 {
@@ -351,7 +352,7 @@ Team Selection Lists
 
 .drill-button {
     background-color: rgba(63, 68, 68, .7);
-    color: grey;
+    color: white;
     padding: 20px 30px; /* Increase padding for larger button size */
     font-size: 1.5em; /* Increase font size for better readability */
     border: none;
@@ -502,7 +503,7 @@ Team Selection Lists
 /* Save Session Button */
 .create-session-button {
     position: fixed;
-    width: calc(30vw);
+    width: calc(28vw);
     height: calc(8vw);
     bottom: 40px;
     right: 20px; /* Adjust this if it's too far to the right */

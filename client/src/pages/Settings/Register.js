@@ -45,7 +45,6 @@ const Register = ({ isOpen, onClose }) => {
               <div>
                 <br/>
                 <h4>What Role will the user have?</h4>
-                
                 <select value={role} onChange={(e) => setRole(e.target.value)}>
                     <option value="Select">Select</option>
                     <option value="Admin">Full Access</option>
