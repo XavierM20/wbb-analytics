@@ -35,8 +35,8 @@ body, html {
   height: 100%;
   margin: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: var(--bg-color);
-  color: var(--text-color-dark);
+  background-color: rgba(63, 68, 68, .7);
+  color: white
 }
 
 
@@ -54,6 +54,16 @@ body, html {
   position: relative;
 }
 
+.team-stats-container::before{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .2);
+    z-index: -1;
+  }
 
 .content-wrapper {
   display: flex;
@@ -66,7 +76,7 @@ body, html {
   max-width: 390px; /* Added max-width for better control */
   margin-left: auto; /* Keeps it on the right side */
   margin-top: 1px;
-  background-color: var(--card-bg-color);
+  background-color: white;
   padding: 20px;
   border-radius: 8px;
   margin-bottom: 60px; /* Reduced from 40px to bring tempo cards closer */
@@ -89,7 +99,7 @@ body, html {
   justify-content: space-between;
   margin-top: -70px;
   margin-bottom: 40px;
-  background-color: var(--header-color);
+  background-color: rgba(63, 68, 68, .7);;
   color: var(--text-color-light);
   border-radius: 10px;
 }
@@ -102,7 +112,7 @@ body, html {
   right: 150px;
   display: flex;
   justify-content: space-between;
-  background-color: rgb(220, 220, 220); /* Keep original color */
+  background-color: rgba(63, 68, 68, .7); /* Keep original color */
   padding: 3px;
   border-radius: 10px;
 }
@@ -126,11 +136,13 @@ body, html {
 
 /* Container for the whole section */
 .team-leaders {
-  margin: 10px;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
   padding: 10px;
   border: 0px solid #ccc;
   border-radius: 10px;
-  background-color: #f9f9f9;
+  background-color: rgba(63, 68, 68, .7);
 }
 
 /* Section header */
@@ -151,17 +163,17 @@ body, html {
 .leader-category {
   flex: 1;
   text-align: center;
-  background-color: #ddd;
+  background-color: rgba(63, 68, 68, .7);
   border-radius: 20px;
   padding: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
 }
 
 /* Category title */
 .leader-category h4 {
   margin-bottom: 1px;
   font-size: 1.1rem;
-  color: #444;
+  color: white;
   margin-right: 150px;
 }
 
@@ -178,14 +190,14 @@ body, html {
   margin: 0;
   font-size: 1rem;
   margin-left: 100px;
-  color: #555;
+  color: white;
 }
 
 /* Player statistic */
 .leader-category .stat {
   font-size: 1.2rem;
   font-weight: bold;
-  color: #000;
+  color: white;
 }
 
 

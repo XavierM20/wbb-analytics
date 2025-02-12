@@ -228,28 +228,17 @@ function CreateSeason() {
   return (
     <div className="create-season">
     <button className='btn-home top-right-button' onClick={() => navigate('/homepage')}>Home</button>
-      <div className="form-container">
+      <div className="form-container-season">
         <form onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="yearInput">Season Year:</label>
-            <input
-              type="text"
-              id="yearInput"
-              value={year}
-              onChange={handleYearChange}
-              placeholder="2023-2024"
-            />
+            <Text style={styles.title}>Season Year:</Text>
+            <input type="text" id="yearInput" value={year} onChange={handleYearChange} placeholder="2023-2024" aria-label="input for season year"/>
             <small>Enter the season start and end years (e.g., "2023-2024"). Years must be consecutive.</small>
           </div>
           <div className="player-input">
             <label>Player Name:</label>
-            <input
-              type="text"
-              list="previous-players"
-              value={activePlayer.name}
-              onChange={(e) => handlePlayerChange('name', e.target.value)}
-              onBlur={(e) => {
-                const player = previousSeasonPlayers.find(p => p.name === e.target.value);
+            <input type="text" aria-label="input for player name" list="previous-players" value={activePlayer.name} onChange={(e) => handlePlayerChange('name', e.target.value)}
+                onBlur={(e) => {const player = previousSeasonPlayers.find(p => p.name === e.target.value);
                 if (player) {
                   selectPreviousPlayer(player);
                 }
@@ -261,15 +250,9 @@ function CreateSeason() {
               ))}
             </datalist>
             <label>Jersey Number:</label>
-            <input
-              type="number"
-              value={activePlayer.jersey_number}
-              onChange={(e) => handlePlayerChange('jersey_number', e.target.value)}
-            />
+            <input type="number" aria-label="input for jersey number" value={activePlayer.jersey_number} onChange={(e) => handlePlayerChange('jersey_number', e.target.value)}/>
             {jerseyError && <div className="jersey-error">{jerseyError}</div>}
-            <button type="button" onClick={addOrUpdatePlayer}>
-              {editIndex >= 0 ? 'Update Player' : 'Add Player'}
-            </button>
+            <button type="button" onClick={addOrUpdatePlayer}>{editIndex >= 0 ? 'Update Player' : 'Add Player'}</button>
           </div>
           <button type="submit">Create/Edit Season</button>
         </form>
@@ -280,9 +263,7 @@ function CreateSeason() {
         </View>
         {players.map((player, index) => (
           <div key={index} className="player-list-item">
-            <div className="player-info">
-              {player.name} - {player.jersey_number}
-            </div>
+            <div className="player-info">{player.name} - {player.jersey_number}</div>
             <div className="player-actions">
               <button className="btnEdit" onClick={() => editPlayer(index)}>Edit</button>
               <button className="btnDelete" onClick={() => deletePlayer(index)}>Delete</button>

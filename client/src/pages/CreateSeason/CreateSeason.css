@@ -55,13 +55,16 @@
   opacity: 1; /* Make placeholder fully visible */
 }
 
-.form-container {
+.form-container-season {
   flex-basis: 50%;
+  justify-content: center;
+  align-items: center;
   margin: auto;
 }
 
-.form-container form {
-  padding: 20px;
+.form-container-season form {
+  font-weight: bold;
+  text-align: center;
   background-color: rgba(63, 68, 68, .7);
   border-radius: 5px;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 5);

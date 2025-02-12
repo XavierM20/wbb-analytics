@@ -485,7 +485,7 @@ const handleCourtClick = (area) => {
     <div className="main-container">
       <button className='btn-home top-right-button' onClick={() => navigate('/homepage')}>Home</button>
       <div className="player-stats-container">
-          <div className="selectors">
+          <div className="ps-selectors">
             <Selector
                 options={allPlayers}
                 onChange={handlePlayerChange}
@@ -633,7 +633,6 @@ const handleCourtClick = (area) => {
             </div>
           </div>
         </div>
-
       </div>
     </div>
   );

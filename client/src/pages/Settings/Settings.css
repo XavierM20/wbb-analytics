@@ -145,3 +145,8 @@
     background-color: #EECF08;
     transform: scale(1.01);
 }
+
+.customize-team-colors:hover{
+    background-color: #EECF08 !important;
+    transform: scale(1.01);
+}
