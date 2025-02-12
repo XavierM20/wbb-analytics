@@ -15,7 +15,7 @@ const LoginPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [school, setSchool] = useState('');
+    const [schoolId, setSchoolId] = useState('');
     const [schools, setSchools] = useState([]);
     const [isAddingSchool, setIsAddingSchool] = useState(false);
     const [newSchool, setNewSchool] = useState('');
@@ -42,6 +42,7 @@ const LoginPage = () => {
             try {
                 const response = await fetch(`${serverUrl}/api/schools`);
                 const data = await response.json();
+                console.log(data);
                 setSchools(data);
             } catch (error) {
                 console.error("Error fetching schools:", error);
@@ -69,12 +70,12 @@ const LoginPage = () => {
         setErrorUser('');
         setErrorPass('');
         setErrorConfirmPass('');
-
+    
         if (username.length < 8) {
             setErrorUser('Username is too short!');
             error = true;
         }
-
+    
         const regex = /[!?@#$%^&*()]/;
         const cap = /[A-Z]/;
         const low = /[a-z]/;
@@ -82,23 +83,23 @@ const LoginPage = () => {
             setErrorPass('Password must be at least 8 characters and include a special character, uppercase, and lowercase letters.');
             error = true;
         }
-
+    
         if (password !== confirmPassword) {
             setErrorConfirmPass('Passwords do not match!');
             error = true;
         }
-
-        if (!school) {
+    
+        if (!schoolId) {
             alert('Please select or add a school.');
             error = true;
         }
-
+    
         if (!error) {
             try {
                 const userData = {
                     username,
                     password,
-                    school
+                    schoolId  // Send school with the request
                 };
                 const userResponse = await fetch(`${serverUrl}/api/users`, {
                     method: 'POST',
@@ -107,6 +108,7 @@ const LoginPage = () => {
                     },
                     body: JSON.stringify(userData),
                 });
+    
                 const newUser = await userResponse.json();
                 if (!newUser.message) {
                     auth.loginAction({
@@ -122,7 +124,7 @@ const LoginPage = () => {
             }
         }
     };
-
+    
     const handleLogin = async (event) => {
         const saltRounds = 10;
         event.preventDefault();
@@ -173,7 +175,7 @@ const LoginPage = () => {
     
             if (response.ok) {
                 setSchools([...schools, result]); // Update school list
-                setSchool(result.name); // Set selected school to newly added school
+                setSchoolId(result._id); // Set selected school to newly added school
                 setNewSchool(''); // Clear input
                 setCity(''); // Clear city input
                 setState(''); // Clear state input
@@ -193,7 +195,8 @@ const LoginPage = () => {
         if (value === "add-new") {
             setIsAddingSchool(true);
         } else {
-            setSchool(value);
+            console.log(value);
+            setSchoolId(value);
             setIsAddingSchool(false);
         }
     };
@@ -223,10 +226,10 @@ const LoginPage = () => {
                         <label><input type="password" placeholder="Password" aria-label="input for password" value={password} onChange={(e) => setPassword(e.target.value)} />{errorPass && <p className="error">{errorPass}</p>}</label>
                         <label><input type="password" placeholder="Confirm Password" aria-label="input for confirming password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />{errorConfirmPass && <p className="error">{errorConfirmPass}</p>}</label>
                         <label>
-                            <select value={school} onChange={(e) => handleSchoolChange(e.target.value)}>
+                            <select value={schoolId} onChange={(e) => handleSchoolChange(e.target.value)}>
                                 <option value="">Select a school</option>
                                 {schools.map((s) => (
-                                    <option key={s.id} value={s.name}>
+                                    <option key={s.id} value={s._id}> {/* Use s.id as the value */}
                                         {s.name}
                                     </option>
                                 ))}

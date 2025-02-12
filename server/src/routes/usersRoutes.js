@@ -42,48 +42,33 @@ This will also delete the key in the database
 */
 router.post('/', async (req, res) => {
   const saltRounds = 10;
-  const {username,password,key} = req.body;
+  const { username, password, key, schoolId } = req.body; // Include schoolId
   console.log(key + '!');
+
   try {
-  
-  const existingUser = await User.findOne({ username });
-  if (existingUser) {
-    /*
-    const keyFound = await Key.findOne({ key });
-    if (!keyFound)
-    {
-      return res.status(400).json({ both: true, message: 'Could not find the userKey', message0: 'Username is already taken'  });
-    }
-    else
-    {
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
       return res.status(400).json({ user: true, message: 'Username is already taken' });
     }
-    */
-    return res.status(400).json({ user: true, message: 'Username is already taken' });
-  }
-  
-  /*const keyFound = await Key.findOneAndDelete({ key });
-  if (!keyFound)
-  {
-    return res.status(400).json({ key: true, message: 'Could not find the userKey' });
-  }
-    */
-  const hashedPassword = await bcrypt.hash(password, saltRounds);
-  
-  const newUser = new User({
-    _id: new mongoose.Types.ObjectId(),
-    username,
-    password: hashedPassword,
-    //role: keyFound.role
-    role: 'Admin'
-  });
-  
+
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    const newUser = new User({
+      _id: new mongoose.Types.ObjectId(),
+      username,
+      password: hashedPassword,
+      role: 'Admin',
+      schoolId // Save the school
+    });
+
     await newUser.save();
     res.status(201).json(newUser);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
+
+
 // fetch user by username and password, give incorrect password error if searching fails
 router.post('/userCheck', async (req, res) => {
   try { 
