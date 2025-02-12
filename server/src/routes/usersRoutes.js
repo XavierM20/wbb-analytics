@@ -42,29 +42,32 @@ This will also delete the key in the database
 */
 router.post('/', async (req, res) => {
   const saltRounds = 10;
-  const { username, password, school } = req.body;  // Include school
+  const { username, password, key, school } = req.body; // Include school
+  console.log(key + '!');
 
   try {
-      const existingUser = await User.findOne({ username });
-      if (existingUser) {
-          return res.status(400).json({ user: true, message: 'Username is already taken' });
-      }
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      return res.status(400).json({ user: true, message: 'Username is already taken' });
+    }
 
-      const hashedPassword = await bcrypt.hash(password, saltRounds);
-      const newUser = new User({
-          _id: new mongoose.Types.ObjectId(),
-          username,
-          password: hashedPassword,
-          role: 'Admin',
-          school  // Save school in the user document
-      });
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-      await newUser.save();
-      res.status(201).json(newUser);
+    const newUser = new User({
+      _id: new mongoose.Types.ObjectId(),
+      username,
+      password: hashedPassword,
+      role: 'Admin',
+      school // Save the school
+    });
+
+    await newUser.save();
+    res.status(201).json(newUser);
   } catch (error) {
-      res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 });
+
 
 // fetch user by username and password, give incorrect password error if searching fails
 router.post('/userCheck', async (req, res) => {
