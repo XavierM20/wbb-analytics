@@ -114,6 +114,7 @@ const LoginPage = () => {
                     auth.loginAction({
                         username: newUser.username,
                         token: newUser.role,
+                        schoolId: schoolId,
                     });
                     navigate('/homepage');
                 } else {
