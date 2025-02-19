@@ -117,14 +117,14 @@ router.get('/:seasonId/practices', async (req, res) => {
     }
 });
 
-// GET season by end year assuming season is in format "startYear-endYear"
-router.get('/endYear/:endYear', async (req, res) => {
+// GET season by end year and schoolID (assuming season is in format "startYear-endYear")
+router.get('/endYear/:endYear/:schoolID', async (req, res) => {
     console.log(req.params.endYear);
     try {
         // Assuming year is stored as "startYear-endYear"
         const endYearPattern = `-${req.params.endYear}`;
         console.log('endYearPattern: ' + endYearPattern);
-        const season = await Season.findOne({ year: { $regex: endYearPattern } });
+        const season = await Season.findOne({ year: { $regex: endYearPattern }, schoolID: req.params.schoolID });
         if (!season) {
             return res.status(404).json({ message: 'Season not found for the given year' });
         }
@@ -150,6 +150,9 @@ router.get('/:id/practices', async (req, res) => {
 // POST a new season with validation
 router.post('/', async (req, res) => {
     const { year, players, schoolID } = req.body;
+
+    console.log(req.body);
+    console.log(schoolID);
 
     if (!year || !Array.isArray(players)) {
         return res.status(400).json({ message: 'Year, players, and schoolID are required.' });

@@ -26,7 +26,7 @@ function CreateSeason() {
       const endYear = year.split('-')[1];
 
       // Fetch for the end year, if exists fetch players
-      fetch(`${serverUrl}/api/seasons/endYear/${endYear}`)
+      fetch(`${serverUrl}/api/seasons/endYear/${endYear}/${sessionStorage.getItem('schoolID')}`)
         .then(response => response.json())
         .then(data => {
           // Call fetch players
@@ -202,7 +202,7 @@ function CreateSeason() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ year, players: allPlayers.map((p) => p._id) }),
+                body: JSON.stringify({ year, players: allPlayers.map((p) => p._id), schoolID: sessionStorage.getItem('schoolID') }),
             });
 
             if (!createSeasonResponse.ok) {
