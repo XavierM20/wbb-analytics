@@ -114,6 +114,7 @@ const LoginPage = () => {
                     auth.loginAction({
                         username: newUser.username,
                         token: newUser.role,
+                        schoolId: schoolId,
                     });
                     navigate('/homepage');
                 } else {
@@ -148,7 +149,7 @@ const LoginPage = () => {
         if(loginData.message){
             setIncorrect(true);
         } else {
-            auth.loginAction({username: loginData.username, password: loginData.password, token: loginData.role});
+            auth.loginAction({username: loginData.username, password: loginData.password, token: loginData.role, schoolId: loginData.schoolId});
             navigate('/homepage');
         }
         };
