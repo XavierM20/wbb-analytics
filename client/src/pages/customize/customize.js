@@ -67,13 +67,7 @@ function PickColors() {
     <button className='btn-home top-right-button' onClick={() => navigate('/homepage')}>Home</button>
       <div className="form-container">
         <label htmlFor="colorInput">Pick a Color (Hex Code):</label>
-        <input
-          type="text"
-          id="colorInput"
-          value={activeColor}
-          onChange={handleColorChange}
-          placeholder="#FFFFFF"
-        />
+        <input type="text" id="colorInput" value={activeColor} onChange={handleColorChange} placeholder="#FFFFFF" aria-label="input for hexcode"/>
         {error && <div className="error-message">{error}</div>}
         <button type="button" onClick={addOrUpdateColor}>
           {editIndex >= 0 ? 'Update Color' : 'Add Color'}
@@ -83,10 +77,8 @@ function PickColors() {
         {colors.map((color, index) => (
           color && (
             <div key={index} className="color-item">
-              <div
-                className="color-preview"
-                style={{ backgroundColor: color }}
-              ></div>
+              <div className="color-preview" style={{ backgroundColor: color }}>
+              </div>
               <span>{color}</span>
               <button onClick={() => editColor(index)}>Edit</button>
               <button onClick={() => deleteColor(index)}>Delete</button>

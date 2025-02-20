@@ -61,13 +61,14 @@ body, html {
 }
 
 /* Ensure no conflicting height on child elements */
-.selectors {
+.ps-selectors {
   display: flex;
   justify-content: space-between; /* Distribute space evenly between selectors */
   align-items: center;
   margin-bottom: auto;
   padding: 10px;
   background-color: var(--card-color);
+  border-radius: 10px;
   width: 100%; /* Set the width to 100% to take up available space */
   box-sizing: border-box; /* Include padding in width calculation */
 }

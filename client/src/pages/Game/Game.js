@@ -468,52 +468,27 @@ const Game = () => {
                     <div className="game-mode-content">
                         {/* Close button in the corner */}
                         <div className="game-selection">
-                            <button
-                                onClick={() => {
-                                    setGameMode('new');
-                                    setGameModeOverlayVisible(false);
-                                    setNewGameOverlay(true);
-                                }}
-                            >
-                                Create New Game
-                            </button>
-                            <button
-                                onClick={() => {
-                                    setGameMode('load');
-                                    setGameModeOverlayVisible(false);
-                                    setLoadGameOverlayVisible(true);
-                                }}
-                            >
-                                Load Existing Game
-                            </button>
+                            <button onClick={() => {setGameMode('new');setGameModeOverlayVisible(false);setNewGameOverlay(true);}}>Create New Game</button>
+                            <button onClick={() => {setGameMode('load');setGameModeOverlayVisible(false);setLoadGameOverlayVisible(true);}}>Load Existing Game</button>
                         </div>
                     </div>
                 </div>
             )}
-
-
             {newGameOverlay && gameMode === 'new' && (
                 <div className="new-game-overlay">
                     <div className="new-game-overlay-content">
                         <h3>Opponent Team Name</h3>
-                        <input
-                            id="opponent-team-input"
-                            type="text"
-                            value={opponentTeamValue}
-                            onChange={(e) => setOpponentTeamValue(e.target.value)}
-                        />
+                        <input id="opponent-team-input" aria-label="input for opponent team name" type="text" value={opponentTeamValue} onChange={(e) => setOpponentTeamValue(e.target.value)}/>
                         <ImagePicker setSelectedFile={setSelectedFile} setFilePreview={setFilePreview} buttonText='Upload Team Logo' displayFileName/>
                         <h3>Location</h3>
                         <button onClick={() => handleLocationClick('home')} className={tempLocation === 'home' ? '' : 'disabled'} disabled={tempLocation === 'home'}>Home</button>
                         <button onClick={() => handleLocationClick('away')} className={tempLocation === 'away' ? '' : 'disabled'} disabled={tempLocation === 'away'}>Away</button>
-
                         <div className='submit-button'>
                             <button onClick={handleInputSubmission}>Submit</button>
                         </div>
                     </div>
                 </div>
             )}
-
             {loadGameOverlayVisible && gameMode === 'load' && (
                 <div className="load-game-overlay">
                     <div className="load-game-overlay-content">
@@ -521,7 +496,6 @@ const Game = () => {
                     </div>
                 </div>
             )}
-
             <div className="main">
                 <button className='btn-home top-right-button' onClick={() => navigate('/homepage')}>Home</button>
                 <Text style={{ color: 'white',
@@ -541,7 +515,6 @@ const Game = () => {
                         />
                     )}
                 </Text>
-
                 <div className='tempo-timer'>
                     <TempoTimer 
                         isTiming={isTiming}
@@ -551,7 +524,6 @@ const Game = () => {
                         setCurrentTime={setCurrentTempo}
                     />
                 </div>
-                
                 <div className="game-tempo-container">
                     <div className="last-tempo-container">
                     <View style={styles.table}>
@@ -599,26 +571,22 @@ const Game = () => {
                         />
                     </div>
                 </div>
-
                 <div className="shotContainer">
                     <ShotPopup
                         isOpen={newGameOverlay}
                         onClose={() => setNewGameOverlay(true)}
                     />
-
                     <>
                         <div className="MadeButton" onClick={() => handleShotOutcome('made')}>Made</div>
                         <div className="MissedButton" onClick={() => handleShotOutcome('missed')}>Missed</div>
                     </>
                 </div>
-
                 {showPlayerSelection && (
                     <PlayerSelectionPopup
                         onPlayerSelect={handlePlayerSelection}
                         seasonId={getSeasonByDate()._id}
                     />
                 )}
-                
                 <div className="submit-delete-container">
                     <button className="submit-game-button" onClick={submitGame}> Submit Game </button>
                     <button className="delete-game-button" onClick={deleteGame}> Delete Game </button>
@@ -627,7 +595,6 @@ const Game = () => {
         </>
     );
 }
-
 const styles = StyleSheet.create({
     table: {
       width: '100%',

@@ -212,7 +212,6 @@ const Practice = () => {
                         </>
                     </div>
                 </div>
-
                 <div className="lists-column">
                     <Players
                         listA={listA}
@@ -224,9 +223,7 @@ const Practice = () => {
                     />
                 </div>
             </div>
-            <button onClick={() => navigate('/drill')} className="create-session-button">
-                Create Practice
-            </button>
+            <button onClick={() => navigate('/drill')} className="create-session-button">Create Practice</button>
             {/*onClick={updatePractice}>//
             //</div>Create Practice*/}
         </div>
