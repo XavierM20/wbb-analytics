@@ -25,6 +25,7 @@ const AuthProvider = ({ children }) => {
                 setToken(data.token);
 
                 sessionStorage.setItem("site", data.token);
+                sessionStorage.setItem("schoolID", data.schoolId);
 
                 // Use token here instead of data.token
             }

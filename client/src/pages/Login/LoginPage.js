@@ -117,7 +117,11 @@ const LoginPage = () => {
 
                 const newUser = await userResponse.json();
                 if (!newUser.message) {
-                    auth.loginAction({ username: newUser.username, token: newUser.role });
+                    auth.loginAction({
+                        username: newUser.username,
+                        token: newUser.role,
+                        schoolId: schoolId,
+                    });
                     checkSeasonAndRedirect(newUser.schoolId);
                 } else {
                     setErrorUser(newUser.message);
@@ -142,7 +146,7 @@ const LoginPage = () => {
             if (loginData.message) {
                 setIncorrect(true);
             } else {
-                auth.loginAction({ username: loginData.username, token: loginData.role });
+                auth.loginAction({username: loginData.username, password: loginData.password, token: loginData.role, schoolId: loginData.schoolId});
                 navigate('/homepage');
             }
         } catch (error) {

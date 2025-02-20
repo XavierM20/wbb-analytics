@@ -13,7 +13,8 @@ const seasonSchema = new Schema({
     year: { type: String, required: true },
     players: [{ type: Schema.Types.ObjectId, ref: 'Player'}],
     games: [{ type: Schema.Types.ObjectId, ref: 'Game', default: [] }],
-    practices: [{ type: Schema.Types.ObjectId, ref: 'Practice', default: [] }]
+    practices: [{ type: Schema.Types.ObjectId, ref: 'Practice', default: [] }],
+    schoolID: { type: Schema.Types.ObjectId, ref: 'School', required: true } // Added reference to School
 });
 
 module.exports = mongoose.model('Season', seasonSchema);
