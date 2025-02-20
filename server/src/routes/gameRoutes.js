@@ -27,13 +27,25 @@ const gameSchema = Joi.object({
     team_logo: Joi.string().optional(),
 });
 
-// GET all games
-router.get('/', isAuthenticated, async (req, res) => {
+// GET all games for a specific school
+router.get('/:seasonID', isAuthenticated, async (req, res) => {
     try {
-        const games = await Game.find().populate('season_id tempo_events shot_events');
+        const { seasonID } = req.params;
+        console.log(seasonID);
+
+        if (!mongoose.isValidObjectId(seasonID)) {
+            console.log('1');
+            return res.status(400).json({ error: 'Invalid seasonID format' });
+        }
+        console.log(2);
+
+        const games = await Game.find({ season_id: new mongoose.Types.ObjectId(seasonID) });
+        console.log(games);
+
         res.json(games);
-    } catch (err) {
-        res.status(500).json({ message: 'Internal server error', error: err.message });
+    } catch (error) {
+        console.error("Error retrieving games:", error);
+        res.status(500).json({ error: 'Server error' });
     }
 });
 
@@ -95,14 +107,30 @@ router.get('/byShotEvent/:shotEventId', isAuthenticated, async (req, res) => {
 });
 
 // GET a game by ID
-router.get('/:id', isAuthenticated, async (req, res) => {
+router.get('/id/:id', isAuthenticated, async (req, res) => {
     try {
-        const game = await Game.findById(req.params.id);
+        console.log("Received game ID:", req.params.id);
+        console.log("Type of ID:", typeof req.params.id);
+
+        const { id } = req.params;
+
+        console.log("Received game ID:", id);
+
+        // Validate ID format
+        if (!mongoose.isValidObjectId(id)) {
+            return res.status(400).json({ message: 'Invalid game ID format' });
+        }
+
+        // Query for the game by ObjectId
+        const game = await Game.findOne({ _id: new mongoose.Types.ObjectId(req.params.id) });
+
         if (!game) {
             return res.status(404).json({ message: 'Game not found' });
         }
+
         res.json(game);
     } catch (err) {
+        console.error("Error fetching game:", err);
         res.status(500).json({ message: 'Internal server error', error: err.message });
     }
 });

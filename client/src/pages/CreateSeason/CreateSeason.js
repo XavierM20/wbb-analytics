@@ -173,7 +173,7 @@ function CreateSeason() {
 
         // Check if the season already exists
         const endYear = year.split('-')[1];
-        const seasonResponse = await fetch(`${serverUrl}/api/seasons/endYear/${endYear}`);
+        const seasonResponse = await fetch(`${serverUrl}/api/seasons/endYear/${endYear}/${sessionStorage.getItem('schoolID')}`);
         const existingSeason = await seasonResponse.json();
 
         if (existingSeason.message !== 'Season not found for the given year') {
