@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 function CreateSeason() {
   const [year, setYear] = useState('');
   const [players, setPlayers] = useState([]);
-  const [activePlayer, setActivePlayer] = useState({ name: '', jersey_number: '' });
+  const [activePlayer, setActivePlayer] = useState({ name: '', jersey_number: '', position: ''   });
   const [editIndex, setEditIndex] = useState(-1);
   const [jerseyError, setJerseyError] = useState('');
   const [previousSeasonPlayers, setPreviousSeasonPlayers] = useState([]);
@@ -95,6 +95,8 @@ function CreateSeason() {
         setJerseyError('Jersey number cannot be empty.');
         return;
     }
+
+   
 
     const jerseyNumberInt = parseInt(activePlayer.jersey_number, 10);
     if (isNaN(jerseyNumberInt) || jerseyNumberInt < 0) {
@@ -216,7 +218,7 @@ function CreateSeason() {
         // Reset form state
         setYear('');
         setPlayers([]);
-        setActivePlayer({ name: '', jersey_number: '' });
+        setActivePlayer({ name: '', jersey_number: '', position: ''});
         setEditIndex(-1);
     } catch (error) {
         console.error('Error handling submission:', error);
@@ -267,9 +269,16 @@ function CreateSeason() {
               onChange={(e) => handlePlayerChange('jersey_number', e.target.value)}
             />
             {jerseyError && <div className="jersey-error">{jerseyError}</div>}
-            <button type="button" onClick={addOrUpdatePlayer}>
-              {editIndex >= 0 ? 'Update Player' : 'Add Player'}
-            </button>
+
+            <label>Position:</label>
+            <select aria-label="select for position" value={activePlayer.position} onChange={(e) => handlePlayerChange('position', e.target.value)}>
+              <option value="PG">PG</option>
+              <option value="SG">SG</option>
+              <option value="SF">SF</option>
+              <option value="PF">PF</option>
+              <option value="C">C</option>
+            </select>
+            <button type="button" onClick={addOrUpdatePlayer}>{editIndex >= 0 ? 'Update Player' : 'Add Player'}</button>
           </div>
           <button type="submit">Create/Edit Season</button>
         </form>
@@ -280,9 +289,7 @@ function CreateSeason() {
         </View>
         {players.map((player, index) => (
           <div key={index} className="player-list-item">
-            <div className="player-info">
-              {player.name} - {player.jersey_number}
-            </div>
+            <div className="player-info">{player.name} - {player.jersey_number} - {player.position}</div>
             <div className="player-actions">
               <button className="btnEdit" onClick={() => editPlayer(index)}>Edit</button>
               <button className="btnDelete" onClick={() => deletePlayer(index)}>Delete</button>

@@ -7,6 +7,7 @@ const Joi = require('joi');
 const playerSchema = Joi.object({
     name: Joi.string().required(),
     jersey_number: Joi.number().integer().min(0).required(),
+    position: Joi.string().required(),
     seasons: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)).optional() // Validates MongoDB ObjectIds
 });
 
