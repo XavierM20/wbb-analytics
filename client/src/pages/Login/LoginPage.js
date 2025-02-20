@@ -15,7 +15,7 @@ const LoginPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [school, setSchool] = useState('');
+    const [schoolId, setSchoolId] = useState('');
     const [schools, setSchools] = useState([]);
     const [isAddingSchool, setIsAddingSchool] = useState(false);
     const [newSchool, setNewSchool] = useState('');
@@ -101,14 +101,14 @@ const LoginPage = () => {
             error = true;
         }
 
-        if (!school) {
+        if (!schoolId) {
             alert('Please select or add a school.');
             error = true;
         }
 
         if (!error) {
             try {
-                const userData = { username, password, school };
+                const userData = { username, password, schoolId };
                 const userResponse = await fetch(`${serverUrl}/api/users`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -170,7 +170,7 @@ const LoginPage = () => {
             const result = await response.json();
             if (response.ok) {
                 setSchools([...schools, result]);
-                setSchool(result.name);
+                setSchoolId(result._id);
                 setNewSchool('');
                 setCity('');
                 setState('');
@@ -188,7 +188,7 @@ const LoginPage = () => {
         if (value === "add-new") {
             setIsAddingSchool(true);
         } else {
-            setSchool(value);
+            setSchoolId(value);
             setIsAddingSchool(false);
         }
     };
