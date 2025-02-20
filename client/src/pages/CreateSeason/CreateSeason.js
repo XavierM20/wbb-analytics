@@ -121,7 +121,7 @@ function CreateSeason() {
     }
     setPlayers(updatedPlayers);
     console.log('updatedPlayers:', updatedPlayers);
-    setActivePlayer({ name: '', jersey_number: '' }); // Clear the input fields
+    setActivePlayer({ name: '', jersey_number: '', position: ''}); // Clear the input fields
     setJerseyError(''); // Clear any error messages
 };
 
