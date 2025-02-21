@@ -1,5 +1,5 @@
 .home-page-container {
-  background: url('../../images/homepageWBB.jpeg') no-repeat center center !important;;
+  background: url('../../images/HRALogo.png') no-repeat center center !important;;
   background-size: cover;
   position: fixed;
   height: 100vh;
@@ -37,8 +37,8 @@
     display: none;
 }
 .button-practice {
-    background: url('../../images/practice.jpg') no-repeat center center / cover;;
-    height: calc(35vw);
+    background: url('../../images/HRALion.png') no-repeat center center / cover;;
+    height: calc(35vh);
     width: calc(18vw); /* Buttons fill their grid cell */
     background-size: cover; /* Ensure images fit properly */
     background-position: center;
@@ -56,7 +56,7 @@
 }
 
 .button-game {
-    background: url('../../images/game.jpg') no-repeat center center / cover;;
+    background: url('../../images/HRALion.png') no-repeat center center / cover;;
     height: calc(35vw);
     width: calc(18vw); /* Buttons fill their grid cell */
     aspect-ratio: 2 / 6; /* Maintain consistent aspect ratio */
@@ -75,7 +75,7 @@
     cursor: pointer;
 }
 .button-playerStats {
-    background: url('../../images/playerStats.jpg') no-repeat center center / cover;;
+    background: url('../../images/HRALion.png') no-repeat center center / cover;;
     height: calc(35vw);
     width: calc(18vw); /* Maintain consistent aspect ratio */
     background-size: cover; /* Ensure images fit properly */
@@ -93,7 +93,7 @@
     cursor: pointer;
 }
 .button-teamStats {
-    background: url('../../images/teamStats.jpg') no-repeat center center / cover;;
+    background: url('../../images/HRALion.png') no-repeat center center / cover;;
     height: calc(35vw);
     width: calc(18vw); /* Maintain consistent aspect ratio */
     background-size: cover; /* Ensure images fit properly */
@@ -111,7 +111,7 @@
     cursor: pointer;
 }
 .button-settings {
-    background: url('../../images/settings.jpg') no-repeat center center / cover;;
+    background: url('../../images/HRALion.png') no-repeat center center / cover;;
     height: calc(35vw);
     width: calc(18vw); /* Maintain consistent aspect ratio */
     background-size: cover; /* Ensure images fit properly */

@@ -1,7 +1,8 @@
 .settings-page-container {
-    background: url('../../images/homepageWBB.jpeg') !important;
+    background: url('../../images/HRALogo.png') !important;
     background-size: cover;
-    height: 100vh;
+    height: 50vh;
+    width: 100vw;
     margin: 0 auto;
     padding: 20px;
     display: flex;
@@ -14,7 +15,7 @@
 
 .btn-home {
     padding: 10px 20px;
-    background-color: #007bff; /* Bootstrap blue */
+    background-color: #172B4F; /* Bootstrap blue */
     color: white;
     border: none;
     border-radius: 5px;
@@ -54,12 +55,12 @@
 }
 
 .btn-JSON:hover {
-    background-color: #EECF08;
+    background-color: #C89D46;
     color: #FFFF;
 }
 
 .btn-CSV:hover {
-    background-color: #EECF08;
+    background-color: #C89D46;
     color: #FFFF;
 }
 
@@ -75,7 +76,7 @@
 }
 
 .Register-btn:hover {
-    background-color: #EECF08;
+    background-color: #C89D46;
     color: #FFFF;
 }
 
@@ -123,7 +124,7 @@
   }
   
 .submitReg-button  {
-    background-color: #FFDD00; /* example color */
+    background-color: #C89D46; /* example color */
     color: #000000;
     text-decoration: none;
     font-weight: bold;
@@ -137,16 +138,16 @@
 
   }
 .submitReg-button:hover {
-    background-color: #EECF08 !important;
+    background-color: #C89D46 !important;
     transform: scale(1.01);
 }
 
 .season:hover{
-    background-color: #EECF08;
+    background-color: #C89D46;
     transform: scale(1.01);
 }
 
 .customize-team-colors:hover{
-    background-color: #EECF08 !important;
+    background-color: #C89D46 !important;
     transform: scale(1.01);
 }

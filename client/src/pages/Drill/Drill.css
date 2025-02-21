@@ -1,6 +1,6 @@
 
 .background-container{
-    background: url('../../images/homepageWBB.jpeg') no-repeat center center;
+    background: url('../../images/HRALogo.png') no-repeat center center;
     background-size: cover;
     position: fixed;
     height: 100vh;
@@ -9,7 +9,7 @@
 }
 .btn-home {
     padding: 10px 20px;
-    background-color: #007bff; /* Bootstrap blue */
+    background-color: #172B4F; /* Bootstrap blue */
     color: white;
     border: none;
     border-radius: 5px;
