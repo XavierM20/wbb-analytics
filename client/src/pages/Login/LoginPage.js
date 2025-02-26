@@ -224,6 +224,25 @@ const LoginPage = () => {
                             <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
                             {errorConfirmPass && <p className="error">{errorConfirmPass}</p>}
                         </label>
+                        <label>
+                            <select value={schoolId} onChange={(e) => handleSchoolChange(e.target.value)}>
+                                <option value="">Select a school</option>
+                                {schools.map((s) => (
+                                    <option key={s.id} value={s._id}> {/* Use s.id as the value */}
+                                        {s.name}
+                                    </option>
+                                ))}
+                                <option value="add-new">Add School</option>
+                            </select>
+                        </label>
+                        {isAddingSchool && (
+                            <div>
+                                <label><input type="text" placeholder="Enter new school name" aria-label="input for new school name" value={newSchool} onChange={(e) => setNewSchool(e.target.value)}/></label>
+                                <label><input type="text" placeholder="Enter City" aria-label="input for city" value={city} onChange={(e) => setCity(e.target.value)}/></label>
+                                <label><input type="text" placeholder="Enter State" aria-label="input for state" value={state} onChange={(e) => setState(e.target.value)}/></label>
+                                <button type="button" onClick={handleAddSchool}>Add</button>
+                            </div>
+                        )}
                         <button type="submit">Submit</button>
                         <p className="switch" onClick={moveToLogin}>Already have an account? <b>Login</b></p>
                     </form>
