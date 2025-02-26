@@ -79,6 +79,7 @@ useEffect(() => {
       //console.log(playerData[0]); //Array
       setAllPlayers(playerData.map(player => ({
       label: `${player.name}`,
+      position: `${player.position}`,
       value: player._id.toString(),
     })));
       if (playerID) {
@@ -515,9 +516,7 @@ const handleCourtClick = (area) => {
           </div>
           <div className="bio-text">
               <p><strong>Name:</strong> {selectedPlayer ? selectedPlayer.label : "Select a player"}</p>
-              <p><strong>Position:</strong> PF</p>
-              <p><strong>Born:</strong> 9/29/1988</p>
-              <p><strong>From:</strong> Suitland, MD</p>
+              <p><strong>Position:</strong> {selectedPlayer ? selectedPlayer.position : "N/A"}</p>
           </div>
           <div className="player-court-container">
               <ImageMapper
