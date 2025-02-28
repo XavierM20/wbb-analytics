@@ -1,5 +1,6 @@
 .home-page-container {
-  background: url('../../images/HRALogo.png') no-repeat center center !important;;
+  /*background: url('../../images/HRALogo.png') no-repeat center center !important;;*/
+  background-color: rgba(23, 43, 79, 1);
   background-size: cover;
   position: fixed;
   height: 100vh;
@@ -37,15 +38,17 @@
     display: none;
 }
 .button-practice {
-    background: url('../../images/HRALion.png') no-repeat center center / cover;;
-    height: calc(35vh);
+    /*background: url('../../images/HRALion.png') no-repeat center center / cover;;*/
+    background-color: rgba(200,157,70, 1);
+    height: calc(35vw);
     width: calc(18vw); /* Buttons fill their grid cell */
+    aspect-ratio: 2 / 6; /* Maintain consistent aspect ratio */
     background-size: cover; /* Ensure images fit properly */
     background-position: center;
     display: flex;
     justify-content: flex-start; /* Align text to the start */
     align-items: flex-start; /* Text stays at the bottom */
-    color: white;
+    color: cornsilk;
     text-align: left;
     padding: 2%; /* Add padding inside the button */
     font-size: calc(2vw + 0.5em); /* Text dynamically scales with viewport width */
@@ -56,7 +59,8 @@
 }
 
 .button-game {
-    background: url('../../images/HRALion.png') no-repeat center center / cover;;
+    /*background: url('../../images/HRALion.png') no-repeat center center / cover;;*/
+    background-color: rgba(200,157,70, 1);
     height: calc(35vw);
     width: calc(18vw); /* Buttons fill their grid cell */
     aspect-ratio: 2 / 6; /* Maintain consistent aspect ratio */
@@ -65,7 +69,7 @@
     display: flex;
     justify-content: flex-start; /* Align text to the start */
     align-items: flex-start; /* Text stays at the bottom */
-    color: white;
+    color: cornsilk;
     text-align: left;
     padding: 2%; /* Add padding inside the button */
     font-size: calc(2vw + 0.5em); /* Text dynamically scales with viewport width */
@@ -75,15 +79,17 @@
     cursor: pointer;
 }
 .button-playerStats {
-    background: url('../../images/HRALion.png') no-repeat center center / cover;;
+    /*background: url('../../images/HRALion.png') no-repeat center center / cover;;*/
+    background-color: rgba(200,157,70, 1);
     height: calc(35vw);
-    width: calc(18vw); /* Maintain consistent aspect ratio */
+    width: calc(18vw); /* Buttons fill their grid cell */
+    aspect-ratio: 2 / 6; /* Maintain consistent aspect ratio */
     background-size: cover; /* Ensure images fit properly */
     background-position: center;
     display: flex;
     justify-content: flex-start; /* Align text to the start */
     align-items: flex-start; /* Text stays at the bottom */
-    color: white;
+    color: cornsilk;
     text-align: left;
     padding: 2%; /* Add padding inside the button */
     font-size: calc(2vw + 0.5em); /* Text dynamically scales with viewport width */
@@ -93,15 +99,17 @@
     cursor: pointer;
 }
 .button-teamStats {
-    background: url('../../images/HRALion.png') no-repeat center center / cover;;
+    /*background: url('../../images/HRALion.png') no-repeat center center / cover;;*/
+    background-color: rgba(200,157,70, 1);
     height: calc(35vw);
-    width: calc(18vw); /* Maintain consistent aspect ratio */
+    width: calc(18vw); /* Buttons fill their grid cell */
+    aspect-ratio: 2 / 6; /* Maintain consistent aspect ratio */
     background-size: cover; /* Ensure images fit properly */
     background-position: center;
     display: flex;
     justify-content: flex-start; /* Align text to the start */
     align-items: flex-start; /* Text stays at the bottom */
-    color: white;
+    color: cornsilk;
     text-align: left;
     padding: 2%; /* Add padding inside the button */
     font-size: calc(2vw + 0.5em); /* Text dynamically scales with viewport width */
@@ -111,15 +119,17 @@
     cursor: pointer;
 }
 .button-settings {
-    background: url('../../images/HRALion.png') no-repeat center center / cover;;
+    /*background: url('../../images/HRALion.png') no-repeat center center / cover;;*/
+    background-color: rgba(200,157,70, 1);
     height: calc(35vw);
-    width: calc(18vw); /* Maintain consistent aspect ratio */
+    width: calc(18vw); /* Buttons fill their grid cell */
+    aspect-ratio: 2 / 6; /* Maintain consistent aspect ratio */
     background-size: cover; /* Ensure images fit properly */
     background-position: center;
     display: flex;
     justify-content: flex-start; /* Align text to the start */
     align-items: flex-start; /* Text stays at the bottom */
-    color: white;
+    color: cornsilk;
     text-align: left;
     padding: 2%; /* Add padding inside the button */
     font-size: calc(2vw + 0.5em); /* Text dynamically scales with viewport width */
@@ -167,8 +177,8 @@ position: fixed;
 top: 50%;
 left: 50%;
 transform: translate(-50%, -50%);
-background-color: white;
-border: 1px solid #ccc;
+background-color: cornsilk;
+border: 1px solid cornsilk;
 padding: 20px;
 transition: opacity .5s ease !important; /* Smooth transition for opacity */
 }
@@ -199,7 +209,7 @@ transition: opacity .5s ease !important; /* Smooth transition for opacity */
 }
 
 .close-button:hover {
-  color: #888;
+  color: cornsilk;
 }
 
 .submit-button {
@@ -219,5 +229,5 @@ transition: opacity .5s ease !important; /* Smooth transition for opacity */
     border-radius: 5px;
     cursor: pointer;
     background-color: red;
-    color: #FFFF;
+    color: cornsilk;
 }

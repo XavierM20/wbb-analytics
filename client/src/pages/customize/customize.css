@@ -1,5 +1,6 @@
 .pick-colors {
     background-size: cover;
+    background-color: rgba(23, 43, 79, 1);
     position: fixed;
     height: calc(100vw);
     width: calc(100vw);
@@ -16,7 +17,7 @@
   .btn-home {
     padding: 10px 20px;
     background-color: #172B4F !important;  
-    color: white !important;
+    color: cornsilk !important;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -35,11 +36,11 @@
   }
   
   .pick-colors h1{
-    color: white;
+    color: cornsilk;
   }
 
   .pick-colors label{
-    color: white;
+    color: cornsilk;
   }
 
   .pick-colors small{
@@ -101,7 +102,7 @@
     padding: 8px;
     margin-top: 5px;
     border-radius: 4px;
-    border: 1px solid #ccc;
+    border: 1px solid cornsilk;
   }
   
   .pick-colors input:focus {
@@ -112,7 +113,7 @@
   .pick-colors button {
     padding: 10px 20px;
     margin-top: 20px;
-    background-color: white; /* Purple background for color theme */
+    background-color: cornsilk; /* Purple background for color theme */
     color: black; /* White text for contrast */
     border: none;
     border-radius: 5px;
@@ -127,7 +128,7 @@
   .pick-colors .delete-button,
   .pick-colors .edit-button {
     background-color: #ff0000; /* Red background for delete button */
-    color: white; /* White text for contrast */
+    color: cornsilk; /* White text for contrast */
     padding: 5px 10px;
     margin-left: 10px;
   }

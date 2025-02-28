@@ -5,7 +5,8 @@ Layout containers
 
 */
 .practice-container{
-    background: url('../../images/HRALogo.png') no-repeat center center;
+    /*background: url('../../images/HRALogo.png') no-repeat center center;*/
+    background-color: rgba(23, 43, 79, 1);
     background-size: cover;
     position: fixed;
     height: 100vh;
@@ -26,7 +27,7 @@ Layout containers
   .btn-home {
     padding: 10px 20px;
     background-color: #172B4F; /* Bootstrap blue */
-    color: white;
+    color: cornsilk;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -153,7 +154,7 @@ Session Information
 /* SessionButtons.css */
 .input-field {
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid cornsil;
     border-radius: 5px;
     width: 100%;
 }
@@ -200,7 +201,7 @@ Team Selection Lists
 
 .list h2 {
     font-size: 1.5em;
-    color: white;
+    color: cornsilk;
     margin-bottom: 15px;
     
 }
@@ -231,8 +232,8 @@ Team Selection Lists
 }
 
 .add-dropdown-button{
-    background-color: #27ae60;
-    color: white;
+    background-color: rgba(200,157,70, 1);;
+    color: cornsilk;
     padding: 7px;
     justify-content: center;
     height: calc(3.5vw);
@@ -259,7 +260,7 @@ Team Selection Lists
     width: 100%;
     padding: 12px;
     font-size: 1.2em;
-    border: 1px solid #ccc;
+    border: 1px solid cornsilk;
     border-radius: 4px;
     margin-bottom: 10px;
 }
@@ -268,7 +269,7 @@ Team Selection Lists
     width: auto;
     max-width: 100%;
     padding: 8px 12px;
-    border: 1px solid #ccc;
+    border: 1px solid cornsilk;
     border-radius: 4px;
     background-color: grey;
     color: grey;
@@ -283,7 +284,7 @@ Team Selection Lists
     margin-left: 10px;
     vertical-align: middle;
     background-color: #ec2e19;
-    color: white;
+    color: cornsilk;
 }
 
 .remove-player-button:hover {
@@ -319,7 +320,7 @@ Team Selection Lists
 
 .drill-card {
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid cornsilk;
     border-radius: 5px;
     width: 100%;
 }
@@ -337,7 +338,7 @@ Team Selection Lists
     margin-left: 10px;
     border-radius: 15%;
     vertical-align: middle;
-    color: white;
+    color: cornsilk;
 }
 
 .edit-drill-button {
@@ -347,12 +348,12 @@ Team Selection Lists
     margin-left: 10px;
     border-radius: 15%;
     vertical-align: middle;
-    color: white;
+    color: cornsilk;
 }
 
 .drill-button {
     background-color: rgba(63, 68, 68, .7);
-    color: white;
+    color: cornsilk;
     padding: 20px 30px; /* Increase padding for larger button size */
     font-size: 1.5em; /* Increase font size for better readability */
     border: none;
@@ -406,8 +407,8 @@ Team Selection Lists
 }
 
 .add-drill-button {
-    background-color: #27ae60;
-    color: white; 
+    background-color: rgba(200,157,70, 1);;
+    color: cornsilk; 
     padding: 7px;
     font-size: 12.5px;
     border: none;
@@ -453,7 +454,7 @@ Team Selection Lists
 
 .drill-modal-content h2 {
     font-size: 1.8em;
-    color: white; /* Use the header color variable */
+    color: cornsilk; /* Use the header color variable */
     margin-bottom: 20px;
 }   
 
@@ -461,14 +462,14 @@ Team Selection Lists
     font-size: 1.2em;
     margin-bottom: 10px;
     width: 100%; /* Full width for labels */
-    color: white; /* Dark color for text */
+    color: cornsilk; /* Dark color for text */
 }
 
 .drill-modal-content input[type="text"] {
     padding: 10px;
     margin-bottom: 20px;
     width: 100%; /* Full width for inputs */
-    border: 1px solid #ccc;
+    border: 1px solid cornsilk;
     border-radius: 4px;
     font-size: 1em; /* Readable font size */
 }
@@ -478,7 +479,7 @@ Team Selection Lists
     margin-top: 10px;
     width: calc(70% - 20px); /* Half width minus padding */
     background-color: #27ae60;
-    color: white;
+    color: cornsilk;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -508,7 +509,7 @@ Team Selection Lists
     bottom: 40px;
     right: 20px; /* Adjust this if it's too far to the right */
     background-color: rgba(63, 68, 68, .7); /* Using primary color variable */
-    color: white; /* Using light text color variable for contrast */
+    color: cornsilk; /* Using light text color variable for contrast */
     border: none;
     border-radius: 4px;
     padding: 30px; /* Adjusted padding for a better proportion */

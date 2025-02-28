@@ -22,7 +22,7 @@
 .btn-home {
   padding: 10px 20px;
   background-color: #007bff; /* Bootstrap blue */
-  color: white;
+  color: cornsilk;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -36,13 +36,14 @@ body, html {
   margin: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: rgba(63, 68, 68, .7);
-  color: white
+  color: cornsilk
 }
 
 
 
 .team-stats-container {
-  background: url('../../images/HRALogo.png') no-repeat center center;
+  /*background: url('../../images/HRALogo.png') no-repeat center center;*/
+  background-color: rgba(23, 43, 79, 1);
   background-size: cover;
   height: 95vh;
   width: 100vw;
@@ -76,7 +77,7 @@ body, html {
   max-width: 390px; /* Added max-width for better control */
   margin-left: auto; /* Keeps it on the right side */
   margin-top: 1px;
-  background-color: white;
+  background-color: cornsilk;
   padding: 20px;
   border-radius: 8px;
   margin-bottom: 60px; /* Reduced from 40px to bring tempo cards closer */
@@ -140,7 +141,7 @@ body, html {
   justify-content: center;
   margin: auto;
   padding: 10px;
-  border: 0px solid #ccc;
+  border: 0px solid cornsilk;
   border-radius: 10px;
   background-color: rgba(63, 68, 68, .7);
 }
@@ -173,7 +174,7 @@ body, html {
 .leader-category h4 {
   margin-bottom: 1px;
   font-size: 1.1rem;
-  color: white;
+  color: cornsilk;
   margin-right: 150px;
 }
 
@@ -190,14 +191,14 @@ body, html {
   margin: 0;
   font-size: 1rem;
   margin-left: 100px;
-  color: white;
+  color: cornsilk;
 }
 
 /* Player statistic */
 .leader-category .stat {
   font-size: 1.2rem;
   font-weight: bold;
-  color: white;
+  color: cornsilk;
 }
 
 

@@ -1,5 +1,6 @@
 .settings-page-container {
-    background: url('../../images/HRALogo.png') !important;
+    /*background: url('../../images/HRALogo.png') !important;*/
+    background-color: rgba(23, 43, 79, 1);
     background-size: cover;
     height: 50vh;
     width: 100vw;
@@ -15,8 +16,8 @@
 
 .btn-home {
     padding: 10px 20px;
-    background-color: #172B4F; /* Bootstrap blue */
-    color: white;
+    background-color: cornsilk; /* Bootstrap blue */
+    color: black;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -35,7 +36,7 @@
 }
 
 .settings-button-container h1 {
-    color: #FFFF; /* Change this to your desired color */
+    color: cornsilk; /* Change this to your desired color */
     margin-top: 0; /* Remove top margin */
     margin-bottom: 20px; /* Adjust bottom margin as needed */
     text-align: center;
@@ -56,17 +57,17 @@
 
 .btn-JSON:hover {
     background-color: #C89D46;
-    color: #FFFF;
+    color: cornsilk;
 }
 
 .btn-CSV:hover {
     background-color: #C89D46;
-    color: #FFFF;
+    color: cornsilk;
 }
 
 .btn {
-    border: 1px solid #fff;
-    color: #fff;
+    border: 1px solid cornsilk;
+    color: cornsilk;
     background-color: rgba(63, 68, 68, .7);;
     display: block;
     padding: 20px 40px; /* Increased padding for bigger buttons */
@@ -77,7 +78,7 @@
 
 .Register-btn:hover {
     background-color: #C89D46;
-    color: #FFFF;
+    color: cornsilk;
 }
 
 .register-overlay {
@@ -102,7 +103,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: white;
+  background-color: cornsilk;
   border: 1px solid #ccc;
   padding: 20px;
   transition: opacity .5s ease !important; /* Smooth transition for opacity */
@@ -114,7 +115,7 @@
     right: 5px;
     background: none !important;
     border: none !important;
-    color: white !important;
+    color: cornsilk !important;
     font-size: 20px;
     cursor: pointer;
 }
