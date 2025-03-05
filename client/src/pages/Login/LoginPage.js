@@ -167,6 +167,18 @@ const LoginPage = () => {
                     <form onSubmit={handleRegister}>
                         <h2>Register</h2>
                         <label>
+                            <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
+                            {errorUser && <p className="error">{errorUser}</p>}
+                        </label>
+                        <label>
+                            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                            {errorPass && <p className="error">{errorPass}</p>}
+                        </label>
+                        <label>
+                            <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+                            {errorConfirmPass && <p className="error">{errorConfirmPass}</p>}
+                        </label>
+                        <label>
                             Select Role:
                             <select value={role} onChange={(e) => setRole(e.target.value)}>
                                 <option value="">Select</option>
@@ -182,18 +194,6 @@ const LoginPage = () => {
                                     <option key={sch.id} value={sch.id}>{sch.name}</option>
                                 ))}
                             </select>
-                        </label>
-                        <label>
-                            <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
-                            {errorUser && <p className="error">{errorUser}</p>}
-                        </label>
-                        <label>
-                            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                            {errorPass && <p className="error">{errorPass}</p>}
-                        </label>
-                        <label>
-                            <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
-                            {errorConfirmPass && <p className="error">{errorConfirmPass}</p>}
                         </label>
                         <button type="submit">Submit</button>
                         <p className="switch" onClick={() => setIsRegistering(false)}>Already have an account? <b>Login</b></p>
