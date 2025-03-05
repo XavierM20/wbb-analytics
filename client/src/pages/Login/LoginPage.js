@@ -49,6 +49,9 @@ const LoginPage = () => {
         fetchSchools();
     }, [serverUrl]);
 
+    const handleSchoolChange = (e) => {
+        setSchool(e.target.value);
+    };
     const moveToRegister = () => {
         setUsername('');
         setPassword('');
@@ -201,10 +204,11 @@ const LoginPage = () => {
                         </label>
                         {incorrect && <p className='error'>Incorrect Username or Password</p>}
                         <button type="submit">Submit</button>
-                        <p className='switch' onClick={moveToRegister}>Don't have an account? <b>Register</b></p>
+                        <p className='switch' onClick={() => setIsRegistering(true)}>Don't have an account? <b>Register</b></p>
                     </form>
                 ) : (
                     <form onSubmit={handleRegister}>
+                        <h2>Register</h2>
                         <label>
                             Select Role:
                             <select value={role} onChange={(e) => setRole(e.target.value)}>
@@ -213,8 +217,15 @@ const LoginPage = () => {
                                 <option value="Player">Player</option>
                             </select>
                         </label>
-
-                        <h2>Register</h2>
+                        <label>
+                            Select School:
+                            <select value={school} onChange={handleSchoolChange}>
+                                <option value="">Select</option>
+                                {schools.map((sch) => (
+                                    <option key={sch.id} value={sch.id}>{sch.name}</option>
+                                ))}
+                            </select>
+                        </label>
                         <label>
                             <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
                             {errorUser && <p className="error">{errorUser}</p>}
@@ -228,7 +239,7 @@ const LoginPage = () => {
                             {errorConfirmPass && <p className="error">{errorConfirmPass}</p>}
                         </label>
                         <button type="submit">Submit</button>
-                        <p className="switch" onClick={moveToLogin}>Already have an account? <b>Login</b></p>
+                        <p className="switch" onClick={() => setIsRegistering(false)}>Already have an account? <b>Login</b></p>
                     </form>
                 )}
             </div>
