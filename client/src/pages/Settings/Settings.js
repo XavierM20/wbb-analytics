@@ -1,47 +1,36 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/AuthProvider';
-import Register from './Register.js';
 import './Settings.css';
 
 const Settings = () => {
     const navigate = useNavigate();
-    const [error, setError] = useState('');
-    const [registration, setRegistration] = useState(false);
     const auth = useAuth();
 
     const handleExport = (type) => {
         try {
-            if (type === 'JSON') {
-                // Add logic to export JSON
-                console.log('Exporting JSON...');
-            } else if (type === 'CSV') {
-                // Add logic to export CSV
-                console.log('Exporting CSV...');
-            }
+            console.log(`Exporting ${type}...`);
         } catch (err) {
-            setError(`Error exporting ${type}. Please try again.`);
+            console.error(`Error exporting ${type}:`, err);
         }
     };
 
     return (
         <div className="settings-page-container">
-        <button className='btn-home top-right-button' onClick={() => navigate('/homepage')}>Home</button>
+            <button className='btn-home top-right-button' onClick={() => navigate('/homepage')}>Home</button>
             <div className="settings-button-container">
                 <h1>Settings</h1>
                 <div className="button-row">
-                {sessionStorage.getItem('site') === 'Admin' && (
-                    <button className="btn Register-btn" onClick={() => { setRegistration(true);}}>Create Registration Key</button>
-                )}
-                {registration && (
-                    <Register isOpen={registration} onClose={() => setRegistration(false)} />
-                )}
                     <div className="export-buttons">
                         <button className="btn btn-JSON" onClick={() => handleExport('JSON')}>Export JSON</button>
                         <button className="btn btn-CSV" onClick={() => handleExport('CSV')}>Export CSV</button>
                     </div>
-                    <button className="btn season" onClick={() => navigate('/season')} to="/">Create New Season</button>
-                    <button className="btn customize-team-colors" onClick={() => navigate('/customize')}>Customize Team Colors</button>
+                    {auth.role === 'Coach' && (
+                        <>
+                            <button className="btn season" onClick={() => navigate('/season')}>Create New Season</button>
+                            <button className="btn customize-team-colors" onClick={() => navigate('/customize')}>Customize Team Colors</button>
+                        </>
+                    )}
                 </div>
             </div>
         </div>

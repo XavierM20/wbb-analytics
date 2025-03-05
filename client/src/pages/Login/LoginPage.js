@@ -82,39 +82,36 @@ const LoginPage = () => {
         setErrorUser('');
         setErrorPass('');
         setErrorConfirmPass('');
-
+    
         if (username.length < 8) {
             setErrorUser('Username is too short!');
             error = true;
         }
-
-        const regex = /[!?@#$%^&*()]/;
-        const cap = /[A-Z]/;
-        const low = /[a-z]/;
-        if (password.length < 8 || !regex.test(password) || !cap.test(password) || !low.test(password)) {
+    
+        if (password.length < 8 || !/[!?@#$%^&*()]/.test(password) || !/[A-Z]/.test(password) || !/[a-z]/.test(password)) {
             setErrorPass('Password must be at least 8 characters and include a special character, uppercase, and lowercase letters.');
             error = true;
         }
-
+    
         if (password !== confirmPassword) {
             setErrorConfirmPass('Passwords do not match!');
             error = true;
         }
-
-        if (!school) {
-            alert('Please select or add a school.');
+    
+        if (!school || !role) {
+            alert('Please select a school and role.');
             error = true;
         }
-
+    
         if (!error) {
             try {
-                const userData = { username, password, school };
+                const userData = { username, password, school, role };
                 const userResponse = await fetch(`${serverUrl}/api/users`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(userData),
                 });
-
+    
                 const newUser = await userResponse.json();
                 if (!newUser.message) {
                     auth.loginAction({ username: newUser.username, token: newUser.role });
@@ -127,6 +124,18 @@ const LoginPage = () => {
             }
         }
     };
+    
+    return (
+        <label>
+            Select Role:
+            <select value={role} onChange={(e) => setRole(e.target.value)}>
+                <option value="">Select</option>
+                <option value="Coach">Coach</option>
+                <option value="Player">Player</option>
+            </select>
+        </label>
+    );
+    
 
     const handleLogin = async (event) => {
         event.preventDefault();
