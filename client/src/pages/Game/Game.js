@@ -28,6 +28,7 @@ const Game = () => {
     const [tempoEvents, setTempoEvents] = useState([]);
     const [resetTimer, setResetTimer] = useState(false);
     const [currentTempo, setCurrentTempo] = useState(0);
+    const [myTeam, setMyTeam] = useState('');
     const [opponentTeam, setOpponentTeam] = useState('');
     const [tempLocation, setTempLocation] = useState('');
     const [shotOutcome, setShotOutcome] = useState(null);
@@ -181,7 +182,17 @@ const Game = () => {
         // Get the current season for this school
         const seasonResponse = await fetch(`${process.env.REACT_APP_SERVER_URL}/api/seasons/endYear/${year2}/${schoolID}`);
         const seasonData = await seasonResponse.json();
+        console.log('Season Data:');
         console.log(seasonData);
+
+        // Get the school name from schoolID
+        const schoolResponse = await fetch(`${process.env.REACT_APP_SERVER_URL}/api/schools/${schoolID}`);
+        const schoolData = await schoolResponse.json();
+        console.log('School Data:');
+        console.log(schoolData);
+
+        setMyTeam(schoolData.name);
+
         return seasonData;
 
         //console.log(finalYear);
@@ -512,6 +523,7 @@ const Game = () => {
         fetchSeasonId();
     }, []); // Runs only once when the component mounts
     
+    
     return (
         <>
             {gameModeOverlayVisible && (
@@ -557,7 +569,7 @@ const Game = () => {
                     padding: 5,             // Add padding to space the text from the background edges
                     borderRadius: 10,       // Optional: Add rounded corners
                     }}>
-                    TN Tech vs {opponentTeam}
+                    {myTeam} vs {opponentTeam}
                     {filePreview && (
                         <Image 
                             source={{ uri: filePreview }}  

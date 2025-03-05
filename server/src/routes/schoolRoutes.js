@@ -41,5 +41,20 @@ router.post('/', async (req, res) => {
     }
 });
 
+// Fetch a single school
+router.get('/:id', async (req, res) => {
+    try {
+        const school = await School.findById(req.params.id);
+        if (!school) {
+            return res.status(404).json({ message: "School not found" });
+        }
+
+        res.json(school);
+    } catch (error) {
+        console.error("Error fetching school:", error);
+        res.status(500).json({ message: "Error fetching school" });
+    }
+});
+
 
 module.exports = router;
