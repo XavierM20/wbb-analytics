@@ -49,21 +49,7 @@ const LoginPage = () => {
         fetchSchools();
     }, [serverUrl]);
 
-    const handleSchoolChange = (e) => {
-        setSchool(e.target.value);
-    };
-    const moveToRegister = () => {
-        setUsername('');
-        setPassword('');
-        setConfirmPassword('');
-        setIsRegistering(true);
-    };
 
-    const moveToLogin = () => {
-        setUsername('');
-        setPassword('');
-        setIsRegistering(false);
-    };
 
     const checkSeasonAndRedirect = async (schoolId) => {
         try {
@@ -151,35 +137,6 @@ const LoginPage = () => {
         }
     }
 
-    async function handleAddSchool() {
-        if (!newSchool || !city || !state) {
-            alert("All fields (name, city, state) are required");
-            return;
-        }
-
-        try {
-            const response = await fetch(`${serverUrl}/api/schools`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: newSchool, city, state }),
-            });
-
-            const result = await response.json();
-            if (response.ok) {
-                setSchools([...schools, result]);
-                setSchool(result.name);
-                setNewSchool('');
-                setCity('');
-                setState('');
-                setIsAddingSchool(false);
-            } else {
-                alert(result.message || "Error adding school");
-            }
-        } catch (error) {
-            console.error("Error adding school:", error);
-            alert("An unexpected error occurred. Please try again.");
-        }
-    }
 
     function handleSchoolChange(value) {
         if (value === "add-new") {
