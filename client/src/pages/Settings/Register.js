@@ -3,7 +3,7 @@ Register.js:
     This is the page where you can create a userkey linked to a specific role.
 */
 
-/* import './Settings';
+/import './Settings';
 import React, { useState } from 'react';
 
 const Register = ({ isOpen, onClose }) => {
@@ -57,16 +57,16 @@ const Register = ({ isOpen, onClose }) => {
             </div>
             ) : (
               <div>
-                {/*show the key the user will recieve*/
+                {/*show the key the user will recieve*/}
                 //<label>User Key Created!</label>
                // <p className="KeyContainer">User Key:  
                // <input className="InvisibleInput" type="text" value={key} readOnly/>
               //  </p>
              // </div>  
-           // )}
+            )}
          // </div>
        // </div>
-   //   );
- //   }
-//export default Register;
+      );
+    }
+export default Register;
    
