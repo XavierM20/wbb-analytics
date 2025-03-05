@@ -95,7 +95,7 @@ const LoginPage = () => {
     
         if (!error) {
             try {
-                const userData = { username, password, school, role };
+                const userData = { username, password, schoolId: school, role };
                 const userResponse = await fetch(`${serverUrl}/api/users`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -104,7 +104,7 @@ const LoginPage = () => {
     
                 const newUser = await userResponse.json();
                 if (!newUser.message) {
-                    auth.loginAction({ username: newUser.username, token: newUser.role });
+                    auth.loginAction({ username: newUser.username, token: newUser.role, schoolId: newUser.schoolId });
                     checkSeasonAndRedirect(newUser.schoolId);
                 } else {
                     setErrorUser(newUser.message);
@@ -114,6 +114,7 @@ const LoginPage = () => {
             }
         }
     };
+    
     
     async function handleLogin(event) {
         event.preventDefault();

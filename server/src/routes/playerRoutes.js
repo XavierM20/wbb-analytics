@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const Player = require('../models/player'); // Ensure this path matches your project structure
+const Player = require('../models/player'); 
 const Joi = require('joi');
+const jwt = require('jsonwebtoken');
+const User = require('../models/user');
 
 // Define Joi schema for player validation
 const playerSchema = Joi.object({
@@ -10,54 +12,64 @@ const playerSchema = Joi.object({
     seasons: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)).optional() // Validates MongoDB ObjectIds
 });
 
-// Authentication middleware - to be replaced with actual logic
-const isAuthenticated = (req, res, next) => {
-    // Placeholder for your authentication logic
-    next();
+// Helper function to authenticate user from JWT
+const authenticateUser = async (req) => {
+    const token = req.header('Authorization');
+    if (!token) {
+        throw new Error('Access denied. No token provided.');
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.userId);
+    if (!user) {
+        throw new Error('Invalid user.');
+    }
+
+    return user;
 };
 
-// GET all players
-router.get('/', isAuthenticated, async (req, res) => {
+// GET all players for the logged-in user's school
+router.get('/', async (req, res) => {
     try {
-        const players = await Player.find();
-        res.json(players);
-    } catch (err) {
-        res.status(500).json({ message: 'Internal server error', error: err.message });
-    }
-});
-
-// Get a player by SeasonID
-router.get('/bySeason/:seasonID', isAuthenticated, async (req, res) => {
-    try {
-        const players = await Player.find({ seasons: req.params.seasonID });
-        if (!players.length) {
-            return res.status(404).json({ message: 'No players found for that season' });
+        const user = await authenticateUser(req);
+        if (!user.schoolId) {
+            return res.status(403).json({ message: 'User is not associated with any school' });
         }
+
+        const players = await Player.find({ schoolId: user.schoolId });
         res.json(players);
     } catch (err) {
-        res.status(500).json({ message: 'Internal server error', error: err.message });
+        res.status(400).json({ message: err.message });
     }
 });
 
-// GET a player by ID
-router.get('/:id', isAuthenticated, async (req, res) => {
+// GET a player by ID (must be in the user's school)
+router.get('/:id', async (req, res) => {
     try {
-        const player = await Player.findById(req.params.id).populate('seasons');
+        const user = await authenticateUser(req);
+
+        const player = await Player.findOne({ _id: req.params.id, schoolId: user.schoolId }).populate('seasons');
         if (!player) {
-            return res.status(404).json({ message: 'Player not found' });
+            return res.status(404).json({ message: 'Player not found or not in your school' });
         }
+
         res.json(player);
     } catch (err) {
         res.status(500).json({ message: 'Internal server error', error: err.message });
     }
 });
 
-// GET players by name (case-insensitive search)
-router.get('/name/:name', isAuthenticated, async (req, res) => {
+// GET players by name (must belong to the user's school)
+router.get('/name/:name', async (req, res) => {
     try {
-        const players = await Player.find({ name: { $regex: new RegExp(req.params.name, 'i') } });
+        const user = await authenticateUser(req);
+        const players = await Player.find({ 
+            name: { $regex: new RegExp(req.params.name, 'i') },
+            schoolId: user.schoolId 
+        });
+
         if (!players.length) {
-            return res.status(404).json({ message: 'No players found with that name' });
+            return res.status(404).json({ message: 'No players found with that name in your school' });
         }
         res.json(players);
     } catch (err) {
@@ -65,12 +77,17 @@ router.get('/name/:name', isAuthenticated, async (req, res) => {
     }
 });
 
-// GET players by jersey number
-router.get('/jersey/:jerseyNumber', isAuthenticated, async (req, res) => {
+// GET players by jersey number (must belong to the user's school)
+router.get('/jersey/:jerseyNumber', async (req, res) => {
     try {
-        const players = await Player.find({ jersey_number: req.params.jerseyNumber });
+        const user = await authenticateUser(req);
+        const players = await Player.find({ 
+            jersey_number: req.params.jerseyNumber,
+            schoolId: user.schoolId 
+        });
+
         if (!players.length) {
-            return res.status(404).json({ message: 'No players found with that jersey number' });
+            return res.status(404).json({ message: 'No players found with that jersey number in your school' });
         }
         res.json(players);
     } catch (err) {
@@ -78,60 +95,73 @@ router.get('/jersey/:jerseyNumber', isAuthenticated, async (req, res) => {
     }
 });
 
-// POST a new player with validation
-router.post('/', isAuthenticated, async (req, res) => {
-    const { error, value } = playerSchema.validate(req.body);
-    if (error) {
-        return res.status(400).json({ message: error.details[0].message });
-    }
-
+// POST a new player (Only Coaches can add players to their school)
+router.post('/', async (req, res) => {
     try {
-        const player = new Player(value);
+        const user = await authenticateUser(req);
+        if (user.role !== 'Coach') {
+            return res.status(403).json({ message: 'Only coaches can add players' });
+        }
+
+        const { error, value } = playerSchema.validate(req.body);
+        if (error) {
+            return res.status(400).json({ message: error.details[0].message });
+        }
+
+        const player = new Player({
+            ...value,
+            schoolId: user.schoolId, // Ensure player is tied to the coach's school
+        });
+
         await player.save();
-
-        // If a season ID is provided, associate the player with the season
-        if (req.body.seasonId) {
-            const Season = require('../models/season'); // Ensure correct path to Season model
-            const season = await Season.findById(req.body.seasonId);
-            if (!season) {
-                return res.status(404).json({ message: 'Season not found' });
-            }
-            season.players.push(player._id);
-            await season.save();
-        }
-
         res.status(201).json(player);
     } catch (err) {
         res.status(500).json({ message: 'Failed to create player', error: err.message });
     }
 });
 
-
-// PATCH to update a player with validation
-router.patch('/:id', isAuthenticated, async (req, res) => {
-    const { error, value } = playerSchema.validate(req.body);
-    if (error) {
-        return res.status(400).json({ message: error.details[0].message });
-    }
-
+// PATCH to update a player (Only Coaches can update players from their school)
+router.patch('/:id', async (req, res) => {
     try {
-        const updatedPlayer = await Player.findByIdAndUpdate(req.params.id, value, { new: true });
-        if (!updatedPlayer) {
-            return res.status(404).json({ message: 'Player not found' });
+        const user = await authenticateUser(req);
+        if (user.role !== 'Coach') {
+            return res.status(403).json({ message: 'Only coaches can edit players' });
         }
+
+        const { error, value } = playerSchema.validate(req.body);
+        if (error) {
+            return res.status(400).json({ message: error.details[0].message });
+        }
+
+        const updatedPlayer = await Player.findOneAndUpdate(
+            { _id: req.params.id, schoolId: user.schoolId }, // Restrict edit access to the coach's school
+            value,
+            { new: true }
+        );
+
+        if (!updatedPlayer) {
+            return res.status(404).json({ message: 'Player not found or not in your school' });
+        }
+
         res.json(updatedPlayer);
     } catch (err) {
         res.status(500).json({ message: 'Internal server error', error: err.message });
     }
 });
 
-// DELETE a player
-router.delete('/:id', isAuthenticated, async (req, res) => {
+// DELETE a player (Only Coaches can delete players from their school)
+router.delete('/:id', async (req, res) => {
     try {
-        const player = await Player.findByIdAndDelete(req.params.id);
-        if (!player) {
-            return res.status(404).json({ message: 'Player not found' });
+        const user = await authenticateUser(req);
+        if (user.role !== 'Coach') {
+            return res.status(403).json({ message: 'Only coaches can delete players' });
         }
+
+        const player = await Player.findOneAndDelete({ _id: req.params.id, schoolId: user.schoolId });
+        if (!player) {
+            return res.status(404).json({ message: 'Player not found or not in your school' });
+        }
+
         res.json({ message: 'Player deleted successfully' });
     } catch (err) {
         res.status(500).json({ message: 'Internal server error', error: err.message });

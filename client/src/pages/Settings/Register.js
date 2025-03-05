@@ -2,8 +2,7 @@
 Register.js:
     This is the page where you can create a userkey linked to a specific role.
 */
-
-/import './Settings';
+import './Settings';
 import React, { useState } from 'react';
 
 const Register = ({ isOpen, onClose }) => {
