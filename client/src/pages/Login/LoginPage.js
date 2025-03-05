@@ -126,19 +126,7 @@ const LoginPage = () => {
         }
     };
     
-    return (
-        <label>
-            Select Role:
-            <select value={role} onChange={(e) => setRole(e.target.value)}>
-                <option value="">Select</option>
-                <option value="Coach">Coach</option>
-                <option value="Player">Player</option>
-            </select>
-        </label>
-    );
-    
-
-    const handleLogin = async (event) => {
+    async function handleLogin(event) {
         event.preventDefault();
 
         try {
@@ -158,9 +146,9 @@ const LoginPage = () => {
         } catch (error) {
             console.error("Error logging in:", error);
         }
-    };
+    }
 
-    const handleAddSchool = async () => {
+    async function handleAddSchool() {
         if (!newSchool || !city || !state) {
             alert("All fields (name, city, state) are required");
             return;
@@ -188,17 +176,17 @@ const LoginPage = () => {
             console.error("Error adding school:", error);
             alert("An unexpected error occurred. Please try again.");
         }
-    };
+    }
 
-    const handleSchoolChange = (value) => {
+    function handleSchoolChange(value) {
         if (value === "add-new") {
             setIsAddingSchool(true);
         } else {
             setSchool(value);
             setIsAddingSchool(false);
         }
-    };
-
+    }
+    
     return (
         <div className="login-page-container">
             <div className="login-form">
@@ -217,6 +205,15 @@ const LoginPage = () => {
                     </form>
                 ) : (
                     <form onSubmit={handleRegister}>
+                        <label>
+                            Select Role:
+                            <select value={role} onChange={(e) => setRole(e.target.value)}>
+                                <option value="">Select</option>
+                                <option value="Coach">Coach</option>
+                                <option value="Player">Player</option>
+                            </select>
+                        </label>
+
                         <h2>Register</h2>
                         <label>
                             <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
