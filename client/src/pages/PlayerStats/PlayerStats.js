@@ -74,25 +74,28 @@ function PlayerStats() {
 useEffect(() => {
   const fetchInitialData = async () => {
     try {
-      const playerResponse = await fetch(serverUrl + '/api/players/'); //Note to self: feetches as an ARRAY // Also should switch this to player ID at some point
+      const playerResponse = await fetch(serverUrl + '/api/players/'); 
       const playerData = await playerResponse.json();
-      //console.log(playerData[0]); //Array
-      setAllPlayers(playerData.map(player => ({
-      label: `${player.name}`,
-      position: `${player.position}`,
-      value: player._id.toString(),
-    })));
+      
+      const formattedPlayers = playerData.map(player => ({
+        label: `${player.name}`,
+        position: `${player.position}`,
+        value: player._id.toString(),
+      }));
+
+      setAllPlayers(formattedPlayers);
+
       if (playerID) {
-        //Find the player with the matching ID
-        setSelectedPlayer(playerData.find(player => player._id === playerID))
-        fetchPlayerData(playerData.find(player => player._id === playerID)._id);
+        const selected = playerData.find(player => player._id === playerID);
+        setSelectedPlayer(selected);
+        fetchPlayerData(selected._id);
       } else if (playerData.length > 0) {
-        setSelectedPlayer(playerData[0]); //What about jersey number that no exis?
-        fetchPlayerData(playerData[0]._id);
+        const firstPlayer = formattedPlayers[0];
+        setSelectedPlayer(firstPlayer);
+        fetchPlayerData(firstPlayer.value);
       }
-      //console.log(selectedPlayer);
-    } catch (error){
-      console.error("Failed to player data: ", error);
+    } catch (error) {
+      console.error("Failed to fetch player data: ", error);
     }
     try{
       const sessionResponse = await fetch(serverUrl + '/api/practices');
@@ -177,27 +180,31 @@ useEffect(() => {
   const handleSessionChange = (event) => {
     const newSessionId = event.target.value;
     setSelectedSession(newSessionId);
-
-    // Update the URL with the new session ID
+  
     const urlParams = new URLSearchParams(window.location.search);
     urlParams.set('sessionId', newSessionId);
     window.history.pushState(null, '', `${window.location.pathname}?${urlParams}`);
-
-    // Immediately filter drills for the newly selected session and set the first drill as selected
-    // This assumes allDrills has been previously populated with all available drills
+  
+    if (!Array.isArray(allDrills)) {
+      console.error("Expected allDrills to be an array, but got:", allDrills);
+      setFilteredDrills([]); // Fallback to an empty array
+      return;
+    }
+  
+    // Proceed with filtering
     const sessionDrills = allDrills.filter(drill => drill.practice_id === newSessionId);
+    
     if (sessionDrills.length > 0) {
       const firstDrillId = sessionDrills[0]._id.toString();
       setSelectedDrill(firstDrillId);
-      handleDrillChange({ target: { value: firstDrillId } }); //An attempt?
-
-      // Optionally, update the URL with the new drill ID as well
+      handleDrillChange({ target: { value: firstDrillId } });
+  
+      // Update the URL with the new drill ID
       urlParams.set('drillId', firstDrillId);
       window.history.pushState(null, '', `${window.location.pathname}?${urlParams}`);
     } else {
-      // If no drills are found for the selected session, clear the selected drill
+      // If no drills are found, clear the selected drill
       setSelectedDrill('');
-      console.log("This is where the code went")
     }
   };
 
@@ -509,9 +516,14 @@ const handleCourtClick = (area) => {
         </div>
         <div className='layout-container'>
           <div className="player-headshot">
-          <img src={selectedPlayer && selectedPlayer.label ? require(`../../images/${(selectedPlayer.label || "").toLowerCase().replace(/ /g, "_")}.png`): require('../../images/default.png')}
-            alt={selectedPlayer ? selectedPlayer.label : "Default Player"} 
-            onError={(e) => e.target.src = require('../../images/default.png')} 
+          <img src={(() => {
+            try{
+              return require(`../../images/${(selectedPlayer?.label || "").toLowerCase().replace(/ /g, "_")}.png`);
+            } 
+            catch (error) {
+              return require('../../images/default.png');
+            }
+            })()} alt={selectedPlayer ? selectedPlayer.label : "Default Player"} onError={(e) => e.target.src = require('../../images/default.png')} 
           />
           </div>
           <div className="bio-text">

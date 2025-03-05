@@ -104,9 +104,11 @@ function CreateSeason() {
         return;
     }
 
+    // Ensure position is set to PG if empty
+    const playerPosition = activePlayer.position || 'PG'
+
     // Check if jersey number is already in use by another player (not including the currently edited player if any)
     const isJerseyNumberInUse = players.some((p, idx) => p.jersey_number === jerseyNumberInt && idx !== editIndex);
-
     if (isJerseyNumberInUse) {
         setJerseyError('Jersey number already in use. Please choose another.');
         return;
@@ -121,7 +123,7 @@ function CreateSeason() {
     }
     setPlayers(updatedPlayers);
     console.log('updatedPlayers:', updatedPlayers);
-    setActivePlayer({ name: '', jersey_number: '', position: ''}); // Clear the input fields
+    setActivePlayer({ name: '', jersey_number: '', position: 'PG'}); // Clear the input fields
     setJerseyError(''); // Clear any error messages
 };
 
