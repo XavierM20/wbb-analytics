@@ -220,6 +220,34 @@ const LoginPage = () => {
                             <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
                             {errorConfirmPass && <p className="error">{errorConfirmPass}</p>}
                         </label>
+                        <label>
+                        <span>Role</span>
+                        <select value={role} onChange={(e) => setRole(e.target.value)}>
+                            <option value="">Select Role</option>
+                            <option value="admin">Admin</option>
+                            <option value="teacher">Teacher</option>
+                            <option value="student">Student</option>
+                        </select>
+                    </label>
+
+                    <label>
+                        <span>School</span>
+                        <select value={school} onChange={(e) => handleSchoolChange(e.target.value)}>
+                            <option value="">Select School</option>
+                            {schools.map((s) => (
+                                <option key={s._id} value={s.name}>{s.name}</option>
+                            ))}
+                            <option value="add-new">Add New School</option>
+                        </select>
+                    </label>
+                    {isAddingSchool && (
+                        <div>
+                            <input type="text" placeholder="School Name" value={newSchool} onChange={(e) => setNewSchool(e.target.value)} />
+                            <input type="text" placeholder="City" value={city} onChange={(e) => setCity(e.target.value)} />
+                            <input type="text" placeholder="State" value={state} onChange={(e) => setState(e.target.value)} />
+                            <button type="button" onClick={handleAddSchool}>Add School</button>
+                        </div>
+                    )}
                         <button type="submit">Submit</button>
                         <p className="switch" onClick={moveToLogin}>Already have an account? <b>Login</b></p>
                     </form>
