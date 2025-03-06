@@ -108,7 +108,7 @@ const LoginPage = () => {
 
         if (!error) {
             try {
-                const userData = { username, password, school };
+                const userData = { username, password, role, school };
                 const userResponse = await fetch(`${serverUrl}/api/users`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
