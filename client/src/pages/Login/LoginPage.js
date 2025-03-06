@@ -15,7 +15,7 @@ const LoginPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [school, setSchool] = useState('');
+    const [schoolId, setSchoolId] = useState('');
     const [schools, setSchools] = useState([]);
     const [isAddingSchool, setIsAddingSchool] = useState(false);
     const [newSchool, setNewSchool] = useState('');
@@ -68,7 +68,7 @@ const LoginPage = () => {
             if (data.exists) {
                 navigate('/homepage');
             } else {
-                navigate('/create-season');
+                navigate('/season');
             }
         } catch (error) {
             console.error("Error checking season:", error);
@@ -101,14 +101,14 @@ const LoginPage = () => {
             error = true;
         }
 
-        if (!school) {
+        if (!schoolId) {
             alert('Please select or add a school.');
             error = true;
         }
 
         if (!error) {
             try {
-                const userData = { username, password, role, schoolId: school };
+                const userData = { username, password, role, schoolId: schoolId };
                 const userResponse = await fetch(`${serverUrl}/api/users`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -166,7 +166,7 @@ const LoginPage = () => {
             const result = await response.json();
             if (response.ok) {
                 setSchools([...schools, result]);
-                setSchool(result._id);
+                setSchoolId(result._id);
                 setNewSchool('');
                 setCity('');
                 setState('');
@@ -184,7 +184,7 @@ const LoginPage = () => {
         if (value === "add-new") {
             setIsAddingSchool(true);
         } else {
-            setSchool(value);
+            setSchoolId(value);
             setIsAddingSchool(false);
         }
     };
@@ -231,7 +231,7 @@ const LoginPage = () => {
 
                     <label>
                         <span>School</span>
-                        <select value={school} onChange={(e) => handleSchoolChange(e.target.value)}>
+                        <select value={schoolId} onChange={(e) => handleSchoolChange(e.target.value)}>
                             <option value="">Select School</option>
                             {schools.map((s) => (
                                 <option key={s._id} value={s.name}>{s.name}</option>
