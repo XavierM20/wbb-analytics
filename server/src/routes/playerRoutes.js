@@ -3,7 +3,7 @@ const router = express.Router();
 const Player = require('../models/player'); 
 const Joi = require('joi');
 const jwt = require('jsonwebtoken');
-const User = require('../models/user');
+const User = require('../models/users');
 
 // Define Joi schema for player validation
 const playerSchema = Joi.object({
