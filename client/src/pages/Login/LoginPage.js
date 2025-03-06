@@ -166,7 +166,7 @@ const LoginPage = () => {
             const result = await response.json();
             if (response.ok) {
                 setSchools([...schools, result]);
-                setSchool(result.name);
+                setSchool(result._id);
                 setNewSchool('');
                 setCity('');
                 setState('');
