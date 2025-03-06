@@ -224,9 +224,8 @@ const LoginPage = () => {
                         <span>Role</span>
                         <select value={role} onChange={(e) => setRole(e.target.value)}>
                             <option value="">Select Role</option>
-                            <option value="admin">Admin</option>
-                            <option value="teacher">Teacher</option>
-                            <option value="student">Student</option>
+                            <option value="admin">Coach</option>
+                            <option value="teacher">Player</option>
                         </select>
                     </label>
 
