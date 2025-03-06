@@ -28,6 +28,23 @@ const authenticateUser = async (req) => {
     return user;
 };
 
+const authenticateCoachForSchool = async (req, res, next) => {
+    try {
+        const user = await authenticateUser(req);
+        if (user.role !== 'Coach' || user.schoolId !== req.body.schoolId) {
+            return res.status(403).json({ message: 'Only the assigned school’s coach can modify players' });
+        }
+        next();
+    } catch (error) {
+        res.status(401).json({ message: 'Unauthorized' });
+    }
+};
+
+router.post('/', authenticateCoachForSchool, async (req, res) => {
+    // Coach can add a player
+});
+
+
 // GET all players for the logged-in user's school
 router.get('/', async (req, res) => {
     try {
