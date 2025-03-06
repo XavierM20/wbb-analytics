@@ -82,12 +82,12 @@ const LoginPage = () => {
         setErrorUser('');
         setErrorPass('');
         setErrorConfirmPass('');
-
+    
         if (username.length < 8) {
             setErrorUser('Username is too short!');
             error = true;
         }
-
+    
         const regex = /[!?@#$%^&*()]/;
         const cap = /[A-Z]/;
         const low = /[a-z]/;
@@ -95,30 +95,41 @@ const LoginPage = () => {
             setErrorPass('Password must be at least 8 characters and include a special character, uppercase, and lowercase letters.');
             error = true;
         }
-
+    
         if (password !== confirmPassword) {
             setErrorConfirmPass('Passwords do not match!');
             error = true;
         }
-
+    
         if (!schoolId) {
             alert('Please select or add a school.');
             error = true;
         }
-
+    
+        if (!role) {
+            alert('Please select a role.');
+            error = true;
+        }
+    
         if (!error) {
             try {
-                const userData = { username, password, role, schoolId: schoolId };
+                const userData = { username, password, role, schoolId };
                 const userResponse = await fetch(`${serverUrl}/api/users`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(userData),
                 });
-
+    
                 const newUser = await userResponse.json();
                 if (!newUser.message) {
                     auth.loginAction({ username: newUser.username, token: newUser.role });
-                    checkSeasonAndRedirect(newUser.schoolId);
+    
+                    // Redirect based on role
+                    if (newUser.role === "Player") {
+                        navigate('/homepage');
+                    } else if (newUser.role === "Coach") {
+                        navigate('/season');
+                    }
                 } else {
                     setErrorUser(newUser.message);
                 }
@@ -130,20 +141,26 @@ const LoginPage = () => {
 
     const handleLogin = async (event) => {
         event.preventDefault();
-
+    
         try {
             const loginResponse = await fetch(`${serverUrl}/api/users/userCheck`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password }),
             });
-
+    
             const loginData = await loginResponse.json();
             if (loginData.message) {
                 setIncorrect(true);
             } else {
                 auth.loginAction({ username: loginData.username, token: loginData.role });
-                navigate('/homepage');
+    
+                // Redirect based on role
+                if (loginData.role === "Player") {
+                    navigate('/homepage');
+                } else if (loginData.role === "Coach") {
+                    navigate('/season');
+                }
             }
         } catch (error) {
             console.error("Error logging in:", error);
