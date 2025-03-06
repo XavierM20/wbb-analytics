@@ -26,7 +26,7 @@ const LoginPage = () => {
     const [city, setCity] = useState('');
     const [state, setState] = useState('');
     const [incorrect, setIncorrect] = useState(false);
-
+    const [role, setRole] = useState('');
     const serverUrl = process.env.REACT_APP_SERVER_URL;
 
     useEffect(() => {
