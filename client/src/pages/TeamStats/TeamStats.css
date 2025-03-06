@@ -176,11 +176,11 @@ body, html {
 }
 
 /* Leader images */
-.leader-category img {
+.leader-image-large {
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  margin-left: auto; /* Pushes the image to the right */
+  object-fit: cover;
 }
 
 /* Leader category text */
