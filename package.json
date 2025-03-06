@@ -38,6 +38,7 @@
     "react-navigation": "^5.0.0",
     "react-router-dom": "^6.19.0",
     "react-scripts": "^5.0.1",
+    "react-select": "^5.10.1",
     "react-use": "^17.5.0",
     "styled-components": "^6.1.1",
     "web-vitals": "^2.1.4"
