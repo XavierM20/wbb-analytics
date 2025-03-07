@@ -57,15 +57,15 @@ const Register = ({ isOpen, onClose }) => {
             ) : (
               <div>
                 {/*show the key the user will recieve*/}
-                <label>User Key Created!</label>
-                <p className="KeyContainer">User Key:  
-                <input className="InvisibleInput" type="text" value={key} readOnly/>
-                </p>
-              </div>  
+                //<label>User Key Created!</label>
+               // <p className="KeyContainer">User Key:  
+               // <input className="InvisibleInput" type="text" value={key} readOnly/>
+              //  </p>
+             // </div>  
             )}
-          </div>
-        </div>
+         // </div>
+       // </div>
       );
     }
-
 export default Register;
+   
