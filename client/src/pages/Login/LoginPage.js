@@ -100,7 +100,6 @@ const LoginPage = () => {
             setErrorConfirmPass('Passwords do not match!');
             error = true;
         }
-    
         if (!schoolId) {
             alert('Please select or add a school.');
             error = true;
@@ -114,6 +113,7 @@ const LoginPage = () => {
         if (!error) {
             try {
                 const userData = { username, password, role, schoolId };
+
                 const userResponse = await fetch(`${serverUrl}/api/users`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -122,7 +122,11 @@ const LoginPage = () => {
     
                 const newUser = await userResponse.json();
                 if (!newUser.message) {
-                    auth.loginAction({ username: newUser.username, token: newUser.role });
+                    auth.loginAction({
+                        username: newUser.username,
+                        token: newUser.role,
+                        schoolId: schoolId,
+                    });
     
                     // Redirect based on role
                     if (newUser.role === "Player") {
@@ -153,7 +157,7 @@ const LoginPage = () => {
             if (loginData.message) {
                 setIncorrect(true);
             } else {
-                auth.loginAction({ username: loginData.username, token: loginData.role });
+                auth.loginAction({username: loginData.username, password: loginData.password, token: loginData.role, schoolId: loginData.schoolId});
     
                 // Redirect based on role
                 if (loginData.role === "Player") {
@@ -251,7 +255,9 @@ const LoginPage = () => {
                         <select value={schoolId} onChange={(e) => handleSchoolChange(e.target.value)}>
                             <option value="">Select School</option>
                             {schools.map((s) => (
-                                <option key={s._id} value={s.name}>{s.name}</option>
+                                <option key={s.id} value={s._id}> {/* Use s.id as the value */}
+                                    {s.name}
+                                </option>
                             ))}
                             <option value="add-new">Add New School</option>
                         </select>

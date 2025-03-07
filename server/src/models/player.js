@@ -9,11 +9,12 @@
  const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const playerSchema = new Schema({
-    name: { type: String, required: true },
-    jersey_number: { type: Number, required: true },
-    seasons: [{ type: Schema.Types.ObjectId, ref: 'Season' }],
-    schoolId: { type: Schema.Types.ObjectId, ref: 'School', required: true } // Ensure each player is tied to a school
-});
-
-module.exports = mongoose.model('Player', playerSchema);
+ const playerSchema = new mongoose.Schema({
+     name: { type: String, required: true },
+     jersey_number: { type: Number, required: true },
+     position: { type: String, required: true },
+     seasons: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Season' }], // References seasons
+     schoolId: { type: Schema.Types.ObjectId, ref: 'School', required: true } // Ensure each player is tied to a school
+ });
+ 
+ module.exports = mongoose.model('Player', playerSchema);

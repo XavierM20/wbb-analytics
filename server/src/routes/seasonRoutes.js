@@ -3,6 +3,7 @@ const router = express.Router();
 const Season = require('../models/season'); // Adjust the path as necessary
 const Games = require('../models/game');
 const Practice = require('../models/practice');
+const School = require('../models/School')
 const Joi = require('joi');
 
 // Define Joi schema for season validation
@@ -10,7 +11,8 @@ const seasonSchema = Joi.object({
     year: Joi.string().required(),
     players: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
     games: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
-    practices: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/))
+    practices: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
+    schoolID: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required()
 });
 
 // Authentication middleware (to be implemented based on your auth system)
@@ -136,14 +138,14 @@ router.get('/:seasonId/practices', async (req, res) => {
     }
 });
 
-// GET season by end year assuming season is in format "startYear-endYear"
-router.get('/endYear/:endYear', async (req, res) => {
+// GET season by end year and schoolID (assuming season is in format "startYear-endYear")
+router.get('/endYear/:endYear/:schoolID', async (req, res) => {
     console.log(req.params.endYear);
     try {
         // Assuming year is stored as "startYear-endYear"
         const endYearPattern = `-${req.params.endYear}`;
         console.log('endYearPattern: ' + endYearPattern);
-        const season = await Season.findOne({ year: { $regex: endYearPattern } });
+        const season = await Season.findOne({ year: { $regex: endYearPattern }, schoolID: req.params.schoolID });
         if (!season) {
             return res.status(404).json({ message: 'Season not found for the given year' });
         }
@@ -168,14 +170,17 @@ router.get('/:id/practices', async (req, res) => {
 
 // POST a new season with validation
 router.post('/', async (req, res) => {
-    const { year, players } = req.body;
+    const { year, players, schoolID } = req.body;
+
+    console.log(req.body);
+    console.log(schoolID);
 
     if (!year || !Array.isArray(players)) {
-        return res.status(400).json({ message: 'Year and players are required.' });
+        return res.status(400).json({ message: 'Year, players, and schoolID are required.' });
     }
 
     try {
-        const season = new Season({ year, players });
+        const season = new Season({ year, players, schoolID });
         await season.save();
 
         // Optionally update players with this season
@@ -199,7 +204,7 @@ router.patch('/:id', isAuthenticated, async (req, res) => {
     }
 
     try {
-        const updatedSeason = await Season.findByIdAndUpdate(req.params.id, value, { new: true }).populate(['players', 'games', 'practices']);
+        const updatedSeason = await Season.findByIdAndUpdate(req.params.id, value, { new: true }).populate(['players', 'games', 'practices', 'schoolID']);
         if (!updatedSeason) {
             return res.status(404).json({ message: 'Season not found' });
         }
@@ -256,5 +261,17 @@ router.patch('/:id/players', isAuthenticated, async (req, res) => {
         res.status(500).json({ message: 'Internal server error', error: err.message });
     }
 });
+
+router.get('/school/:schoolID', async (req, res) => {
+    try {
+        const seasons = await Season.find({ schoolID: req.params.schoolID }).populate('schoolID');
+        if (!seasons || seasons.length === 0) {
+            return res.status(404).json({ message: 'No seasons found for the given school' });
+        }
+        res.json(seasons);
+    } catch (err) {
+        res.status(500).json({ message: 'Internal server error', error: err.message });
+    }
+})
 
 module.exports = router;

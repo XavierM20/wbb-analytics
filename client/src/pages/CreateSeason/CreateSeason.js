@@ -7,7 +7,7 @@ import { useAuth } from '../../hooks/AuthProvider'; // Assuming you have an Auth
 function CreateSeason() {
   const [year, setYear] = useState('');
   const [players, setPlayers] = useState([]);
-  const [activePlayer, setActivePlayer] = useState({ name: '', jersey_number: '' });
+  const [activePlayer, setActivePlayer] = useState({ name: '', jersey_number: '', position: ''   });
   const [editIndex, setEditIndex] = useState(-1);
   const [jerseyError, setJerseyError] = useState('');
   const [previousSeasonPlayers, setPreviousSeasonPlayers] = useState([]);
@@ -22,24 +22,29 @@ function CreateSeason() {
     When a season year is typed, parse for the end year then check if that season already exists.
     If it does, fetch the players for that season and display them.
   */
-    useEffect(() => {
-      if (year.length === 9) {
-        const startYear = year.split('-')[0];
-        const endYear = year.split('-')[1];
-  
-        fetch(`${serverUrl}/api/seasons/endYear/${endYear}`)
-          .then(response => response.json())
-          .then(data => {
-            fetchPlayers(data.players);
-          })
-          .catch(error => {
-            console.error('Error fetching the previous season:', error);
-            setPreviousSeasonPlayers([]);
-          });
-      } else {
-        setPlayers([]);
-      }
-    }, [year, serverUrl]);
+
+  useEffect(() => {
+    if (year.length === 9) {
+      // Parse the inputted season for start and end year
+      const startYear = year.split('-')[0];
+      const endYear = year.split('-')[1];
+
+      // Fetch for the end year, if exists fetch players
+      fetch(`${serverUrl}/api/seasons/endYear/${endYear}/${sessionStorage.getItem('schoolID')}`)
+        .then(response => response.json())
+        .then(data => {
+          // Call fetch players
+          fetchPlayers(data.players)
+        })
+        .catch(error => {
+          console.error('Error fetching the previous season:', error);
+          setPreviousSeasonPlayers([]);
+        });
+    } else {
+      setPlayers([]);
+    }
+  }, [year, serverUrl]);
+
   /*
     Function: fetchPlayers
     Description: Fetches the players for the season from the server then adds them to the players state.
@@ -96,15 +101,19 @@ function CreateSeason() {
         return;
     }
 
+   
+
     const jerseyNumberInt = parseInt(activePlayer.jersey_number, 10);
     if (isNaN(jerseyNumberInt) || jerseyNumberInt < 0) {
         setJerseyError('Jersey number must be a valid number.');
         return;
     }
 
+    // Ensure position is set to PG if empty
+    const playerPosition = activePlayer.position || 'PG'
+
     // Check if jersey number is already in use by another player (not including the currently edited player if any)
     const isJerseyNumberInUse = players.some((p, idx) => p.jersey_number === jerseyNumberInt && idx !== editIndex);
-
     if (isJerseyNumberInUse) {
         setJerseyError('Jersey number already in use. Please choose another.');
         return;
@@ -119,7 +128,7 @@ function CreateSeason() {
     }
     setPlayers(updatedPlayers);
     console.log('updatedPlayers:', updatedPlayers);
-    setActivePlayer({ name: '', jersey_number: '' }); // Clear the input fields
+    setActivePlayer({ name: '', jersey_number: '', position: 'PG'}); // Clear the input fields
     setJerseyError(''); // Clear any error messages
 };
 
@@ -147,27 +156,63 @@ function CreateSeason() {
     If a season already exists for the year, update the players for that season.
     If a season does not exist, create the season with all the players in the players state.
   */
-      const handleSubmit = async (event) => {
-        event.preventDefault();
-    
-        // Prevent players from submitting the form
-        if (userRole === 'Player') {
-          alert("You do not have permission to create or edit a season.");
-          return;
-        }
-    
-        console.log('Submitting:', year, players);
-    
-        try {
-            const newPlayers = players.filter((p) => !p._id);
-            const existingPlayers = players.filter((p) => p._id);
-    
-            const playerPromises = newPlayers.map((player) => {
-                return fetch(`${serverUrl}/api/players`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(player),
-                }).then((response) => response.json());
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    console.log('Submitting:', year, players);
+
+    try {
+        // If no season exists, create new players and a new season
+        const newPlayers = players.filter((p) => !p._id);
+        const existingPlayers = players.filter((p) => p._id);
+
+        // Create new players
+        const playerPromises = newPlayers.map((player) => {
+            return fetch(`${serverUrl}/api/players`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(player),
+            }).then((response) => response.json());
+        });
+
+        const newlyCreatedPlayers = await Promise.all(playerPromises);
+
+        const allPlayers = [...existingPlayers, ...newlyCreatedPlayers];
+
+        // Check if the season already exists
+        const endYear = year.split('-')[1];
+        const seasonResponse = await fetch(`${serverUrl}/api/seasons/endYear/${endYear}/${sessionStorage.getItem('schoolID')}`);
+        const existingSeason = await seasonResponse.json();
+
+        if (existingSeason.message !== 'Season not found for the given year') {
+            console.log('Season already exists:', existingSeason);
+            console.log('Season ID: ' + existingSeason._id);
+
+            // Update players for the existing season using the PATCH endpoint
+            const updateResponse = await fetch(`${serverUrl}/api/seasons/${existingSeason._id}/players`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ players: allPlayers.map((p) => p._id) }),
+            });
+
+            if (!updateResponse.ok) {
+                throw new Error(`Failed to update season players: ${updateResponse.statusText}`);
+            }
+
+            const updatedSeason = await updateResponse.json();
+            console.log('Updated season:', updatedSeason);
+        } else {
+            // Create a new season
+            const createSeasonResponse = await fetch(`${serverUrl}/api/seasons`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ year, players: allPlayers.map((p) => p._id), schoolID: sessionStorage.getItem('schoolID') }),
             });
     
             const newlyCreatedPlayers = await Promise.all(playerPromises);
@@ -201,9 +246,10 @@ function CreateSeason() {
                 console.log('Created new season:', await createSeasonResponse.json());
             }
     
+            // Reset form state
             setYear('');
             setPlayers([]);
-            setActivePlayer({ name: '', jersey_number: '' });
+            setActivePlayer({ name: '', jersey_number: '', position: ''});
             setEditIndex(-1);
         } catch (error) {
             console.error('Error handling submission:', error);
@@ -262,6 +308,15 @@ function CreateSeason() {
                     onChange={(e) => handlePlayerChange('jersey_number', e.target.value)}
                   />
                   {jerseyError && <div className="jersey-error">{jerseyError}</div>}
+                   
+                  <label>Position:</label>
+                  <select aria-label="select for position" value={activePlayer.position} onChange={(e) => handlePlayerChange('position', e.target.value)}>
+                    <option value="PG">PG</option>
+                    <option value="SG">SG</option>
+                    <option value="SF">SF</option>
+                    <option value="PF">PF</option>
+                    <option value="C">C</option>
+                  </select>
       
                   <button type="button" onClick={addOrUpdatePlayer}>
                     {editIndex >= 0 ? 'Update Player' : 'Add Player'}
@@ -275,6 +330,7 @@ function CreateSeason() {
             <div className="access-denied">
               <h2>Access Denied</h2>
               <p>You do not have permission to create or edit a season.</p>
+
             </div>
           )}
       
