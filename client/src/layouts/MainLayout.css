@@ -6,7 +6,7 @@
 }
 
 .main-layout {
-    background: url(../images/homepageWBB.jpeg) no-repeat center center/cover;
+    /*background: url(../images/homepageWBB.jpeg) no-repeat center center/cover;*/
     display: flex;
     flex-direction: column;
     min-height: 100vh;  /* Full viewport height */
