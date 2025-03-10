@@ -8,14 +8,6 @@ import ShotsByClock from './components/ShotsByClock'; // Displays shots by clock
 import StatCard from './components/StatsDisplay'; // Displays stat cards - not currently used, but kept as import
 import TempoCard from './components/TempoCard'; // Displays tempo stats - not currently used, but kept as import
 
-
-// Mapping object for player names to image paths
-const playerImages = {
-  'Reghan Grimes': '../../images/Reghan_Grimes.jpg',
-  // ... add other players and their images ...
-};
-
-
 // Configuration options for the bar chart
 const chartOptions = {
   maintainAspectRatio: false, // Allows the chart to resize without maintaining its aspect ratio
@@ -95,16 +87,7 @@ function TeamStats() {
   });
 
 
-  // Function to get image path based on player name
-  const getImagePath = (playerName) => {
-    const imageName = playerImages[playerName];
-    if (imageName) {
-      return imageName; // Images are in the public/images directory
-    } else {
-      console.warn(`Image not found for ${playerName}`);
-      return 'profile-placeholder.png'; // Fallback image
-    }
-  };
+
   // --- Data Fetching Functions ---
 
   /**
@@ -322,7 +305,7 @@ function TeamStats() {
         <div className="leader-container">
           <div className="leader-category">
             <h4>Points</h4>
-            <img src={getImagePath('Reghan Grimes')} alt="Player Image" />
+            <img src="profile-placeholder.png" alt="Player Image" />
             <p>
               <strong>Reghan Grimes G</strong>
             </p>
