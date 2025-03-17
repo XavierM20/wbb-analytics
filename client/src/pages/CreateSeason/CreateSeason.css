@@ -1,5 +1,6 @@
 .create-season {
-    background-color: rgba(23, 43, 79, 1);
+  background-color: rgba(23, 43, 79, .8); /* Dark blue background */
+  background-image: url('../../images/basketballIMG.jpg') !important; /* Basketball image */
   background-size: cover;
   position: fixed;
   height: calc(100vh);
@@ -38,7 +39,7 @@
     left: 0;
     width: calc(100vw);
     height: calc(100vh);
-    background-color: rgb(0, 0, 0, .4);
+    background-color: rgba(23, 43, 79, .8);
     z-index: -1;
 }
 
@@ -135,7 +136,7 @@ div.player-actions .btnDelete:hover {
 
 .player-input {
   margin-bottom: 15px;
-  background: cornsilk;
+  background: rgba(200,157,70, .8);
   padding: 10px;
   border-radius: 5px;
 }
