@@ -2,7 +2,7 @@
   border: none; /* Updated to none for a cleaner look */
   border-radius: .5rem; /* Uniform border-radius with other elements */
   padding: 1.25rem;
-  margin: 10px; /* Consistent margin on all sides for symmetry */
+  margin: 0.625rem; /* Consistent margin on all sides for symmetry */
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -29,7 +29,7 @@
   display: flex;
   align-items: baseline;
   justify-content: center;
-  gap: 5px; /* Spacing between the number and 'seconds' */
+  gap: 0.3125rem; /* Spacing between the number and 'seconds' */
 }
 
 .tempo-value time {
@@ -37,13 +37,13 @@
 }
 
 .tempo-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-0.3125rem);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Slightly larger shadow on hover for a 'lifted' effect */
 }
 
 @media (max-width: 768px) {
   .tempo-card {
     width: 100%; /* Full width on small screens */
-    margin: 10px 0; /* Only vertical margins */
+    margin: 0.625rem 0; /* Only vertical margins */
   }
 }
