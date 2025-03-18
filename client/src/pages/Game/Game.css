@@ -10,7 +10,7 @@
     --stat-card-text-color: #333333;
     --accent-color: #FFD700;
     --hover-color: #3d2671;
-    --box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    --box-shadow: 0 4px .5rem 0 rgba(0,0,0,0.2);
 }
 
 .main {
@@ -35,11 +35,11 @@
 }
 
 .opponent-team {
-    margin-top: 20px;
+    margin-top: 1.25rem;
     text-align: center;
     color: cornsilk;
     width: calc(70% - 75px);
-    padding: 10px 20px;
+    padding: 10px 1.25rem;
     margin-bottom: 12px;
     border: none;
     border-radius: 4px;
@@ -52,7 +52,7 @@
     margin-top: 5px;
     border-radius: 5px;
     border: 1px solid black;
-    font-size: 16px;
+    font-size: 1rem;
 }
 
 .game-selection-container {
@@ -68,8 +68,8 @@
 }
 
 .game-entry {
-    padding: 8px;
-    margin-bottom: 8px;
+    padding: .5rem;
+    margin-bottom: .5rem;
     background-color: #503291;
     border: 3px solid #503291;
     border-radius: 10px;
@@ -115,7 +115,7 @@
     border-radius: 15px;
     padding: 5px;
     background-color: cornsilk;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 1);
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 1);
     text-align: center;
     font-size: 1.15em;
     font-style: italic;
@@ -274,7 +274,7 @@
     margin-right: 50px;
     padding: 5px;
     background-color: cornsilk;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 1);
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 1);
     text-align: center;
     font-size: 1.15em;
     font-style: italic;
@@ -287,18 +287,18 @@
 
 .new-game-overlay-content input {
     width: 80%;
-    padding: 8px;
+    padding: .5rem;
     margin-top: 5px;
-    margin-bottom: 20px;
+    margin-bottom: 1.25rem;
     border-radius: 3px;
     border: 3px solid black;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.2);
 }
 
 .overlay button,
 .game-mode-content button,
 .new-game-overlay-content button {
-    padding: 20px;
+    padding: 1.25rem;
     background-color: #503291;
     color: cornsilk;
     border: none;
@@ -313,7 +313,7 @@
     width: 58.825%;
     height: 50px;
     font-size: 1.15em;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.2);
 }
 
 .game-selection button {
@@ -321,8 +321,8 @@
     width: 300px;
     margin-top: 40px;
     margin-bottom: 40px;
-    margin-left: 20px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+    margin-left: 1.25rem;
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.5);
 }
 
 .overlay button:hover,
@@ -451,11 +451,11 @@
 }
 
 .btn-home {
-    padding: 10px 20px;
-    background-color: #172B4F; /* Bootstrap blue */
+    padding: 10px 1.25rem;
+    background-color: rgba(200,157,70, 1); /* Bootstrap blue */
     color: cornsilk;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 1rem;
 }

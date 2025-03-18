@@ -1,6 +1,6 @@
 .stats-table-container {
   overflow-x: auto; /* For horizontal scrolling on smaller screens */
-  margin: 20px 0;
+  margin: 1.25rem 0;
 }
 
 .stats-table {
@@ -43,7 +43,7 @@
 @media (max-width: 768px) {
   .stats-table th,
   .stats-table td {
-    padding: 8px; /* Smaller padding for smaller screens */
+    padding: .5rem; /* Smaller padding for smaller screens */
   }
 
   .stats-table {

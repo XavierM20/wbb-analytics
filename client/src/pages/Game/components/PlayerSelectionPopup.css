@@ -3,7 +3,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    padding: 20px;
+    padding: 1.25rem;
     z-index: 1000;
     background-color: #4f2984;
     border: 3px solid #ffdd00;

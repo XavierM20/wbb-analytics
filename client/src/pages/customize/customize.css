@@ -8,20 +8,20 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 20px;
-    padding: 20px;
-    border-radius: 8px;
+    gap: 1.25rem;
+    padding: 1.25rem;
+    border-radius: .5rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
   
   .btn-home {
-    padding: 10px 20px;
-    background-color: #172B4F !important;  
+    padding: 10px 1.25rem;
+    background-color: rgba(200,157,70, 1) !important;  
     color: cornsilk !important;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 1rem;
   }
   
   .pick-colors::before {
@@ -72,7 +72,7 @@
   .color-list-container {
     flex-basis: 50%;
     border-left: 2px solid red;
-    padding-left: 20px;
+    padding-left: 1.25rem;
   }
   
   .color-list-item {
@@ -99,7 +99,7 @@
   .pick-colors input[type="text"],
   .pick-colors input[type="color"] {
     width: 100%;
-    padding: 8px;
+    padding: .5rem;
     margin-top: 5px;
     border-radius: 4px;
     border: 1px solid cornsilk;
@@ -111,8 +111,8 @@
   }
   
   .pick-colors button {
-    padding: 10px 20px;
-    margin-top: 20px;
+    padding: 10px 1.25rem;
+    margin-top: 1.25rem;
     background-color: cornsilk; /* Purple background for color theme */
     color: black; /* White text for contrast */
     border: none;

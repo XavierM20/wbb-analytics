@@ -1,7 +1,7 @@
 .tempo-card {
   border: none; /* Updated to none for a cleaner look */
-  border-radius: 8px; /* Uniform border-radius with other elements */
-  padding: 20px;
+  border-radius: .5rem; /* Uniform border-radius with other elements */
+  padding: 1.25rem;
   margin: 10px; /* Consistent margin on all sides for symmetry */
   text-align: center;
   display: flex;
