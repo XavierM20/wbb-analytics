@@ -29,11 +29,12 @@ const authenticateUser = async (req) => {
     return user;
 };
 
+// Middleware: Ensure only the assigned school’s coach can modify players
 const authenticateCoachForSchool = async (req, res, next) => {
     try {
         const user = await authenticateUser(req);
-        if (user.role !== 'Coach' || user.schoolId !== req.body.schoolId) {
-            return res.status(403).json({ message: 'Only the assigned school’s coach can modify players' });
+        if (user.role !== 'Coach') {
+            return res.status(403).json({ message: 'Only coaches can manage players' });
         }
         next();
     } catch (error) {
@@ -41,12 +42,7 @@ const authenticateCoachForSchool = async (req, res, next) => {
     }
 };
 
-router.post('/', authenticateCoachForSchool, async (req, res) => {
-    // Coach can add a player
-});
-
-
-// GET all players for the logged-in user's school
+// 📌 GET all players for the logged-in user's school
 router.get('/', async (req, res) => {
     try {
         const user = await authenticateUser(req);
@@ -61,7 +57,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-// GET a player by ID (must be in the user's school)
+// 📌 GET a player by ID (must belong to the user's school)
 router.get('/:id', async (req, res) => {
     try {
         const user = await authenticateUser(req);
@@ -77,7 +73,7 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// GET players by name (must belong to the user's school)
+// 📌 GET players by name (must belong to the user's school)
 router.get('/name/:name', async (req, res) => {
     try {
         const user = await authenticateUser(req);
@@ -95,7 +91,7 @@ router.get('/name/:name', async (req, res) => {
     }
 });
 
-// GET players by jersey number (must belong to the user's school)
+// 📌 GET players by jersey number (must belong to the user's school)
 router.get('/jersey/:jerseyNumber', async (req, res) => {
     try {
         const user = await authenticateUser(req);
@@ -113,22 +109,20 @@ router.get('/jersey/:jerseyNumber', async (req, res) => {
     }
 });
 
-// POST a new player (Only Coaches can add players to their school)
-router.post('/', async (req, res) => {
+// 📌 POST a new player (Only Coaches can add players to their school)
+router.post('/', authenticateCoachForSchool, async (req, res) => {
     try {
         const user = await authenticateUser(req);
-        if (user.role !== 'Coach') {
-            return res.status(403).json({ message: 'Only coaches can add players' });
-        }
 
         const { error, value } = playerSchema.validate(req.body);
         if (error) {
             return res.status(400).json({ message: error.details[0].message });
         }
 
+        // Ensure the player is tied to the coach's school
         const player = new Player({
             ...value,
-            schoolId: user.schoolId, // Ensure player is tied to the coach's school
+            schoolId: user.schoolId 
         });
 
         await player.save();
@@ -138,13 +132,10 @@ router.post('/', async (req, res) => {
     }
 });
 
-// PATCH to update a player (Only Coaches can update players from their school)
-router.patch('/:id', async (req, res) => {
+// 📌 PATCH to update a player (Only Coaches can update players from their school)
+router.patch('/:id', authenticateCoachForSchool, async (req, res) => {
     try {
         const user = await authenticateUser(req);
-        if (user.role !== 'Coach') {
-            return res.status(403).json({ message: 'Only coaches can edit players' });
-        }
 
         const { error, value } = playerSchema.validate(req.body);
         if (error) {
@@ -152,7 +143,7 @@ router.patch('/:id', async (req, res) => {
         }
 
         const updatedPlayer = await Player.findOneAndUpdate(
-            { _id: req.params.id, schoolId: user.schoolId }, // Restrict edit access to the coach's school
+            { _id: req.params.id, schoolId: user.schoolId },
             value,
             { new: true }
         );
@@ -167,13 +158,10 @@ router.patch('/:id', async (req, res) => {
     }
 });
 
-// DELETE a player (Only Coaches can delete players from their school)
-router.delete('/:id', async (req, res) => {
+// 📌 DELETE a player (Only Coaches can delete players from their school)
+router.delete('/:id', authenticateCoachForSchool, async (req, res) => {
     try {
         const user = await authenticateUser(req);
-        if (user.role !== 'Coach') {
-            return res.status(403).json({ message: 'Only coaches can delete players' });
-        }
 
         const player = await Player.findOneAndDelete({ _id: req.params.id, schoolId: user.schoolId });
         if (!player) {
@@ -187,3 +175,4 @@ router.delete('/:id', async (req, res) => {
 });
 
 module.exports = router;
+
