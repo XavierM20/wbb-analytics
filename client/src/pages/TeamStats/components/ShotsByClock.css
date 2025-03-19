@@ -4,7 +4,7 @@
     box-sizing: border-box;
     margin: 0.625rem;
     text-align: center;
-    border: 1px solid #ddd;
+    border: 0.0625rem solid #ddd;
     border-radius: 0.625rem;
     background-color: #fff;
     transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
@@ -15,7 +15,7 @@
   }
   
   .stat-icon {
-    width: 50px; /* or any size you prefer */
+    width: 3.125rem; /* or any size you prefer */
     height: auto;
     margin-bottom: 0.625rem;
   }
@@ -33,14 +33,14 @@
     color: var(--primary-color); /* Use a CSS variable or specific color */
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 48rem) {
     .shots-card {
       flex: 0 0 48%; /* Adjust for mobile to fit 2 cards in a row */
       margin: 0.625rem;
     }
   }
   
-  @media (max-width: 480px) {
+  @media (max-width: 30rem) {
     .shots-card {
       flex: 0 0 100%; /* Full width on very small screens */
       margin: 0.625rem 0;

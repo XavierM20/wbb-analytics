@@ -7,10 +7,10 @@
 }
 
 .selector-select {
-  padding: 0.625rem 15px;
+  padding: 0.625rem 0.9375rem;
   font-size: 1rem; /* Uniform font size with other elements */
   width: 100%; /* Make width responsive */
-  max-width: 250px; /* Maximum width */
+  max-width: 15.625rem; /* Maximum width */
   border: none; /* Remove the border for a cleaner look */
   border-radius: .5rem; /* Consistent border radius with cards */
   background-color: var(--card-bg-color);
@@ -22,7 +22,7 @@
 }
 
 .selector-select:focus {
-  outline: 2px solid var(--accent-color); /* Accent color for focus state */
+  outline: 0.75rem solid var(--accent-color); /* Accent color for focus state */
 }
 
 /* Custom dropdown arrow using CSS only */
@@ -32,7 +32,7 @@
   top: 50%;
   right: 0.625rem;
   transform: translateY(-50%);
-  border: 6px solid transparent;
+  border: 0.375rem solid transparent;
   border-top-color: var(--text-color-dark); /* Arrow color */
   pointer-events: none; /* Ensure clicks pass through to the select element */
 }

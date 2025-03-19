@@ -1,5 +1,5 @@
 .heatmap {
-    border: 2px solid #ddd;
+    border: 0.75rem solid #ddd;
     padding: 1.25rem;
     text-align: center;
     margin: 1.25rem 0;
@@ -8,7 +8,7 @@
   
 .heatmap-placeholder {
     width: 100%; /* Make it take the full width of its container */
-    height: 400px; /* Adjust the height to take up a larger portion of the screen */
+    height: 25rem; /* Adjust the height to take up a larger portion of the screen */
     background-color: gray;
     /* Removed absolute positioning */
   }

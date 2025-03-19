@@ -454,7 +454,7 @@ Team Selection Lists
     padding: 1.25rem;
     border-radius: 0.5rem;
     max-width: 25rem;
-    width: 90%; /* Responsive width, max 400px */
+    width: 90%; 
     display: flex;
     flex-direction: column;
     align-items: center;

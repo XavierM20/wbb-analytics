@@ -12,7 +12,7 @@
   gap: 1.25rem;
   padding: 1.25rem;
   border-radius: .5rem;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 0.25rem 0.375rem rgba(0,0,0,0.1);
 }
 
 .create-season .btn-home {
@@ -89,7 +89,7 @@
   margin-bottom: 0.625rem;
   display: flex;
   align-items: center;
-  border-bottom: cornsilk solid 1px;
+  border-bottom: cornsilk solid 0.0625rem;
 }
 
 .player-info {
@@ -135,7 +135,7 @@ div.player-actions .btnDelete:hover {
 }
 
 .player-input {
-  margin-bottom: 15px;
+  margin-bottom: 0.9375rem;
   background: rgba(200,157,70, .8);
   padding: 0.625rem;
   border-radius: 0.3125rem;
@@ -146,13 +146,13 @@ div.player-actions .btnDelete:hover {
   width: 100%;
   padding: .5rem;
   margin-top: 0.3125rem;
-  border-radius: 4px;
-  border: 1px solid cornsilk;
+  border-radius: 0.25rem;
+  border: 0.0625rem solid cornsilk;
 }
 
 .create-season input:focus{
     outline: none; /* Removes the default outline */
-    border: 2px solid #ffdd00; /* Change this color to your preferred focus color */
+    border: 0.75rem solid #ffdd00; /* Change this color to your preferred focus color */
 }
 .create-season button :not(.btn-home) {
   padding: 0.625rem 1.25rem;

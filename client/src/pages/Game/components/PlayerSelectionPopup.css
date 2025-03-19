@@ -6,7 +6,7 @@
     padding: 1.25rem;
     z-index: 1000;
     background-color: #4f2984;
-    border: 3px solid #ffdd00;
+    border: 0.1875rem solid #ffdd00;
     width: 20%;
     font-size: 1.5em;
 }
@@ -25,8 +25,8 @@
     cursor: pointer;
     padding: 0.3125rem 0.625rem;
     margin-bottom: 0.3125rem;
-    border: 3px solid #ffdd00;
-    border-radius: 3px;
+    border: 0.1875rem solid #ffdd00;
+    border-radius: 0.1875rem;
 }
 
 .player-selection-popup li:hover {

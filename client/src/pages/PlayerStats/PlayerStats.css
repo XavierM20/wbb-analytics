@@ -179,8 +179,8 @@ body, html {
   margin-bottom: auto;
   height: auto; /* Ensure it scales to fit the height */
   padding: 0%;
-  max-height: 150px; /* Optional: Set a max height */
-  max-width: 150px; /* Optional: Set a max width */
+  max-height: 9.375rem; /* Optional: Set a max height */
+  max-width: 9.375rem; /* Optional: Set a max width */
   object-fit: cover; /* Ensure the image scales properly within the container */
   margin-right: auto;
 }
