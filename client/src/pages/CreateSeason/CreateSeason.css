@@ -1,5 +1,6 @@
 .create-season {
-    background-color: rgba(23, 43, 79, 1);
+  background-color: rgba(23, 43, 79, .8); /* Dark blue background */
+  background-image: url('../../images/basketballIMG.jpg') !important; /* Basketball image */
   background-size: cover;
   position: fixed;
   height: calc(100vh);
@@ -8,26 +9,26 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 20px;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  gap: 1.25rem;
+  padding: 1.25rem;
+  border-radius: .5rem;
+  box-shadow: 0 0.25rem 0.375rem rgba(0,0,0,0.1);
 }
 
 .create-season .btn-home {
-  padding: 10px 20px;
-  background-color: #172B4F !important; /* Bootstrap blue */
+  padding: 0.625rem 1.25rem;
+  background-color: rgba(200,157,70, 1) !important; /* Bootstrap blue */
   color: cornsilk;
   border: none;
-  border-radius: 5px;
+  border-radius: 0.3125rem;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 1rem;
 }
 
 .top-right-button {
   position: absolute; /* Allows precise placement */
-  top: 10px;          /* Distance from the top */
-  right: 10px;        /* Distance from the right */
+  top: 0.625rem;          /* Distance from the top */
+  right: 0.625rem;        /* Distance from the right */
   z-index: 1000;      /* Ensures it stays on top of other elements */
 }
 
@@ -38,7 +39,7 @@
     left: 0;
     width: calc(100vw);
     height: calc(100vh);
-    background-color: rgb(0, 0, 0, .4);
+    background-color: rgba(23, 43, 79, .5);
     z-index: -1;
 }
 
@@ -67,8 +68,8 @@
   font-weight: bold;
   text-align: center;
   background-color: rgba(63, 68, 68, .7);
-  border-radius: 5px;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 5);
+  border-radius: 0.3125rem;
+  box-shadow: 0 0 0.625rem 0 rgba(0, 0, 0, 5);
   height: calc(62vh)
 }
 
@@ -77,18 +78,18 @@
 .player-list-container {
   flex-basis: 50%;
   margin: auto;
-  padding: 20px;
+  padding: 1.25rem;
   background-color: rgba(63, 68, 68, .7);
-  border-radius: 5px;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 5);
+  border-radius: 0.3125rem;
+  box-shadow: 0 0 0.625rem 0 rgba(0, 0, 0, 5);
   height: calc(62vh);
 }
 
 .player-list-item {
-  margin-bottom: 10px;
+  margin-bottom: 0.625rem;
   display: flex;
   align-items: center;
-  border-bottom: cornsilk solid 1px;
+  border-bottom: cornsilk solid 0.0625rem;
 }
 
 .player-info {
@@ -97,7 +98,7 @@
 
 .player-actions {
   display: flex;
-  gap: 10px; /* Add spacing between buttons */
+  gap: 0.625rem; /* Add spacing between buttons */
 }
 
 /*
@@ -105,7 +106,7 @@
 */
 .btnEdit,
 .btnDelete {
-  padding: 5px 10px;
+  padding: 0.3125rem 0.625rem;
   cursor: pointer;
 }
 
@@ -130,36 +131,36 @@ div.player-actions .btnDelete:hover {
 .player-input input,
 .player-input button {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 0.3125rem;
 }
 
 .player-input {
-  margin-bottom: 15px;
-  background: cornsilk;
-  padding: 10px;
-  border-radius: 5px;
+  margin-bottom: 0.9375rem;
+  background: rgba(200,157,70, .8);
+  padding: 0.625rem;
+  border-radius: 0.3125rem;
 }
 
 .create-season input[type="text"],
 .create-season input[type="number"] {
   width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-  border-radius: 4px;
-  border: 1px solid cornsilk;
+  padding: .5rem;
+  margin-top: 0.3125rem;
+  border-radius: 0.25rem;
+  border: 0.0625rem solid cornsilk;
 }
 
 .create-season input:focus{
     outline: none; /* Removes the default outline */
-    border: 2px solid #ffdd00; /* Change this color to your preferred focus color */
+    border: 0.75rem solid #ffdd00; /* Change this color to your preferred focus color */
 }
 .create-season button :not(.btn-home) {
-  padding: 10px 20px;
-  margin-top: 20px;
+  padding: 0.625rem 1.25rem;
+  margin-top: 1.25rem;
   background-color: cornsilk; /* Blue background for the button */
   color: black; /* White text for contrast */
   border: none;
-  border-radius: 5px;
+  border-radius: 0.3125rem;
   cursor: pointer;
 }
 
@@ -172,8 +173,8 @@ div.player-actions .btnDelete:hover {
 .create-season .edit-button {
   background-color: #ff0000; /* Red background for delete button */
   color: cornsilk; /* White text for contrast */
-  padding: 5px 10px;
-  margin-left: 10px;
+  padding: 0.3125rem 0.625rem;
+  margin-left: 0.625rem;
 }
 
 .create-season .edit-button {
@@ -182,6 +183,6 @@ div.player-actions .btnDelete:hover {
 
 .jersey-error {
   color: #ff0000; /* Red color for error messages */
-  margin-top: 5px;
-  margin-bottom: 10px;
+  margin-top: 0.3125rem;
+  margin-bottom: 0.625rem;
 }
