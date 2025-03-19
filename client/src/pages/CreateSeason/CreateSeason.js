@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { View, Text, ScrollView, StyleSheet, Dimensions } from 'react-native';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/AuthProvider';
-import axios from 'axios';
+import { ObjectId } from 'bson';
 import './CreateSeason.css';
 
 function CreateSeason() {
