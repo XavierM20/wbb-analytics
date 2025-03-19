@@ -162,100 +162,67 @@ function CreateSeason() {
     console.log('Submitting:', year, players);
 
     try {
+        const newPlayers = players.filter((p) => !p._id);
+        const existingPlayers = players.filter((p) => p._id);
+
+    try {
         // If no season exists, create new players and a new season
         const newPlayers = players.filter((p) => !p._id);
         const existingPlayers = players.filter((p) => p._id);
 
         // Create new players
-        const playerPromises = newPlayers.map((player) => {
-            return fetch(`${serverUrl}/api/players`, {
+         const playerPromises = newPlayers.map((player) =>
+            fetch(`${serverUrl}/api/players`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(player),
-            }).then((response) => response.json());
-        });
+            }).then((response) => response.json())
+        );
 
         const newlyCreatedPlayers = await Promise.all(playerPromises);
-
         const allPlayers = [...existingPlayers, ...newlyCreatedPlayers];
 
         // Check if the season already exists
-        const endYear = year.split('-')[1];
+          const endYear = year.split('-')[1];
         const seasonResponse = await fetch(`${serverUrl}/api/seasons/endYear/${endYear}/${sessionStorage.getItem('schoolID')}`);
         const existingSeason = await seasonResponse.json();
 
         if (existingSeason.message !== 'Season not found for the given year') {
             console.log('Season already exists:', existingSeason);
-            console.log('Season ID: ' + existingSeason._id);
 
             // Update players for the existing season using the PATCH endpoint
             const updateResponse = await fetch(`${serverUrl}/api/seasons/${existingSeason._id}/players`, {
                 method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ players: allPlayers.map((p) => p._id) }),
             });
 
-            if (!updateResponse.ok) {
-                throw new Error(`Failed to update season players: ${updateResponse.statusText}`);
-            }
+            if (!updateResponse.ok) throw new Error(`Failed to update season players: ${updateResponse.statusText}`);
 
-            const updatedSeason = await updateResponse.json();
-            console.log('Updated season:', updatedSeason);
+            console.log('Updated season:', await updateResponse.json());
         } else {
             // Create a new season
             const createSeasonResponse = await fetch(`${serverUrl}/api/seasons`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ year, players: allPlayers.map((p) => p._id), schoolID: sessionStorage.getItem('schoolID') }),
             });
-    
-            const newlyCreatedPlayers = await Promise.all(playerPromises);
-            const allPlayers = [...existingPlayers, ...newlyCreatedPlayers];
-    
-            const endYear = year.split('-')[1];
-            const seasonResponse = await fetch(`${serverUrl}/api/seasons/endYear/${endYear}`);
-            const existingSeason = await seasonResponse.json();
-    
-            if (existingSeason.message !== 'Season not found for the given year') {
-                console.log('Season already exists:', existingSeason);
-    
-                const updateResponse = await fetch(`${serverUrl}/api/seasons/${existingSeason._id}/players`, {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ players: allPlayers.map((p) => p._id) }),
-                });
-    
-                if (!updateResponse.ok) throw new Error(`Failed to update season players: ${updateResponse.statusText}`);
-    
-                console.log('Updated season:', await updateResponse.json());
-            } else {
-                const createSeasonResponse = await fetch(`${serverUrl}/api/seasons`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ year, players: allPlayers.map((p) => p._id) }),
-                });
-    
-                if (!createSeasonResponse.ok) throw new Error(`Failed to create season: ${createSeasonResponse.statusText}`);
-    
-                console.log('Created new season:', await createSeasonResponse.json());
-            }
+
+            if (!createSeasonResponse.ok) throw new Error(`Failed to create season: ${createSeasonResponse.statusText}`);
+
+            console.log('Created new season:', await createSeasonResponse.json());
+        }
     
             // Reset form state
             setYear('');
             setPlayers([]);
-            setActivePlayer({ name: '', jersey_number: '', position: ''});
+            setActivePlayer({ name: '', jersey_number: '', position: '' });
             setEditIndex(-1);
-        } catch (error) {
-            console.error('Error handling submission:', error);
-        }
+
+          } catch (error) {
+              console.error('Error handling submission:', error);
+          }
       };
-    
 
     return (
         <div className="create-season">
