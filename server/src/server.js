@@ -1,4 +1,5 @@
 require('dotenv').config();
+//console.log(process.env);
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -24,9 +25,9 @@ app.use(cors()); // Enable CORS
 app.use(express.json());
 
 const env = process.env.NODE_ENV || 'DEVELOPMENT'; // Default to 'DEVELOPMENT' if NODE_ENV is not set
-
+//console.log(JSON.stringify(env))
 let mongoURI;
-console.log(env);
+// console.log(env);
 // Check if the environment is an off-campus variant
 
 if (env.includes('OFFCAMPUS')) {
@@ -40,11 +41,15 @@ if (env.includes('OFFCAMPUS')) {
 }
 
 console.log(mongoURI); // For debugging: output the determined mongoURI
+console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
+console.log(`mongoURI: ${mongoURI}`);
+console.log(`MONGO_URI_${env}: ${process.env[`MONGO_URI_${env}`]}`);
 
 
 mongoose.connect(mongoURI)
   .then(() => console.log(`Connected to MongoDB at ${mongoURI}`))
   .catch(err => console.error('Could not connect to MongoDB', err));
+
 
 // Setup routes
 app.use('/api/players', playerRoutes);
@@ -58,6 +63,10 @@ app.use('/api/games', gameRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/stats', statsRoutes);
 app.use('/api/schools', schoolRoutes);
+
+app.get('/api/alive',(req,res,next) =>{
+res.status(200).json({status:"alive"})
+})
 
 const port = process.env.PORT || 3001; // Use environment variable or default to 3001
 // Start the server on a single port

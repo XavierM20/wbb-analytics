@@ -106,7 +106,7 @@ body, html {
   position: fixed;
   bottom: 15px;
   left: 150px;
-  right: 150px;
+  right: 135px;
   display: flex;
   justify-content: space-between;
   background-color: rgba(63, 68, 68, .7);

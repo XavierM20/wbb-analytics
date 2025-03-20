@@ -1,18 +1,18 @@
 .selector-label {
   display: block; /* Display label above the dropdown */
-  margin-bottom: 5px;
+  margin-bottom: 0.3125rem;
   color: var(--header-color); /* Use the header color for consistency */
   font-weight: bold;
   font-size: 1rem; /* Adjusted font size for better readability */
 }
 
 .selector-select {
-  padding: 10px 15px;
+  padding: 0.625rem 0.9375rem;
   font-size: 1rem; /* Uniform font size with other elements */
   width: 100%; /* Make width responsive */
-  max-width: 250px; /* Maximum width */
+  max-width: 15.625rem; /* Maximum width */
   border: none; /* Remove the border for a cleaner look */
-  border-radius: 8px; /* Consistent border radius with cards */
+  border-radius: .5rem; /* Consistent border radius with cards */
   background-color: var(--card-bg-color);
   color: var(--text-color-dark);
   box-shadow: var(--box-shadow); /* Add shadow for depth */
@@ -22,7 +22,7 @@
 }
 
 .selector-select:focus {
-  outline: 2px solid var(--accent-color); /* Accent color for focus state */
+  outline: 0.75rem solid var(--accent-color); /* Accent color for focus state */
 }
 
 /* Custom dropdown arrow using CSS only */
@@ -30,9 +30,9 @@
   content: '';
   position: absolute;
   top: 50%;
-  right: 10px;
+  right: 0.625rem;
   transform: translateY(-50%);
-  border: 6px solid transparent;
+  border: 0.375rem solid transparent;
   border-top-color: var(--text-color-dark); /* Arrow color */
   pointer-events: none; /* Ensure clicks pass through to the select element */
 }

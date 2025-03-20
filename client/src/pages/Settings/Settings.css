@@ -11,7 +11,7 @@
     justify-content: center;
     text-align: center;
     overflow: hidden;
-    z-index: -1;
+    z-index: 1;
 }
 .settings-page-container::before{
     content: "";
@@ -20,7 +20,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(200,157,70, .2);
+    background-color: rgba(23, 43, 79, .5);
     z-index: 1;
 }
 
@@ -38,7 +38,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: rgba(23, 43, 79, .8);
+    background-color: rgba(200,157,70, .2);
     padding: 1.875rem;
     gap: 4.375rem; /* Increased gap */
     max-width: 80%; /* Adjusted max-width for larger container */
@@ -67,19 +67,19 @@
 }
 
 .btn-JSON:hover {
-    background-color: #C89D46;
+    background-color: rgba(23, 43, 79, .8);
     color: cornsilk;
 }
 
 .btn-CSV:hover {
-    background-color: #C89D46;
+    background-color: rgba(23, 43, 79, .8);
     color: cornsilk;
 }
 
 .btn {
     border: 0.0625rem solid cornsilk;
     color: cornsilk;
-    background-color: rgba(23, 43, 79, .8);
+    background-color: rgba(200,157,70, .8);
     display: block;
     padding: 1.25rem 2.5rem; /* Increased padding for bigger buttons */
     font-size: 1.5rem; /* Increased font size */
@@ -88,7 +88,7 @@
 }
 
 .Register-btn:hover {
-    background-color: #C89D46;
+    background-color: rgba(23, 43, 79, .8);
     color: cornsilk;
 }
 
@@ -106,7 +106,7 @@
   
   .register-content {
   background-color: rgba(63, 68, 68, .7) !important;
-  border-radius: 5rem;
+  border-radius: .5rem;
   box-shadow: 0 0 0.625rem rgba(0, 0, 0, 0.1);
   max-width: 25rem;
   width: 100%;
@@ -141,7 +141,7 @@
     text-decoration: none;
     font-weight: bold;
     border: none;
-    padding: 5rem 1rem; /* Adjust padding to change the size of the button */
+    padding: .5rem 1rem; /* Adjust padding to change the size of the button */
     text-align: center;
     border-radius: 0.625rem;
     margin: 0.625rem 1.25rem; /* Increased margin for more space between buttons */
@@ -155,11 +155,11 @@
 }
 
 .season:hover{
-    background-color: #C89D46;
+    background-color: rgba(23, 43, 79, .8);
     transform: scale(1.01);
 }
 
 .customize-team-colors:hover{
-    background-color: #C89D46 !important;
+    background-color: rgba(23, 43, 79, .8) !important;
     transform: scale(1.01);
 }
