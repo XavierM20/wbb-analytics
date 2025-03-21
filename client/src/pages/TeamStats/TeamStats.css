@@ -1,4 +1,5 @@
 teamstats.css
+
 /* Root variables for colors and styles */
 :root {
   --bg-color: #9797ef;
@@ -198,3 +199,4 @@ body, html {
   font-weight: bold;
   color: white;
 }
+

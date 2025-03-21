@@ -23,7 +23,7 @@ const Game = () => {
     const [lastTempo, setLastTempo] = useState(null);
     const [tempoType, setTempoType] = useState(null);
     const [shotEvents, setShotEvents] = useState([]);
-    const [SeasonData, setSeasonData] = useState([]);
+    const [seasonData, setSeasonData] = useState([]);
     const [tempoFlag, setTempoFlag] = useState(false);
     const [tempoEvents, setTempoEvents] = useState([]);
     const [resetTimer, setResetTimer] = useState(false);
@@ -44,6 +44,8 @@ const Game = () => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [filePreview, setFilePreview] = useState(null);
     const [imageId, setImageId] = useState(null);
+    const [schoolID, setSchoolID] = useState(sessionStorage.getItem("schoolID"));
+    
 
     const navigate = useNavigate();
     const serverUrl = process.env.REACT_APP_SERVER_URL;
@@ -74,8 +76,18 @@ const Game = () => {
     useEffect(() => {
         const handleCreateGame = async () => {
             try {
-                if (SeasonData.length === 0) {
-                    const response = await fetch(serverUrl + '/api/seasons');
+                if (seasonData.length === 0) {
+                    const currentDate = new Date();
+                    const month = currentDate.getMonth() + 1;
+                    const day = currentDate.getDate();
+                    const year = currentDate.getFullYear();
+
+                    const computedYear = (month < 8 || (month === 8 && day < 2)) ? year - 1 : year + 1;
+
+                    const year1 = Math.min(year, computedYear).toString();
+                    const year2 = Math.max(year, computedYear).toString();
+
+                    const response = await fetch(`${process.env.REACT_APP_SERVER_URL}/api/seasons/endYear/${year2}/${sessionStorage.getItem("schoolID")}`);
                     const data = await response.json();
                     setSeasonData(data);
                 }
@@ -84,7 +96,7 @@ const Game = () => {
             }
         };
         handleCreateGame();
-    }, [opponentTeam, location, SeasonData]);
+    }, [opponentTeam, location, seasonData]);
 
     // Creates a new game if conditions are met
     useEffect(() => {
@@ -106,9 +118,8 @@ const Game = () => {
     // Initialize an empty game at first to generate gameID, as user adds tempos
     // and shots, it will add them when the game is submitted at the end
     const createGame = async () => {
-        const seasonDate = getSeasonByDate();
         const game = {
-            season_id: seasonDate._id,
+            season_id: seasonData._id,
             date: date,
             opponent: opponentTeam,
             location: location,
@@ -136,7 +147,8 @@ const Game = () => {
     };
     
    // Gets the season based on the current date, 2023-2024, 2024-2025, etc.
-    const getSeasonByDate = () => {
+    const getSeasonByDate = async () => {
+        /*
         let finalYear;
         const currentDate = new Date();
         const month = currentDate.getMonth() + 1;
@@ -152,8 +164,29 @@ const Game = () => {
         } else {
             finalYear = SeasonData.find(season => season.year === year2 + '-' + year1);
         }
+        */
+
+        const currentDate = new Date();
+        const month = currentDate.getMonth() + 1;
+        const day = currentDate.getDate();
+        const year = currentDate.getFullYear();
+
+        const computedYear = (month < 8 || (month === 8 && day < 2)) ? year - 1 : year + 1;
+
+        const year1 = Math.min(year, computedYear).toString();
+        const year2 = Math.max(year, computedYear).toString();
+
+        console.log(year1, year2);
+
+        // Get the current season for this school
+        const seasonResponse = await fetch(`${process.env.REACT_APP_SERVER_URL}/api/seasons/endYear/${year2}/${schoolID}`);
+        const seasonData = await seasonResponse.json();
+        console.log(seasonData);
+        return seasonData;
+
+        //console.log(finalYear);
         
-        return finalYear;
+        //return finalYear;
     };
     
     const handleShotOutcome = async (outcome) => {
@@ -210,13 +243,16 @@ const Game = () => {
     // so that we can add to it as they record more data
     const handleSelectGame = async (game) => {
         try {
-            const response = await fetch(`${serverUrl}/api/games/${game._id}`);
+            const response = await fetch(`${serverUrl}/api/games/id/${game._id}`);
 
             if (!response.ok) {
                 throw new Error('Failed to fetch game details');
             }
 
             const gameDetails = await response.json();
+            console.log('Game details:');
+            console.log(gameDetails);
+
             const teamLogo = await fetch(`${serverUrl}/api/games/image/${gameDetails.team_logo}`);
             console.log(teamLogo);
             setGameData(gameDetails._id);
@@ -324,8 +360,9 @@ const Game = () => {
     // seasons table, only posts to the season table if the gameID does not exist there.
     const submitGame = async () =>{
         const uploadedImageId = await uploadImage();
-        const seasonData = getSeasonByDate();
-    
+
+        console.log(gameData);
+
         const gameDataUpdated = {
             season_id: seasonData._id,
             date: date,
@@ -460,6 +497,20 @@ const Game = () => {
             return null;
         }
     }
+
+    // Gets SeasonID and stores it for easier use
+    useEffect(() => {
+        const fetchSeasonId = async () => {
+            try {
+                const season = await getSeasonByDate(); // Wait for the function to complete
+                setSeasonData(season); // Store the result in state
+            } catch (error) {
+                console.error("Error fetching season ID:", error);
+            }
+        };
+
+        fetchSeasonId();
+    }, []); // Runs only once when the component mounts
     
     return (
         <>
@@ -584,7 +635,7 @@ const Game = () => {
                 {showPlayerSelection && (
                     <PlayerSelectionPopup
                         onPlayerSelect={handlePlayerSelection}
-                        seasonId={getSeasonByDate()._id}
+                        seasonId={seasonData._id}
                     />
                 )}
                 <div className="submit-delete-container">
