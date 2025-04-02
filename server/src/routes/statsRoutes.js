@@ -277,6 +277,19 @@ router.get('/byDrill/:drillId', isAuthenticated, async (req, res) => {
     }
 });
 
+// Get stats by player_id and drill_id
+router.get('/byPlayerAndGameOrDrill/:playerId/:drillId', isAuthenticated, async (req, res) => {
+    try {
+        const stats = await Stats.findOne({ player_id: req.params.playerId, drill_id: req.params.drillId });
+        if (!stats) {
+            return res.status(404).json({ message: 'No stats found for the given player_id and drill_id' });
+        }
+        res.json(stats);
+    } catch (err) {
+        res.status(500).json({ message: 'Internal server error', error: err.message });
+    }
+});
+
 // POST new stats with validation
 router.post('/', isAuthenticated, async (req, res) => {
     try {
