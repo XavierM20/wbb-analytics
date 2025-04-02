@@ -67,6 +67,9 @@ app.get('/api/alive',(req,res,next) =>{
 res.status(200).json({status:"alive"})
 })
 
+const webhookRoutes = require('./routes/webhookRoutes');
+app.use('/github-webhook/pushevent', webhookRoutes);
+
 const port = process.env.PORT || 3001; // Use environment variable or default to 3001
 // Start the server on a single port
 app.listen(port, () => {
