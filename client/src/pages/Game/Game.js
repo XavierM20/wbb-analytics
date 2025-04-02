@@ -105,6 +105,14 @@ const Game = () => {
         fetchSeasonId();
     }, []); // Runs only once when the component mounts
 
+    const handleNavigation = () => {
+        if (gameData) {
+            setAlertVisible(true);
+        } else {
+            navigate('/homepage');
+        }
+    }
+
     const handleConfirm = () => {
 
     }
@@ -593,7 +601,7 @@ const Game = () => {
                 </div>
             )}
             <div className='main'>
-                <button className='btn-home top-right-button' onClick={() => {setAlertVisible(true)}}>Home</button>
+                <button className='btn-home top-right-button' onClick={handleNavigation}>Home</button>
                 <CustomAlert
                     visible={alertVisible}
                     title="Save Game?"
