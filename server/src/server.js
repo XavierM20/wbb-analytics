@@ -50,18 +50,6 @@ mongoose.connect(mongoURI)
   .then(() => console.log(`Connected to MongoDB at ${mongoURI}`))
   .catch(err => console.error('Could not connect to MongoDB', err));
 
-
-//Webhook route
-app.post('github-webhook/pushevent', (req, res) => {
-    if(!req.body){
-        return res.status(400).send('No data received');
-    }
-
-    if(req.headers['x-github-event'] === 'push'){
-        console.log('Push event received');
-    }
-    res.status(200).send('Webhook received');
-})
 // Setup routes
 app.use('/api/players', playerRoutes);
 app.use('/api/seasons', seasonRoutes);
