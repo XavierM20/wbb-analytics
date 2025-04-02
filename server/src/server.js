@@ -16,6 +16,7 @@ const userRoutes = require('./routes/usersRoutes');
 const statsRoutes = require('./routes/statsRoutes');
 const keyRoutes = require('./routes/keyRoutes');
 const schoolRoutes = require('./routes/schoolRoutes');
+const webhookRoutes = require('./routes/webhookRoutes');
 
 const app = express();
 
@@ -67,7 +68,6 @@ app.get('/api/alive',(req,res,next) =>{
 res.status(200).json({status:"alive"})
 })
 
-const webhookRoutes = require('./routes/webhookRoutes');
 app.use('/github-webhook/pushevent', webhookRoutes);
 
 const port = process.env.PORT || 3001; // Use environment variable or default to 3001
