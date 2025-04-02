@@ -11,9 +11,11 @@ import TempoButton from './components/TempoButton';
 import TempoTimer from './components/TempoTimer';
 import GameSelection from './components/GameSelection';
 import ImagePicker from './components/ImagePicker';
+import CustomAlert from './components/customAlert';
 import './Game.css';
 
 const Game = () => {
+    const [alertVisible, setAlertVisible] = useState(false);
     const [gameData, setGameData] = useState('');
     const [gameMode, setGameMode] = useState('');
     const [location, setLocation] = useState('');
@@ -101,7 +103,19 @@ const Game = () => {
         };
 
         fetchSeasonId();
-        }, []); // Runs only once when the component mounts
+    }, []); // Runs only once when the component mounts
+
+    const handleConfirm = () => {
+
+    }
+
+    const handleCancel = () => {
+        setAlertVisible(false);
+    }
+    
+    const handleHome = () => {
+        navigate('/homepage');
+    }
 
     const createGame = async () => {
         const game = {
@@ -579,7 +593,15 @@ const Game = () => {
                 </div>
             )}
             <div className='main'>
-                <button className='btn-home top-right-button' onClick={() => navigate('/homepage')}>Home</button>
+                <button className='btn-home top-right-button' onClick={() => {setAlertVisible(true)}}>Home</button>
+                <CustomAlert
+                    visible={alertVisible}
+                    title="Save Game?"
+                    message="Do you want save the game first?"
+                    onConfirm={handleConfirm}
+                    onCancel={handleCancel}
+                    onGoHome={handleHome}
+                />
                 <View style={styles.outerContainer}>
                     <View style={styles.scoreboardWrapper}>
                         {/* Left Group */}
