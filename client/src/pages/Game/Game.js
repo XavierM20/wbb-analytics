@@ -557,10 +557,18 @@ const Game = () => {
     }, [serverUrl, seasonData]);
 
     const onPlayerSelectForShot = (player) => {
-        setIsPlayerSelectedforShot(true);
-        console.log('Player selected for shot:');
-        console.log(player);
-        setCurrentPlayer(player);
+        // If the currently selected player is the same as the clicked player, deselect
+        if (currentPlayer && currentPlayer.id === player.id) {
+            console.log('Deselecting player:');
+            console.log(player);
+            setIsPlayerSelectedforShot(false);
+            setCurrentPlayer(null);
+        } else {
+            console.log('Player selected for shot:');
+            console.log(player);
+            setIsPlayerSelectedforShot(true);
+            setCurrentPlayer(player);
+        }
     };
 
     useEffect(() => {
