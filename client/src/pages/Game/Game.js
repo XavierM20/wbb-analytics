@@ -35,6 +35,7 @@ const Game = () => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [filePreview, setFilePreview] = useState(null);
     const [schoolID, setSchoolID] = useState(sessionStorage.getItem("schoolID"));
+    const [imageID, setImageID] = useState('');
 
     /* Player Selection  */
     const [playersOnCourt, setPlayersOnCourt] = useState([]);
@@ -114,7 +115,10 @@ const Game = () => {
     }
 
     const handleConfirm = () => {
+        // Save the game data to the database (patch)
 
+        // Return to the homepage
+        navigate('/homepage');
     }
 
     const handleCancel = () => {
@@ -126,11 +130,19 @@ const Game = () => {
     }
 
     const createGame = async () => {
+        let image_id = await uploadImage();
+        console.log('Image ID:', imageID);
+
         const game = {
             season_id: seasonData._id,
             date: date,
             opponent: opponentTeam,
             location: location,
+            score: {
+                team: 0,
+                opponent: 0,
+            },
+            team_logo: image_id
         };
     
         try {
@@ -177,6 +189,31 @@ const Game = () => {
         }
     };
 
+    const uploadImage = async() => {
+        if (!selectedFile) {
+            console.log('No file selected');
+            return null;
+        }
+
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+
+        try {
+            const response = await fetch(`${serverUrl}/api/games/uploadLogo`, {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+            console.log('Image uploaded:', data.id);
+            setImageID(data.id);
+            return data.id;
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            return null;
+        }
+    }
+
     const handleLocationClick = (location) => {
         setTempLocation(location);
     };
@@ -214,6 +251,9 @@ const Game = () => {
             setShotEvents(gameDetails.shot_events || []);
             setLoadGameOverlayVisible(false);
             setFilePreview(teamLogo.url);
+            setImageID(gameDetails.team_logo);
+            setMyScore(gameDetails.score.team)
+            setOpponentScore(gameDetails.score.opponent)
 
         } catch (error) {
             console.error('Error fetching game details:', error);
@@ -331,22 +371,23 @@ const Game = () => {
         setIsShotPopupOpen(true);
     }
 
-    const handleMadeShot = () => {
-        // Determine shot points based on the zone name, as in your commented code.
-        if (selectedZone.name == 6 || selectedZone.name == 7 || selectedZone.name == 8) {
-          console.log(`3 point shot made by ${currentPlayerRef.current.name}`);
-          setMyScore(prevScore => prevScore + 3);
-        } else {
-          console.log(`2 point shot made by ${currentPlayerRef.current.name}`);
-          setMyScore(prevScore => prevScore + 2);
-        }
+    // Still need to handle tempos
+    const handleMadeShot = async () => {
+        // Determine shot points based on zone name
+        const shotPoints = (selectedZone.name == 6 || selectedZone.name == 7 || selectedZone.name == 8) ? 3 : 2;
+        console.log(`${shotPoints} point shot made by ${currentPlayerRef.current.name}`);
+        
+        // Calculate the new score locally
+        const newScore = myScore + shotPoints;
+        setMyScore(newScore);
+        
         setIsShotPopupOpen(false);
         setIsTiming(false);
         console.log(`Tempo recorded: ${currentTempo.toFixed(2)} seconds`);
-
-        // Find the shot clock time based on the current tempo
-        var shotClockTime = null;
-        if(currentTempo.toFixed(2) <= 20) {
+      
+        // Determine shot clock time based on current tempo
+        let shotClockTime = null;
+        if (currentTempo.toFixed(2) <= 20) {
             shotClockTime = 'first_third';
         } else if (currentTempo.toFixed(2) <= 40) {
             shotClockTime = 'second_third';
@@ -354,6 +395,8 @@ const Game = () => {
             shotClockTime = 'final_third';
         }
 
+        const currentTime = new Date().toISOString()
+      
         // Submit the shot event to the server
         const shotEvent = {
             gameOrDrill_id: gameData,
@@ -362,17 +405,76 @@ const Game = () => {
             made: true,
             zone: selectedZone.name,
             shot_clock_time: shotClockTime,
-            timestamp: new Date().toISOString()
-        }
-
-        fetch(`${serverUrl}/api/shots`, {
+            timestamp: currentTime
+        };
+      
+        let shotResponse = await fetch(`${serverUrl}/api/shots`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(shotEvent)
+        });
+      
+        // Parse the response (assuming the response returns the created shot event data)
+        const shotData = await shotResponse.json();
+        console.log(shotData._id)
+
+        // Update shotEvents locally with the new shot event
+        const newShotEvents = [...shotEvents, shotData._id];
+        
+        setShotEvents(newShotEvents);
+
+        // Submit the tempo event to the database
+        const tempoEvent = {
+            gameOrDrill_id: gameData,
+            onModel: 'Game',
+            player_ids: playersOnCourt.map(player => player.id),
+            tempo_type: tempoType,
+            transition_time: currentTempo.toFixed(2),
+            timestamp: currentTime
+        }
+
+        let tempoResponse = await fetch(`${serverUrl}/api/tempos`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(tempoEvent)
         })
-    };
+
+        const tempoData = await tempoResponse.json();
+        console.log(tempoData._id);
+
+        // Update tempoEvents locally with the new tempo event
+        const newTempoEvents = [...tempoEventIds, tempoData._id];
+        setTempoEventIds(newTempoEvents);
+
+        console.log(newTempoEvents);
+      
+        // Patch game in database using the locally computed values
+        const updatedScore = {
+          season_id: seasonData._id,
+          date: date,
+          opponent: opponentTeam,
+          location: location,
+          tempo_events: newTempoEvents,
+          shot_events: newShotEvents, // Use the updated array
+          score: {
+            team: newScore, // Use the new score calculated locally
+            opponent: opponentScore
+          },
+          team_logo: imageID,
+        };
+      
+        await fetch(`${serverUrl}/api/games/${gameData}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(updatedScore)
+        });
+      };      
       
     const handleMissedShot = () => {
         console.log(`Shot missed by ${currentPlayerRef.current.name}`);
