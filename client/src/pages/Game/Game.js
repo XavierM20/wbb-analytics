@@ -523,11 +523,57 @@ const Game = () => {
     // Function that adds points to the team score
     const myTeamScore = (points) => {
         setMyScore(prevScore => prevScore + points);
+
+        // Patch the game in the database with the new score
+        const updatedScore = {
+            season_id: seasonData._id,
+            date: date,
+            opponent: opponentTeam,
+            location: location,
+            tempo_events: tempoEventIds,
+            shot_events: shotEvents,
+            score: {
+                team: (points+myScore),
+                opponent: opponentScore,
+            },
+            team_logo: imageID,
+        };
+
+        fetch(`${serverUrl}/api/games/${gameData}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedScore)
+        })
     }
 
     // Function that adds points to the team score
     const opposingTeamScore = (points) => {
         setOpponentScore(prevScore => prevScore + points);
+        
+        // Patch the game in the database with the new score
+        const updatedScore = {
+            season_id: seasonData._id,
+            date: date,
+            opponent: opponentTeam,
+            location: location,
+            tempo_events: tempoEventIds,
+            shot_events: shotEvents,
+            score: {
+                team: myScore,
+                opponent: (points+opponentScore),
+            },
+            team_logo: imageID,
+        };
+
+        fetch(`${serverUrl}/api/games/${gameData}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedScore)
+        })
     }
 
     /* 
