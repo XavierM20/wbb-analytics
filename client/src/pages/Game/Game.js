@@ -792,7 +792,14 @@ const Game = () => {
                         <View style={styles.scoreBox}>
                             <Text style={styles.scoreText}>{opponentScore}</Text>
                         </View>
-                        <Text style={styles.teamText}>{opponentTeam}</Text>
+                            <Text style={styles.teamText}>{opponentTeam}</Text>
+                            {filePreview && (
+                                <Image 
+                                    source={{ uri: filePreview }}  
+                                    style={styles.teamLogo} 
+                                    onError={(error) => console.error("Image Load Error:", error.nativeEvent)}
+                                />
+                            )}
                         </View>
                     </View>
                 </View>

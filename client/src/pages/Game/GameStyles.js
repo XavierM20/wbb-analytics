@@ -224,5 +224,11 @@ export default StyleSheet.create({
         color: 'white',
         fontSize: 18,
         fontWeight: 'bold',
-    },        
+    },
+    // Styles for the team logos
+    teamLogo: {
+        width: 50,
+        height: 50,
+        marginLeft: 10,
+    },
 });
