@@ -396,58 +396,20 @@ const Game = () => {
         }
 
         const currentTime = new Date().toISOString()
-      
+
         // Submit the shot event to the server
-        const shotEvent = {
-            gameOrDrill_id: gameData,
-            onModel: 'Game',
-            player_id: currentPlayerRef.current.id,
-            made: true,
-            zone: selectedZone.name,
-            shot_clock_time: shotClockTime,
-            timestamp: currentTime
-        };
-      
-        let shotResponse = await fetch(`${serverUrl}/api/shots`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(shotEvent)
-        });
-      
-        // Parse the response (assuming the response returns the created shot event data)
-        const shotData = await shotResponse.json();
-        console.log(shotData._id)
+        const shotData = await handleShotEvent(true, selectedZone.name, shotClockTime);
 
         // Update shotEvents locally with the new shot event
-        const newShotEvents = [...shotEvents, shotData._id];
+        const newShotEvents = [...shotEvents, shotData];
         
         setShotEvents(newShotEvents);
 
-        // Submit the tempo event to the database
-        const tempoEvent = {
-            gameOrDrill_id: gameData,
-            onModel: 'Game',
-            player_ids: playersOnCourt.map(player => player.id),
-            tempo_type: tempoType,
-            transition_time: currentTempo.toFixed(2),
-            timestamp: currentTime
-        }
-
-        let tempoResponse = await fetch(`${serverUrl}/api/tempos`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(tempoEvent)
-        })
-
-        const tempoData = await tempoResponse.json();
-        console.log(tempoData._id);
+        // Submit the temp event to the database
+        const tempoData = await submitTempo((tempoType === 'offensive' ? 'defensive' : 'offensive'), playersOnCourt.map(player => player.id), currentTempo);
 
         // Update tempoEvents locally with the new tempo event
-        const newTempoEvents = [...tempoEventIds, tempoData._id];
+        const newTempoEvents = [...tempoEventIds, tempoData];
         setTempoEventIds(newTempoEvents);
 
         console.log(newTempoEvents);
@@ -476,7 +438,7 @@ const Game = () => {
         });
       };      
       
-    const handleMissedShot = () => {
+    const handleMissedShot = async () => {
         console.log(`Shot missed by ${currentPlayerRef.current.name}`);
         setIsShotPopupOpen(false);
 
@@ -489,26 +451,37 @@ const Game = () => {
         } else {
             shotClockTime = 'final_third';
         }
-
+        
         // Submit the shot event to the server
+        handleShotEvent(false, selectedZone.name, shotClockTime);
+    };
+
+    // Function to handle submission of shotEvents
+    // Takes made: boolean, zone: string, shotClockTime: string
+    const handleShotEvent = async (made, zone, shotClockTime, ) => {
         const shotEvent = {
             gameOrDrill_id: gameData,
             onModel: 'Game',
             player_id: currentPlayerRef.current.id,
-            made: false,
-            zone: selectedZone.name,
+            made: made,
+            zone: zone,
             shot_clock_time: shotClockTime,
             timestamp: new Date().toISOString()
-        }
-
-        fetch(`${serverUrl}/api/shots`, {
+        };
+        
+        let shotResponse = await fetch(`${serverUrl}/api/shots`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(shotEvent)
-        })
-    };
+        });
+      
+        // Parse the response (assuming the response returns the created shot event data)
+        const shotData = await shotResponse.json();
+
+        return shotData._id;
+    }
 
     // Create a new map object with the selected area highlighted.
     const updatedMap = {
@@ -683,23 +656,55 @@ const Game = () => {
         Tempo Functions
     */
 
-    const handleStopTempo = (type) => {
+    const handleStopTempo = async (type) => {
         console.log(`Stopping ${tempoType} tempo`);
         setIsTiming(false);
         setRecordedTempo(currentTempo);
 
         // Determine if tempo is offensive or defensive
-        const isOffensive = type;
+        const isOffensive = (tempoType === 'offensive') ? true : false;
 
         // Get the IDs of the players on the court
         const playersOnCourtIds = playersOnCourt.map(player => player.id);
 
         // Call submitTempo with the correct arguments
-        submitTempo(isOffensive, playersOnCourtIds, currentTempo);
+        let newTempoID = await submitTempo(isOffensive, playersOnCourtIds, currentTempo);
     };
 
     // Add functionality for submit tempo
-    const submitTempo = async (isOffensive, playersOnCourtIds, tempo) => {};
+    const submitTempo = async (isOffensive, playersOnCourtIds, tempo) => {
+        console.log(`Submitting ${isOffensive ? 'offensive' : 'defensive'} tempo`);
+        
+        const tempoEvent = {
+            gameOrDrill_id: gameData,
+            onModel: 'Game',
+            player_ids: playersOnCourtIds,
+            tempo_type: isOffensive ? 'offensive' : 'defensive',
+            transition_time: tempo.toFixed(2),
+            timestamp: new Date().toISOString()
+        };
+
+        // Send the tempo event to the server
+        try {
+            const response = await fetch(`${serverUrl}/api/tempos`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(tempoEvent)
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to submit tempo event');
+            }
+
+            const data = await response.json();
+            console.log('Tempo event submitted:', data);
+            return data._id; // Return the ID of the submitted tempo event  
+        } catch (error) {
+            console.error('Error submitting tempo event:', error);
+        }
+    };
 
     // Start timing for tempo (offensive or defensive)
     const startTempo = (type) => {
