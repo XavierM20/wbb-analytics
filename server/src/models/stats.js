@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const statsSchema = new Schema({
-    gameOrDrill_id: { type: Schema.Types.ObjectId, refPath: onModel, required: true },
+    gameOrDrill_id: { type: Schema.Types.ObjectId, refPath: 'onModel', required: true },
     onModel: { type: String, required: true, enum: ['Game', 'Drill'] },
     player_id: { type: Schema.Types.ObjectId, ref: 'Player', required: true },
     offensive_rebounds: { type: Number, required: true, default: 0 },

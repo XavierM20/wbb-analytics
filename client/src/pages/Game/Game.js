@@ -622,30 +622,19 @@ const Game = () => {
     */
 
     // Function that patches (updates) one stat by one for a player in the database
-    // uses stat name for the route and sends the id of the stat to be updated
+    // uses stat name for the route and sends the player_id and gameOrDrill_id parameters
     const recordStats = async (player, stat) => {
         console.log(`Recording ${stat} for player ${player.name}`);
         
-        // Get the stat ID from the database using gameID and playerID
-        const response = await fetch(`${serverUrl}/api/stats/byPlayerAndGameOrDrill/${player.id}/${gameData}`);
-        const statData = await response.json();
-        console.log('Stat Data:');
-        console.log(statData);
-        const statId = statData._id;
-        console.log('Stat ID:');
-        console.log(statId);
-
-        // Using the statID, patch the stat in the database
-        const patchResponse = await fetch(`${serverUrl}/api/stats/offensiveRebound/${statId}`, {
+        const statsResponse = await fetch(`${serverUrl}/api/stats/${stat}/${gameData}/${player.id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json'
-            }
-        });
-        if (!patchResponse.ok) {
-            console.error('Failed to update stat');
-            return;
-        }
+            },
+        })
+
+        const response = await statsResponse.json();
+        console.log('Stats recorded:', response);
     }
 
     /*

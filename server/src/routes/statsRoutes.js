@@ -402,6 +402,115 @@ router.patch('/turnover/:id', isAuthenticated, async (req, res) => {
     }
 });
 
+/* Patch Endpoints to update stats by player_id and gameOrDrill_id */
+// PATCH to update offensive rebounds by player_id and drill_id
+router.patch('/offensiveRebound/:gameOrDrillId/:playerId', isAuthenticated, async (req, res) => {
+    try {
+        const { gameOrDrillId, playerId } = req.params;
+        const stats = await Stats.findOneAndUpdate(
+            { gameOrDrill_id: gameOrDrillId, player_id: playerId },
+            { $inc: { offensive_rebounds: 1 } },
+            { new: true }
+        );
+        if (!stats) {
+            return res.status(404).json({ message: 'Stats not found' });
+        }
+        res.json(stats);
+    } catch (err) {
+        res.status(500).json({ message: 'Internal server error', error: err.message });
+    }
+});
+
+// PATCH to update defensive rebounds by player_id and drill_id
+router.patch('/defensiveRebound/:gameOrDrillId/:playerId', isAuthenticated, async (req, res) => {
+    try {
+        const { gameOrDrillId, playerId } = req.params;
+        const stats = await Stats.findOneAndUpdate(
+            { gameOrDrill_id: gameOrDrillId, player_id: playerId },
+            { $inc: { defensive_rebounds: 1 } },
+            { new: true }
+        );
+        if (!stats) {
+            return res.status(404).json({ message: 'Stats not found' });
+        }
+        res.json(stats);
+    } catch (err) {
+        res.status(500).json({ message: 'Internal server error', error: err.message });
+    }
+});
+
+// PATCH to update assists by player_id and drill_id
+router.patch('/assist/:gameOrDrillId/:playerId', isAuthenticated, async (req, res) => {
+    try {
+        const { gameOrDrillId, playerId } = req.params;
+        const stats = await Stats.findOneAndUpdate(
+            { gameOrDrill_id: gameOrDrillId, player_id: playerId },
+            { $inc: { assists: 1 } },
+            { new: true }
+        );
+        if (!stats) {
+            return res.status(404).json({ message: 'Stats not found' });
+        }
+        res.json(stats);
+    } catch (err) {
+        res.status(500).json({ message: 'Internal server error', error: err.message });
+    }
+});
+
+// PATCH to update steals by player_id and drill_id
+router.patch('/steal/:gameOrDrillId/:playerId', isAuthenticated, async (req, res) => {
+    try {
+        const { gameOrDrillId, playerId } = req.params;
+        const stats = await Stats.findOneAndUpdate(
+            { gameOrDrill_id: gameOrDrillId, player_id: playerId },
+            { $inc: { steals: 1 } },
+            { new: true }
+        );
+        if (!stats) {
+            return res.status(404).json({ message: 'Stats not found' });
+        }
+        res.json(stats);
+    } catch (err) {
+        res.status(500).json({ message: 'Internal server error', error: err.message });
+    }
+});
+
+// PATCH to update blocks by player_id and drill_id
+router.patch('/block/:gameOrDrillId/:playerId', isAuthenticated, async (req, res) => {
+    try {
+        const { gameOrDrillId, playerId } = req.params;
+        const stats = await Stats.findOneAndUpdate(
+            { gameOrDrill_id: gameOrDrillId, player_id: playerId },
+            { $inc: { blocks: 1 } },
+            { new: true }
+        );
+        if (!stats) {
+            return res.status(404).json({ message: 'Stats not found' });
+        }
+        res.json(stats);
+    } catch (err) {
+        res.status(500).json({ message: 'Internal server error', error: err.message });
+    }
+});
+
+// PATCH to update turnovers by player_id and drill_id
+router.patch('/turnover/:gameOrDrillId/:playerId', isAuthenticated, async (req, res) => {
+    try {
+        const { gameOrDrillId, playerId } = req.params;
+        const stats = await Stats.findOneAndUpdate(
+            { gameOrDrill_id: gameOrDrillId, player_id: playerId },
+            { $inc: { turnovers: 1 } },
+            { new: true }
+        );
+        if (!stats) {
+            return res.status(404).json({ message: 'Stats not found' });
+        }
+        res.json(stats);
+    } catch (err) {
+        res.status(500).json({ message: 'Internal server error', error: err.message });
+    }
+});
+
 // PATCH to update stats by player_id and drill_id
 router.patch('/byPlayerAndGameOrDrill/:playerId/:gameOrDrillId', isAuthenticated, async (req, res) => {
     try {
