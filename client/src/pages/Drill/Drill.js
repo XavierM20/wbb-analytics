@@ -19,6 +19,7 @@ const Drill = () => {
     const [myScore, setMyScore] = useState(0);
     const [opponentTeam, setOpponentTeam] = useState('');
     const [opponentScore, setOpponentScore] = useState(0);
+    const [myTeam, setMyTeam] = useState('');
     const [submitClicked, setSubmitClicked] = useState(false);
     const [seasonData, setSeasonData] = useState([]);    
     const [newDrillOverlay, setNewDrillOverlay] = useState(false);
@@ -193,18 +194,6 @@ const Drill = () => {
 
     const handleLocationClick = (location) => {
         setTempLocation(location);
-    };
-
-    const handleInputSubmission = () => {
-        if (opponentTeamValue !== '' && tempLocation !== '') {
-            setOpponentTeam(opponentTeamValue);
-            setLocation(tempLocation);
-            setSubmitClicked(true);
-            setNewDrillOverlay(false);
-            
-        } else {
-            alert('Please enter both opponent name and location.');
-        }
     };
 
     const handleSelectDrill = async (drill) => {
