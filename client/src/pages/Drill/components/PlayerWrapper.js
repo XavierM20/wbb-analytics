@@ -1,5 +1,5 @@
 import React from 'react';
-import useLongPress from './useLongPress';
+import useLongPress from '../../Drill/components/useLongPress';
 import PlayerItem from './PlayerItem';
 
 const PlayerWrapper = ({ player, onSelect, onLongPress, isSelected }) => {

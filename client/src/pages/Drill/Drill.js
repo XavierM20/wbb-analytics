@@ -16,10 +16,8 @@ const Drill = () => {
     const [alertVisible, setAlertVisible] = useState(false);
     const [drillData, setDrillData] = useState('');
     const [location, setLocation] = useState('');
-    const [myTeam, setMyTeam] = useState('');
     const [myScore, setMyScore] = useState(0);
     const [opponentTeam, setOpponentTeam] = useState('');
-    const [opponentTeamValue, setOpponentTeamValue] = useState('');
     const [opponentScore, setOpponentScore] = useState(0);
     const [submitClicked, setSubmitClicked] = useState(false);
     const [seasonData, setSeasonData] = useState([]);    
