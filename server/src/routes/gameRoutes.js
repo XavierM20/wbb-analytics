@@ -25,6 +25,10 @@ const gameSchema = Joi.object({
     tempo_events: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
     shot_events: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
     team_logo: Joi.string().optional(),
+    score: Joi.object({
+        team: Joi.number().required(),
+        opponent: Joi.number().required()
+    }).required()
 });
 
 // GET all games for a specific school
