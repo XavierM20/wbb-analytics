@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import React, { useRef, useState, useEffect } from "react";
-import { View, Text, ScrollView, StyleSheet, Dimensions, Image, TouchableOpacity, Touchable, Modal } from 'react-native';
+import { View, Text, Dimensions, Image, TouchableOpacity, Modal } from 'react-native';
 import styles from './GameStyles';
 import ImageMapper from "react-img-mapper";
 import basketballCourtVector from '../Drill/components/basketball-court-vector.jpg';
