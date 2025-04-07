@@ -19,3 +19,4 @@ app.post("/github-webhook/pushevent", (req, res) => {
 });
  
 app.listen(PORT, () => console.log(`Webhook listener running on port ${PORT}`));
+module.exports = router;
