@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.fb6424a7.css",
-    "main.js": "/static/js/main.3d4a5796.js",
+    "main.css": "/static/css/main.82242711.css",
+    "main.js": "/static/js/main.3e38c56a.js",
     "static/media/gameStock.jpg": "/static/media/gameStock.2528b86e35a2abf97ba3.jpg",
     "static/media/soloStock.jpg": "/static/media/soloStock.6cd35d06b414f7c70694.jpg",
     "static/media/settingsStock.jpg": "/static/media/settingsStock.27d84c045c1edc09ea38.jpg",
@@ -18,11 +18,11 @@
     "static/media/default.png": "/static/media/default.9b54d2f899de16fd4a89.png",
     "static/media/HRALion.png": "/static/media/HRALion.f75658bb4f9ddd76ed14.png",
     "index.html": "/index.html",
-    "main.fb6424a7.css.map": "/static/css/main.fb6424a7.css.map",
-    "main.3d4a5796.js.map": "/static/js/main.3d4a5796.js.map"
+    "main.82242711.css.map": "/static/css/main.82242711.css.map",
+    "main.3e38c56a.js.map": "/static/js/main.3e38c56a.js.map"
   },
   "entrypoints": [
-    "static/css/main.fb6424a7.css",
-    "static/js/main.3d4a5796.js"
+    "static/css/main.82242711.css",
+    "static/js/main.3e38c56a.js"
   ]
 }
