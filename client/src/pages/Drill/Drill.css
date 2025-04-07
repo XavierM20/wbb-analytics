@@ -1,337 +1,487 @@
-:root {
-    --bg-color: #f4f4f9;
-    --header-color: #503291;
-    --card-bg-color: #ffffff;
-    --text-color-light: #f7f7f7;
-    --text-color-dark: #333333;
-    --card-color: #6758A0;
-    --primary-color: #503291;
-    --stat-card-bg: #FFD700;
-    --stat-card-text-color: #333333;
-    --accent-color: #FFD700;
-    --hover-color: #3d2671;
-    --box-shadow: 0 0.25rem 0.5rem 0 rgba(0,0,0,0.2);
-  }
-  
-  .main {
+
+.background-container{
+    background-image: url('../../images/basketballIMG.jpg') !important;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center; 
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    margin: 0 auto;
+    padding: 1.25rem;
+    display: grid;
+    place-items: center;
     text-align: center;
-    margin-top: 0rem;
-    box-sizing: border-box;
-  }
-  
-  .main::before {
+    grid-template-rows: auto auto; /* Adjusted for better spacing */
+    overflow: hidden;
+    z-index: 1;
+}
+.btn-home {
+    padding: 0.625rem 1.25rem;
+    background-color: rgba(200,157,70, 1); /* Bootstrap blue */
+    color: cornsilk;
+    border: none;
+    border-radius: 0.3125rem;
+    cursor: pointer;
+    font-size: 1rem;
+}
+.background-container::before{
     content: "";
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgb(0, 0, 0, .4);
+    background-color: rgb(23, 43, 79, .5);
     z-index: -1;
-  }
-  
-  .main h1 {
-    font-style: italic;
-  }
-  
-  .opponent-team {
-    margin-top: 1.25rem;
-    text-align: center;
-    color: #fff;
-    width: calc(70% - 4.6875rem);
-    padding: 0.625rem 1.25rem;
-    margin-bottom: 0.75rem;
+}
+
+.player-container,
+.court-container,
+.extra-stats-container,
+.PopupPlayerCircle {
+    background: rgba(200,157,70, .5);
+    border-radius: 0.5rem;
+    padding: 4%;
+    color: cornsilk;
+
+}
+
+/* Drill Container */
+.drill-container {
+    display: flex;
+    flex-direction: column;
+    height: 90vh;
+    width: 100%;
+}
+
+/* Player and Court Container */
+.player-and-court-container {
+    display: flex;
+    padding: 1%;
+    gap: 2%;
+    height: 55%;
+    width: auto;
+    justify-content: center;
+}
+
+/* Player Container */
+.player-container {
+    display: flex;
+    /* flex: 1; */
+    width: calc(40vw);
+    height: 100%;
+}
+
+/* Court Container */
+.court-container {
+    /* flex: 2; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Take up 1/2 of the screen */
+    width: calc(40vw);
+    height: 100%;
+    padding: 0%;
+    z-index: 50;
+    margin-top: 0.625rem;
+}
+
+/* Extra Stats Container */
+.extra-stats-container {
+    display: grid; /* Use CSS Grid for layout */
+    grid-template-columns: repeat(3, 1fr); /* 3 columns */
+    grid-template-rows: repeat(2, auto); /* 2 rows */
+    gap: 5%; /* Adjust spacing between buttons */
+    justify-content: center; /* Center grid horizontally */
+    justify-items: center;
+    align-items: center; /* Center grid vertically */
+    margin: 0 auto; /* Center the container */
+    padding: 2%; /* Adjust padding as needed */
+    height: calc(15vw);
+    width: calc(80vw); /* Allow the container to grow as needed */
+    background-color: rgba(200,157,70, .5); /* Optional background */
+}
+
+/* Extra Stats */
+.ExtraStats {
+    display: flex;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    padding: 1%;
+    justify-content: center;
+    align-items: center;
     border: none;
-    border-radius: 0.25rem;
-    transition: background-color 0.3s ease;
-    font-size: 1.15em;
-  }
-  
-  .opponent-team input {
-    padding: 0.3125rem 0.625rem;
-    margin-top: 0.3125rem;
-    border-radius: 0.3125rem;
-    border: 0.0625rem solid black;
-    font-size: 1rem;
-  }
-  
-  .drill-entry {
-    padding: 0.5rem;
-    margin-bottom: 0.5rem;
-    background-color: #503291;
-    border: 0.1875rem solid #503291;
-    border-radius: 0.625rem;
+    border-radius: 0.4375rem;
+    background-color: rgba(200,157,70, 1);
+    color: cornsilk;
     cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .drill-entry:hover {
-    background-color: #3d2671;
-  }
-  
-  .drill-mode-overlay,
-  .load-drill-overlay,
-  .overlay,
-  .new-drill-overlay {
+    transition: all 0.3s;
+    font-size: calc(1.3vw);
+    width: calc(20vw);
+    height: calc(4vw);
+}
+
+.ExtraStats:active {
+    background-color: black;
+    transform: scale(0.95);
+}
+
+/* Tempo Container */
+.tempo-container {
+    display: flex;
+    justify-content: center; /* Space out the buttons evenly */
+    padding: 0%; /* Add padding to the container */
+    height: 50%;
+}
+
+
+/* Tempo Timer */
+.TempoTimer {
+    font-size: calc(1.3vw);
+    padding: 5%;
+    border: 0.0625rem solid #000;
+    border-radius: 0.3125rem;
+    display: inline-block;
+    background-color: cornsilk;
+    color: #333;
+    height: calc(5vw);
+    width: calc(10vw);
+    text-align: center;
+    margin-bottom: 8%;
+}
+
+/* Last Tempo Display */
+.LastTempoDisplay {
+    font-size: calc(1.3vw); /* Adjust font size to match TempoButton */
+    color: cornsilk; /* Use the dark text color for readability */
+    padding: 3%; /* Provide some padding */
+    background-color: rgba(200,157,70, .5); /* Use the card background color */
+    border-radius: 0.5rem; /* Round the corners to match the design */
+    text-align: center;
+    height: calc(5vw);
+    width: calc(10vw); /* Adjust width to content */
+}
+
+/* Container for the Cancel button */
+.cancel-button-container {
+    display: flex;
+    justify-content: center; /* Space out the buttons evenly */
+    padding: 0%; /* Add padding to the container */
+    height: 50%;
+}
+
+/* Cancel Button */
+.CancelButton {
+    font-size: calc(1.3vw);
+    padding: 5%;
+    border: 0.0625rem solid #000;
+    border-radius: 0.3125rem;
+    display: inline-block;
+    background-color: cornsilk;
+    color: #333;
+    height: calc(5vw);
+    width: calc(10vw);
+    text-align: center;
+    margin-bottom: 8%;
+}
+
+.CancelButton:hover {
+    background-color: rgba(200,157,70, 1); /* Darken the red on hover for feedback */
+}
+
+.CancelButton:active {
+    transform: scale(0.98); /* Press effect */
+}
+
+.CancelButton.disabled {
+    background-color: cornsilk; /* Greyed out for disabled state */
+    color: #666;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+.TempoButton {
+    padding: 5% 0%; /* Adjust padding to give more space inside the button */
+    font-size: calc(1.8vw); /* Adjust font size for better readability */
+    margin: .5% 1%; /* Add some margin between buttons */
+    border-radius: 0.5rem; /* Match border-radius to other elements like the player-container */
+    background-color: rgba(200,157,70, .5); /* Use the primary purple color */
+    color: cornsilk; /* Use the light color for text */
+    cursor: pointer;
+    transition: background-color 0.2s ease; /* Smooth transition for hover effects */
+    border: none; /* Remove any borders */
+    /* Allow the width to be determined by content and padding */
+    flex-grow: 1; /* Allow the buttons to grow to fill the space */
+    /* Additional styles for interaction states */
+    width: calc(10vw);
+    height: calc(12vw);
+}
+
+.TempoButton.start {
+    background-color: rgba(200,157,70, .5); /* Use a green color for starting the tempo */
+}
+
+.TempoButton.stop {
+    background-color: rgba(200,157,70, .5); /* Use a red color for stopping the tempo */
+}
+
+.TempoButton:active {
+    transform: scale(0.98); /* Slightly reduce the scale for a press effect */
+}
+
+.TempoButton:hover {
+    background-color: rgba(200,157,70, 1); /* Change background color on hover */
+}
+.TempoButton.disabled, 
+.TempoButton:disabled {
+    background-color: cornsilk; /* Gray color for disabled state */
+    color: #666; /* Darker gray for text in disabled state */
+    cursor: not-allowed;
+    opacity: 0.5; /* Reduce opacity for disabled state */
+    pointer-events: none; /* Disable pointer events for disabled state */
+}
+
+/* Adjusting the container for these elements */
+.tempo-controls-container {
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    align-items: center; /* Center items horizontally */
+    justify-content: space-around; /* Even spacing */
+    width: 100%; /* Full width of the parent container */
+    padding: 90%; /* Padding inside the container */
+}
+
+/* Popup Overlay */
+.Overlay {
     position: fixed;
     top: 0;
     left: 0;
+    right: 0;
+    bottom: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(255, 255, 255, 0.1);
+    z-index: 99; /* Below the popup but above other content */
+}
+
+/* Popup Container */
+.Popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(200,157,70, .95); /* Light purple */
+    border-radius: 0.5rem;
+    z-index: 99;
+    max-width: 80%; /* Adjusted to max-width for responsiveness */
+    padding: 2%;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  
-  .drill-mode-overlay,
-  .new-drill-overlay {
-    padding-bottom: 6.25rem;
-    padding-left: 3.125rem;
-  }
-  
-  .load-drill-overlay {
-    padding-bottom: 6.25rem;
-    overflow-y: auto;
-  }
-  
-  .load-drill-overlay-content,
-  .overlay-content,
-  .drill-mode-content,
-  .new-drill-overlay-content {
-    border-radius: 0.9375rem;
-    padding: 0.3125rem;
-    background-color: whitesmoke;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 1);
-    text-align: center;
-    font-size: 1.15em;
-    font-style: italic;
-  }
-  
-  .tempo-timer {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    margin-left: 35%;
-    margin-top: 0.5%;
-    width: 30%;
-    height: 100%;
-  }
-  
-  .display-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-  }
-  
-  .last-tempo {
-    padding: 1%;
+    flex-wrap: wrap; /* Allows items to wrap in rows */
+    justify-content: center; /* Centers items horizontally */
+    gap: 2%; /* Spacing between player circles */
+    overflow-y: auto; /* Enables scrolling if content overflows vertically */
+}
+
+/* Popup Player Container */
+.PopupPlayerContainer {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    font-size: 1.5em;
-    text-align: center;
-    margin-top: -3%;
-    width: 22%;
-  }
-  
-  .undo-button {
-    background-color: #d49b46;
-    color: var(--text-color-light);
-    cursor: pointer;
-    border: none;
-    border-radius: 8%;
-    width: 10%;
-    padding: 1%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.4em;
-    text-align: center;
-    margin-top: -2%;
-  }
-  
-  .drill-tempo-container,
-  .shotContainer,
-  .submit-delete-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    margin: 0 auto;
-  }
-  
-  .drill-tempo-container,
-  .shotContainer {
-    height: 12.5rem;
-  }
-  
-  .submit-delete-container {
-    height: 3.125rem;
-    margin-top: 2%;
-  }
-  
-  .offensive-tempo-button,
-  .defensive-tempo-button,
-  .submit-drill-button,
-  .delete-drill-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0.7%;
-    font-size: 1.5em;
-    border-radius: 0.4375rem;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .submit-drill-button,
-  .delete-drill-button {
-    width: 12.5rem;
+    flex-basis: 20%; /* Adjust the flex-basis to control number of items per row */
+    min-width: 6.25rem; /* Minimum width for each player container */
+}
+
+/* Popup Player Circle */
+.PopupPlayerCircle {
+    width: 4.6875rem; /* Match circle size to main player list */
     height: 4.6875rem;
-    margin: 0 10%;
-  }
-  
-  .submit-button {
-    background-color: whitesmoke !important;
-    margin-top: 1.875rem;
-  }
-  
-  .submit-button:hover {
-    background-color: whitesmoke !important;
-  }
-  
-  .ShotOutcomeSelection,
-  .ClockTimeSelection {
+    border-radius: 50%;
+    background-color: rgba(23, 43, 79, 1); /* Darker purple */
+    color: rgba(200,157,70, 1); /* White color for contrast */
     display: flex;
-    justify-content: center;
-    gap: 9.375rem;
-  }
-  
-  .MadeButton,
-  .MissedButton,
-  .last-tempo-container {
-    display: flex;
-    justify-content: center;
     align-items: center;
-    padding: 0.7%;
-    font-size: 1.5em;
-    margin: 0 5%;
-  }
-  
-  .MadeButton,
-  .MissedButton {
-    width: 38vw;
-    height: 20vh;
-    margin-bottom: 0.625rem;
-  }
-  
-  .MadeButton {
+    justify-content: center;
+    font-size: 2em; /* Font size adjusted for visibility inside circle */
+    margin-bottom: 0.3125rem; /* Spacing between circle and name */
+}
+
+/* Popup Player Name */
+.PopupPlayerName {
+    font-size: 1em; /* Adjusted to match the rest of the UI */
+    color: cornsilk; /* Dark text for readability */
+    word-break: break-word; /* Ensures long names don't overflow */
+    text-align: center; /* Center the names below the circles */
+}
+
+
+.PopupCloseButtonContainer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 1.25rem;
+}
+
+/* Shot Popup */
+.ShotPopup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 1%;
+    padding: 1%;
+    border-radius: 1%;
+}
+
+.ShotOutcomeSelection, 
+.ClockTimeSelection {
+    display: flex;
+    justify-content: center;
+    gap: 50%;
+}
+
+.MadeButton,
+.MissedButton,
+.ClockButton1,
+.ClockButton2,
+.ClockButton3,
+.SubmitShot {
+    margin: 10% 0%;
+    padding: 10% 5%;
+    border: none;
+    border-radius: 0.5rem;
+    font-size: 2em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+    text-align: center;
+    flex: 1;
+}
+
+.MadeButton {
     background-color: #4CAF50;
     color: white;
-  }
-  
-  .MissedButton {
+}
+.MadeButton:hover {
+    background-color: black;
+}
+.MissedButton {
     background-color: #f44336;
     color: white;
-  }
-  
-  .ClockButton1,
-  .ClockButton2,
-  .ClockButton3 {
-    display: none;
-    justify-content: center;
-    align-items: center;
+}
+.MissedButton:hover{
+    background-color: black;
+}
+
+.ClockButton1, 
+.ClockButton2, 
+.ClockButton3 {
     background-color: #607d8b;
     white-space: nowrap;
     min-width: 7.5rem;
-    width: 15.625rem;
-    height: 3.125rem;
-    border-radius: 0.9375rem;
     color: white;
-  }
-  
-  .overlay-content,
-  .drill-mode-content,
-  .new-drill-overlay-content {
-    width: 21.875rem;
-    height: 90%;
-    margin-right: 3.125rem;
-  }
-  
-  .new-drill-overlay h3,
-  .drill-mode-overlay h2 {
-    color: #4f2984;
-  }
-  
-  .new-drill-overlay-content input {
-    width: 80%;
-    padding: 0.5rem;
-    margin-top: 0.3125rem;
-    margin-bottom: 1.25rem;
-    border-radius: 0.1875rem;
-    border: 0.1875rem solid black;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
-  }
-  
-  .overlay button,
-  .drill-mode-content button,
-  .new-drill-overlay-content button {
-    padding: 1.25rem;
-    background-color: #503291;
+}
+
+.SubmitShot {
+    background-color: #2196F3;
     color: white;
-    border: none;
-    border-radius: 0.4375rem;
+}
+
+/* Dynamically displaying clock buttons based on state */
+.ShotOutcomeSelection .ClockButton1, 
+.ShotOutcomeSelection .ClockButton2, 
+.ShotOutcomeSelection .ClockButton3 {
+    display: flex;
+}
+
+/* Player List */
+.PlayerList {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 0.625rem;
+    height: 100%;
+}
+
+.PlayerContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     cursor: pointer;
+    flex-basis: calc(50% - 1.25rem);
+    /* max-width: calc(40% - 1.25rem); */
+    height: calc(30% - 1.25rem);
+    width: 50%;
+}
+
+.PlayerCircle {
+    width: 50%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: rgba(23, 43, 79, 1);
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 0.625rem;
-    margin-left: 4.375rem;
-    margin-bottom: 0.625rem;
-    width: 58.825%;
-    height: 3.125rem;
-    font-size: 1.15em;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
-  }
+    font-size: 3em;
+    color: rgba(200,157,70, 1);
+}
+
+.PlayerName {
+    font-size: 1.2em; /* Adjust font size as necessary */
+    color: cornsilk;
+    text-align: center; /* Center text below the circle */
+    width: 100%; /* Ensures the name doesn't overflow the circle width */
+    margin-top: 0.3125rem; /* Space between the circle and the name */
+}
+
+.player-inverted .PlayerCircle {
+    background-color: rgba(200,157,70, 1);
+    color: rgba(23, 43, 79, 1);
+}
+
+
+/* Media Queries */
+@media (max-width: 48rem) {
+    .PlayerContainer {
+      flex-basis: calc(50% - 1.25rem);
+      max-width: calc(50% - 1.25rem);
+    }
+    .PlayerCircle {
+      width: 50%;
+      height: 200%;
+      font-size: 2em;
+    }
+    .PlayerName {
+      font-size: 1em;
+    }
+}
   
-  .overlay button:hover,
-  .drill-mode-content button:hover,
-  .new-drill-overlay-content button:hover {
-    background-color: #3d2671;
-  }
-  
-  .new-drill-overlay-content button.disabled {
-    opacity: 0.35;
-    cursor: pointer;
-  }
-  
-  .drill-selection button {
-    height: 5rem;
-    width: 18.75rem;
-    margin-top: 2.5rem;
-    margin-bottom: 2.5rem;
-    margin-left: 1.25rem;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5);
-  }
-  
-  .top-right-button {
-    position: absolute;
-    top: 0.625rem;
-    right: 0.625rem;
-    z-index: 1000;
-  }
-  
-  .btn-home {
-    padding: 0.625rem 1.25rem;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 0.3125rem;
-    cursor: pointer;
-    font-size: 1rem;
-  }
-  
+@media (max-width: 30rem) {
+    .PlayerContainer {
+      /* height: 5%; */
+      flex-basis: calc(100% - 1.25rem);
+      max-width: calc(100% - 1.25rem);
+    }
+    .PlayerCircle {
+      width: 50%;
+      height: 200%;
+      font-size: 1.5em;
+    }
+    .PlayerName {
+      font-size: .50em;
+    }
+}
+
+.AvgTempoDisplay {
+    font-size: calc(1.3vw);
+    text-align: center;
+    width: 100%;
+    margin: 1% 2%;
+    height: 15%;
+}
