@@ -11,11 +11,9 @@ import TempoButton from './components/TempoButton';
 import TempoTimer from './components/TempoTimer';
 import GameSelection from './components/GameSelection';
 import ImagePicker from './components/ImagePicker';
-import CustomAlert from './components/customAlert';
 import './Game.css';
 
 const Game = () => {
-    const [alertVisible, setAlertVisible] = useState(false);
     const [gameData, setGameData] = useState('');
     const [gameMode, setGameMode] = useState('');
     const [location, setLocation] = useState('');
@@ -105,29 +103,6 @@ const Game = () => {
 
         fetchSeasonId();
     }, []); // Runs only once when the component mounts
-
-    const handleNavigation = () => {
-        if (gameData) {
-            setAlertVisible(true);
-        } else {
-            navigate('/homepage');
-        }
-    }
-
-    const handleConfirm = () => {
-        // Save the game data to the database (patch)
-
-        // Return to the homepage
-        navigate('/homepage');
-    }
-
-    const handleCancel = () => {
-        setAlertVisible(false);
-    }
-    
-    const handleHome = () => {
-        navigate('/homepage');
-    }
 
     const createGame = async () => {
         let image_id = await uploadImage();
@@ -751,15 +726,7 @@ const Game = () => {
                 </div>
             )}
             <div className='main'>
-                <button className='btn-home top-right-button' onClick={handleNavigation}>Home</button>
-                <CustomAlert
-                    visible={alertVisible}
-                    title="Save Game?"
-                    message="Do you want save the game first?"
-                    onConfirm={handleConfirm}
-                    onCancel={handleCancel}
-                    onGoHome={handleHome}
-                />
+                <button className='btn-home top-right-button' onClick={() => {navigate('/homepage')}}>Home</button>
                 <View style={styles.outerContainer}>
                     <View style={styles.scoreboardWrapper}>
                         {/* Left Group */}
