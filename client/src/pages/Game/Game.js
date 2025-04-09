@@ -276,6 +276,7 @@ const Game = () => {
                 coords: [25, 1.5, 26, 20, 29, 40, 105, 40, 105, 1.5].map(n => n * scaleFactor),
                 fillColor: "#4f2984",
                 preFillColor: "rgba(52, 52, 52, 0.2)",
+                fillColor: "rgba(23, 43, 79, .6)",
                 strokeColor: "green"
             },
             {
@@ -284,6 +285,7 @@ const Game = () => {
                 coords: [193, 1.5, 193, 40, 270, 40, 273, 20, 275, 1.5].map(n => n * scaleFactor),
                 fillColor: "#4f2984",
                 preFillColor: "rgba(52, 52, 52, 0.2)",
+                fillColor: "rgba(23, 43, 79, .6)",
                 strokeColor: "green"
             },
             {
@@ -292,6 +294,7 @@ const Game = () => {
                 coords: [108, 1.5, 108, 102, 190, 102, 190, 1.5].map(n => n * scaleFactor),
                 fillColor: "#4f2984",
                 preFillColor: "rgba(52, 52, 52, 0.2)",
+                fillColor: "rgba(23, 43, 79, .6)",
                 strokeColor: "purple"
             },
             {
@@ -300,6 +303,7 @@ const Game = () => {
                 coords: [30, 45, 103, 45, 103, 107, 150, 107, 150, 141, 126, 138, 115, 135, 110, 134, 100, 131, 95, 129, 90, 127, 85, 125, 74, 117, 65, 110, 40, 78, 38, 70].map(n => n * scaleFactor),
                 fillColor: "#4f2984",
                 preFillColor: "rgba(52, 52, 52, 0.2)",
+                fillColor: "rgba(23, 43, 79, .6)",
                 strokeColor: "red"
             },
             {
@@ -311,6 +315,7 @@ const Game = () => {
                     .map(n => n * scaleFactor),
                 fillColor: "#4f2984",
                 preFillColor: "rgba(52, 52, 52, 0.2)",
+                fillColor: "rgba(23, 43, 79, .6)",
                 strokeColor: "red"
             },
             {
@@ -319,6 +324,7 @@ const Game = () => {
                 coords: [80, 127, 0, 250, 300, 250, 220, 127, 205, 134, 180, 141, 150, 145, 122, 142, 98, 135].map(n => n * scaleFactor),
                 fillColor: "#4f2984",
                 preFillColor: "rgba(52, 52, 52, 0.2)",
+                fillColor: "rgba(23, 43, 79, .6)",
                 strokeColor: "blue"
             },
             {
@@ -327,6 +333,7 @@ const Game = () => {
                 coords: [0, 1.5, 20, 1.5, 23, 34, 35, 75, 40, 85, 45, 92, 50, 99, 55, 105, 60, 110, 65, 116, 70, 120, 79, 127, 0, 250].map(n => n * scaleFactor),
                 fillColor: "#4f2984",
                 preFillColor: "rgba(52, 52, 52, 0.2)",
+                fillColor: "rgba(23, 43, 79, .6)",
                 strokeColor: "blue"
             },
             {
@@ -335,8 +342,9 @@ const Game = () => {
                 coords: [300, 1.5, 278, 1.5, 275, 34, 265, 75, 260, 85, 255, 92, 250, 99, 245, 105, 240, 110, 235, 116, 230, 120, 221, 127, 300, 250].map(n => n * scaleFactor),
                 fillColor: "#4f2984",
                 preFillColor: "rgba(52, 52, 52, 0.2)",
+                fillColor: "rgba(23, 43, 79, .6)",
                 strokeColor: "blue"
-                }
+            }
         ]
     };
 
@@ -463,7 +471,7 @@ const Game = () => {
         ...MAP2,
         areas: MAP2.areas.map(area =>
         selectedZone && area.name === selectedZone.name
-            ? { ...area, preFillColor: "rgba(255, 0, 0, 0.5)" } // Highlight color
+            ? { ...area, preFillColor: "rgba(23, 43, 79, .5)" } // Highlight color
             : { ...area, preFillColor: "rgba(52, 52, 52, 0.2)" } // Default color
         ),
     };
@@ -982,24 +990,31 @@ const Game = () => {
             {/* Shot Outcome Popup */}
             {isShotPopupOpen && (
                 <Modal
-                transparent={true}
-                animationType="fade"
-                visible={isShotPopupOpen}
-                onRequestClose={() => setIsShotPopupOpen(false)}
-              >
-                <View style={styles.overlay}>
-                    <View style={styles.popup}>
-                        <View style={styles.buttonRow}>
-                        <TouchableOpacity style={styles.button} onPress={handleMadeShot}>
-                            <Text style={styles.buttonText}>Made</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.button} onPress={handleMissedShot}>
-                            <Text style={styles.buttonText}>Missed</Text>
-                        </TouchableOpacity>
+                    transparent={true}
+                    animationType="fade"
+                    visible={isShotPopupOpen}
+                    onRequestClose={() => setIsShotPopupOpen(false)}
+                >
+                    <View style={styles.overlay}>
+                        <View style={styles.popup}>
+                        {/* Row with Made and Missed buttons */}
+                            <View style={styles.buttonRow}>
+                                <TouchableOpacity style={styles.madeButton} onPress={handleMadeShot}>
+                                <Text style={styles.buttonText}>Made</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.missedButton} onPress={handleMissedShot}>
+                                <Text style={styles.buttonText}>Missed</Text>
+                                </TouchableOpacity>
+                            </View>
+                            {/* Separate row for Cancel button */}
+                            <View style={styles.cancelRow}>
+                                <TouchableOpacity style={styles.cancelButton} onPress={() => setIsShotPopupOpen(false)}>
+                                <Text style={styles.buttonText}>Cancel</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
-                </View>
-              </Modal>
+                </Modal>              
             )}
         </>
     );
