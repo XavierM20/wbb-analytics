@@ -33,7 +33,7 @@ const Game = () => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [filePreview, setFilePreview] = useState(null);
     const [schoolID, setSchoolID] = useState(sessionStorage.getItem("schoolID"));
-    const [imageID, setImageID] = useState('');
+    const [imageID, setImageID] = useState(null);
 
     /* Player Selection  */
     const [playersOnCourt, setPlayersOnCourt] = useState([]);
@@ -76,12 +76,14 @@ const Game = () => {
     const date = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
 
     // Sets an overlay for the input, can't interact outside until submission
+    /*
     useEffect(() => {
         if (gameMode === 'new' && location !== '' && opponentTeam !== '' && submitClicked === false) {
             createGame();
             setNewGameOverlay(false); // Close the overlay here after creating the game
         }
     }, [opponentTeam, location, gameMode, submitClicked]);
+    */
 
     // Creates a new game if conditions are met
     useEffect(() => {
@@ -194,14 +196,30 @@ const Game = () => {
     };
 
     const handleInputSubmission = () => {
-        if (opponentTeamValue !== '' && tempLocation !== '') {
+        let strErrorMsg = '';
+        let blnError = false;
+
+        if (opponentTeamValue === '') {
+            strErrorMsg += 'Opponent name is required.\n';
+            blnError = true;
+        }
+        if (tempLocation === '') {
+            strErrorMsg += 'Location is required.\n';
+            blnError = true;
+        }
+        if (selectedFile === null) {
+            //strErrorMsg += 'Image is required.\n';
+            //blnError = true;
+        }
+
+        if (blnError) {
+            alert(strErrorMsg);
+            return;
+        } else {
             setOpponentTeam(opponentTeamValue);
             setLocation(tempLocation);
             setSubmitClicked(true);
             setNewGameOverlay(false);
-            
-        } else {
-            alert('Please enter both opponent name and location.');
         }
     };
 
@@ -218,7 +236,17 @@ const Game = () => {
             console.log(gameDetails);
 
             const teamLogo = await fetch(`${serverUrl}/api/games/image/${gameDetails.team_logo}`);
+            console.log('Team Logo:');
             console.log(teamLogo);
+            console.log('Game Details Team Logo')
+            console.log(gameDetails.team_logo);
+
+            if(gameDetails.team_logo === null) {
+                setImageID(null);
+            } else {
+                setImageID(gameDetails.team_logo);
+            }
+
             setGameData(gameDetails._id);
             setOpponentTeam(gameDetails.opponent);
             setLocation(gameDetails.location);
@@ -226,7 +254,7 @@ const Game = () => {
             setShotEvents(gameDetails.shot_events || []);
             setLoadGameOverlayVisible(false);
             setFilePreview(teamLogo.url);
-            setImageID(gameDetails.team_logo);
+            //setImageID(gameDetails.team_logo);
             setMyScore(gameDetails.score.team)
             setOpponentScore(gameDetails.score.opponent)
 
@@ -413,11 +441,11 @@ const Game = () => {
         };
       
         await fetch(`${serverUrl}/api/games/${gameData}`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(updatedScore)
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedScore)
         });
       };      
       
