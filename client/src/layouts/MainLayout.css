@@ -2,11 +2,11 @@
 :root {
     --gold: #ecd852; /* Adjust to the exact shade of gold you're using */
     --purple: grey; /* Adjust to the exact shade of purple you're using */
-    --header-height: 60px; /* Header height */
+    --header-height: 3.75rem; /* Header height */
 }
 
 .main-layout {
-    background: url(../images/homepageWBB.jpeg) no-repeat center center/cover;
+    /*background: url(../images/homepageWBB.jpeg) no-repeat center center/cover;*/
     display: flex;
     flex-direction: column;
     min-height: 100vh;  /* Full viewport height */
@@ -25,7 +25,7 @@
 .menu-item, a {
     color: var(--gold);
     text-decoration: none;
-    padding: 10px;
+    padding: 0.625rem;
     display: block;
 }
 
@@ -35,11 +35,11 @@
 
 .main-layout-content a {
     color: var(--gold);
-    border-bottom: 1px dashed var(--gold);
+    border-bottom: 0.0625rem dashed var(--gold);
 }
 
 .main-layout-content a:hover {
-    border-bottom: 1px solid var(--purple);
+    border-bottom: 0.0625rem solid var(--purple);
 }
 
 .react-router-link {
@@ -55,11 +55,11 @@
 .navbar, .sidebar {
     background-color: var(--purple);
     color: var(--gold);
-    padding: 15px;
+    padding: 0.9375rem;
 }
 
 .navbar-item, .sidebar-item {
-    padding: 10px 0;
+    padding: 0.625rem 0;
 }
 
 .navbar-item:hover, .sidebar-item:hover {
@@ -70,7 +70,7 @@
 .main-layout-footer {
     background-color: var(--gold);
     color: var(--purple);
-    padding: 10px;
+    padding: 0.625rem;
     text-align: center;
     margin-top: auto; /* Pushes the footer to the bottom */
 }
@@ -80,7 +80,7 @@
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    padding: 0 20px;
+    padding: 0 1.25rem;
 }
 
 .HamburgerMenu {
@@ -94,25 +94,25 @@
     align-items: center;
     justify-content: center;
     flex-grow: 1;
-    gap: 20px;
+    gap: 1.25rem;
 }
 
 .practice-date {
     color: var(--gold);
     font-size: 1em;
-    padding: 5px 10px;
+    padding: 0.3125rem 0.625rem;
     background-color: var(--purple);
-    border: 1px solid var(--gold);
+    border: 0.0625rem solid var(--gold);
 }
 
 .practice-select, .drill-select {
     background-color: var(--gold);
     color: var(--purple);
-    border: 1px solid var(--purple);
-    padding: 5px 10px;
+    border: 0.0625rem solid var(--purple);
+    padding: 0.3125rem 0.625rem;
     font-size: 1em;
     cursor: pointer;
-    min-width: 150px;
+    min-width: 9.375rem;
 }
 
 .practice-select:hover, .drill-select:hover {

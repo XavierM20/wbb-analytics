@@ -1,11 +1,11 @@
 .shots-card {
     flex: 0 0 30%; /* Adjust the percentage to fit 4 cards in a row */
-    padding: 20px;
+    padding: 1.25rem;
     box-sizing: border-box;
-    margin: 10px;
+    margin: 0.625rem;
     text-align: center;
-    border: 1px solid #ddd;
-    border-radius: 10px;
+    border: 0.0625rem solid #ddd;
+    border-radius: 0.625rem;
     background-color: #fff;
     transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
     display: flex;
@@ -15,16 +15,16 @@
   }
   
   .stat-icon {
-    width: 50px; /* or any size you prefer */
+    width: 3.125rem; /* or any size you prefer */
     height: auto;
-    margin-bottom: 10px;
+    margin-bottom: 0.625rem;
   }
   
   .shots-title {
     font-size: 1.25em;
     font-weight: 600;
     color: #333;
-    margin-bottom: 5px;
+    margin-bottom: 0.3125rem;
   }
   
   .shots-value {
@@ -33,16 +33,16 @@
     color: var(--primary-color); /* Use a CSS variable or specific color */
   }
 
-  @media (max-width: 768px) {
+  @media (max-width: 48rem) {
     .shots-card {
       flex: 0 0 48%; /* Adjust for mobile to fit 2 cards in a row */
-      margin: 10px;
+      margin: 0.625rem;
     }
   }
   
-  @media (max-width: 480px) {
+  @media (max-width: 30rem) {
     .shots-card {
       flex: 0 0 100%; /* Full width on very small screens */
-      margin: 10px 0;
+      margin: 0.625rem 0;
     }
   }

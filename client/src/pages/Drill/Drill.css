@@ -1,20 +1,29 @@
 
 .background-container{
-    background: url('../../images/homepageWBB.jpeg') no-repeat center center;
+    background-image: url('../../images/basketballIMG.jpg') !important;
     background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center; 
     position: fixed;
     height: 100vh;
     width: 100vw;
-    z-index: 0;
+    margin: 0 auto;
+    padding: 1.25rem;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    grid-template-rows: auto auto; /* Adjusted for better spacing */
+    overflow: hidden;
+    z-index: 1;
 }
 .btn-home {
-    padding: 10px 20px;
-    background-color: #007bff; /* Bootstrap blue */
-    color: white;
+    padding: 0.625rem 1.25rem;
+    background-color: rgba(200,157,70, 1); /* Bootstrap blue */
+    color: cornsilk;
     border: none;
-    border-radius: 5px;
+    border-radius: 0.3125rem;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 1rem;
 }
 .background-container::before{
     content: "";
@@ -23,7 +32,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgb(0, 0, 0, .4);
+    background-color: rgb(23, 43, 79, .5);
     z-index: -1;
 }
 
@@ -31,10 +40,10 @@
 .court-container,
 .extra-stats-container,
 .PopupPlayerCircle {
-    background: rgba(63, 68, 68, .7);
-    border-radius: 8px;
+    background: rgba(200,157,70, .5);
+    border-radius: 0.5rem;
     padding: 4%;
-    color: white;
+    color: cornsilk;
 
 }
 
@@ -75,7 +84,7 @@
     height: 100%;
     padding: 0%;
     z-index: 50;
-    margin-top: 10px;
+    margin-top: 0.625rem;
 }
 
 /* Extra Stats Container */
@@ -91,7 +100,7 @@
     padding: 2%; /* Adjust padding as needed */
     height: calc(15vw);
     width: calc(80vw); /* Allow the container to grow as needed */
-    background-color: rgba(63, 68, 68, .7); /* Optional background */
+    background-color: rgba(200,157,70, .5); /* Optional background */
 }
 
 /* Extra Stats */
@@ -103,9 +112,9 @@
     justify-content: center;
     align-items: center;
     border: none;
-    border-radius: 7px;
-    background-color: #4f2984;
-    color: white;
+    border-radius: 0.4375rem;
+    background-color: rgba(200,157,70, 1);
+    color: cornsilk;
     cursor: pointer;
     transition: all 0.3s;
     font-size: calc(1.3vw);
@@ -131,10 +140,10 @@
 .TempoTimer {
     font-size: calc(1.3vw);
     padding: 5%;
-    border: 1px solid #000;
-    border-radius: 5px;
+    border: 0.0625rem solid #000;
+    border-radius: 0.3125rem;
     display: inline-block;
-    background-color: #fff;
+    background-color: cornsilk;
     color: #333;
     height: calc(5vw);
     width: calc(10vw);
@@ -145,10 +154,10 @@
 /* Last Tempo Display */
 .LastTempoDisplay {
     font-size: calc(1.3vw); /* Adjust font size to match TempoButton */
-    color: white; /* Use the dark text color for readability */
+    color: cornsilk; /* Use the dark text color for readability */
     padding: 3%; /* Provide some padding */
-    background-color: rgba(63, 68, 68, .7); /* Use the card background color */
-    border-radius: 8px; /* Round the corners to match the design */
+    background-color: rgba(200,157,70, .5); /* Use the card background color */
+    border-radius: 0.5rem; /* Round the corners to match the design */
     text-align: center;
     height: calc(5vw);
     width: calc(10vw); /* Adjust width to content */
@@ -157,29 +166,28 @@
 /* Container for the Cancel button */
 .cancel-button-container {
     display: flex;
-    justify-content: center; /* Centers the button horizontally */
-    align-items: center; /* Aligns the button vertically */
-    width: calc(); /* Takes full width of its parent container */
-    margin-top: 5%; /* Adds some space above the button */
+    justify-content: center; /* Space out the buttons evenly */
+    padding: 0%; /* Add padding to the container */
+    height: 50%;
 }
 
 /* Cancel Button */
 .CancelButton {
-    padding: 10% 10%; /* Increase padding for a larger button */
-    font-size: calc(1.3vw); /* Increase font size for visibility */
-    background-color: darkgoldenrod; /* A consistent red color for cancel actions */
-    color: white; /* White text for better contrast */
-    border-radius: 8px; /* Match border-radius to other elements */
-    margin: 15% 5%; /* Consistent margin with TempoButton */;
-    width: calc(10vw); /* Adjust width to content and padding */
+    font-size: calc(1.3vw);
+    padding: 5%;
+    border: 0.0625rem solid #000;
+    border-radius: 0.3125rem;
+    display: inline-block;
+    background-color: cornsilk;
+    color: #333;
     height: calc(5vw);
-    cursor: pointer;
-    transition: background-color 0.2s ease; /* Smooth transition for hover effects */
-    border: none; /* Remove the border */
+    width: calc(10vw);
+    text-align: center;
+    margin-bottom: 8%;
 }
 
 .CancelButton:hover {
-    background-color: black; /* Darken the red on hover for feedback */
+    background-color: rgba(200,157,70, 1); /* Darken the red on hover for feedback */
 }
 
 .CancelButton:active {
@@ -187,7 +195,7 @@
 }
 
 .CancelButton.disabled {
-    background-color: #ccc; /* Greyed out for disabled state */
+    background-color: cornsilk; /* Greyed out for disabled state */
     color: #666;
     cursor: not-allowed;
     opacity: 0.5;
@@ -196,9 +204,9 @@
     padding: 5% 0%; /* Adjust padding to give more space inside the button */
     font-size: calc(1.8vw); /* Adjust font size for better readability */
     margin: .5% 1%; /* Add some margin between buttons */
-    border-radius: 8px; /* Match border-radius to other elements like the player-container */
-    background-color: rgba(63, 68, 68, .7); /* Use the primary purple color */
-    color: white; /* Use the light color for text */
+    border-radius: 0.5rem; /* Match border-radius to other elements like the player-container */
+    background-color: rgba(200,157,70, .5); /* Use the primary purple color */
+    color: cornsilk; /* Use the light color for text */
     cursor: pointer;
     transition: background-color 0.2s ease; /* Smooth transition for hover effects */
     border: none; /* Remove any borders */
@@ -210,11 +218,11 @@
 }
 
 .TempoButton.start {
-    background-color: rgba(63, 68, 68, .7); /* Use a green color for starting the tempo */
+    background-color: rgba(200,157,70, .5); /* Use a green color for starting the tempo */
 }
 
 .TempoButton.stop {
-    background-color: black; /* Use a red color for stopping the tempo */
+    background-color: rgba(200,157,70, .5); /* Use a red color for stopping the tempo */
 }
 
 .TempoButton:active {
@@ -222,11 +230,11 @@
 }
 
 .TempoButton:hover {
-    background-color: black; /* Change background color on hover */
+    background-color: rgba(200,157,70, 1); /* Change background color on hover */
 }
 .TempoButton.disabled, 
 .TempoButton:disabled {
-    background-color: #ccc; /* Gray color for disabled state */
+    background-color: cornsilk; /* Gray color for disabled state */
     color: #666; /* Darker gray for text in disabled state */
     cursor: not-allowed;
     opacity: 0.5; /* Reduce opacity for disabled state */
@@ -262,8 +270,8 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: green; /* Light purple */
-    border-radius: 8px;
+    background-color: rgba(200,157,70, .95); /* Light purple */
+    border-radius: 0.5rem;
     z-index: 99;
     max-width: 80%; /* Adjusted to max-width for responsiveness */
     padding: 2%;
@@ -280,27 +288,27 @@
     flex-direction: column;
     align-items: center;
     flex-basis: 20%; /* Adjust the flex-basis to control number of items per row */
-    min-width: 100px; /* Minimum width for each player container */
+    min-width: 6.25rem; /* Minimum width for each player container */
 }
 
 /* Popup Player Circle */
 .PopupPlayerCircle {
-    width: 75px; /* Match circle size to main player list */
-    height: 75px;
+    width: 4.6875rem; /* Match circle size to main player list */
+    height: 4.6875rem;
     border-radius: 50%;
-    background-color: grey; /* Darker purple */
-    color: white; /* White color for contrast */
+    background-color: rgba(23, 43, 79, 1); /* Darker purple */
+    color: rgba(200,157,70, 1); /* White color for contrast */
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 2em; /* Font size adjusted for visibility inside circle */
-    margin-bottom: 5px; /* Spacing between circle and name */
+    margin-bottom: 0.3125rem; /* Spacing between circle and name */
 }
 
 /* Popup Player Name */
 .PopupPlayerName {
     font-size: 1em; /* Adjusted to match the rest of the UI */
-    color: white; /* Dark text for readability */
+    color: cornsilk; /* Dark text for readability */
     word-break: break-word; /* Ensures long names don't overflow */
     text-align: center; /* Center the names below the circles */
 }
@@ -310,7 +318,7 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    margin-top: 20px;
+    margin-top: 1.25rem;
 }
 
 /* Shot Popup */
@@ -345,7 +353,7 @@
     margin: 10% 0%;
     padding: 10% 5%;
     border: none;
-    border-radius: 8px;
+    border-radius: 0.5rem;
     font-size: 2em;
     font-weight: bold;
     cursor: pointer;
@@ -375,7 +383,7 @@
 .ClockButton3 {
     background-color: #607d8b;
     white-space: nowrap;
-    min-width: 120px;
+    min-width: 7.5rem;
     color: white;
 }
 
@@ -397,7 +405,7 @@
     flex-wrap: wrap;
     justify-content: space-evenly;
     align-items: center;
-    gap: 10px;
+    gap: 0.625rem;
     height: 100%;
 }
 
@@ -406,9 +414,9 @@
     flex-direction: column;
     align-items: center;
     cursor: pointer;
-    flex-basis: calc(50% - 20px);
-    /* max-width: calc(40% - 20px); */
-    height: calc(30% - 20px);
+    flex-basis: calc(50% - 1.25rem);
+    /* max-width: calc(40% - 1.25rem); */
+    height: calc(30% - 1.25rem);
     width: 50%;
 }
 
@@ -416,33 +424,33 @@
     width: 50%;
     height: 100%;
     border-radius: 50%;
-    background-color: #8766b4;
+    background-color: rgba(23, 43, 79, 1);
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 3em;
-    color: #ffd700;
+    color: rgba(200,157,70, 1);
 }
 
 .PlayerName {
     font-size: 1.2em; /* Adjust font size as necessary */
-    color: white;
+    color: cornsilk;
     text-align: center; /* Center text below the circle */
     width: 100%; /* Ensures the name doesn't overflow the circle width */
-    margin-top: 5px; /* Space between the circle and the name */
+    margin-top: 0.3125rem; /* Space between the circle and the name */
 }
 
 .player-inverted .PlayerCircle {
-    background-color: #ffd700;
-    color: #8766b4;
+    background-color: rgba(200,157,70, 1);
+    color: rgba(23, 43, 79, 1);
 }
 
 
 /* Media Queries */
-@media (max-width: 768px) {
+@media (max-width: 48rem) {
     .PlayerContainer {
-      flex-basis: calc(50% - 20px);
-      max-width: calc(50% - 20px);
+      flex-basis: calc(50% - 1.25rem);
+      max-width: calc(50% - 1.25rem);
     }
     .PlayerCircle {
       width: 50%;
@@ -454,11 +462,11 @@
     }
 }
   
-@media (max-width: 480px) {
+@media (max-width: 30rem) {
     .PlayerContainer {
       /* height: 5%; */
-      flex-basis: calc(100% - 20px);
-      max-width: calc(100% - 20px);
+      flex-basis: calc(100% - 1.25rem);
+      max-width: calc(100% - 1.25rem);
     }
     .PlayerCircle {
       width: 50%;

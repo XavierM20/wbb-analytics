@@ -1,13 +1,13 @@
 .stats-table-container {
   overflow-x: auto; /* For horizontal scrolling on smaller screens */
-  margin: 20px 0;
+  margin: 1.25rem 0;
 }
 
 .stats-table {
   width: 100%;
   border-collapse: collapse; /* For a cleaner look */
   margin: 0 auto; /* Centering the table */
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+  box-shadow: 0 0.75rem 0.375rem rgba(0,0,0,0.1); /* Subtle shadow for depth */
 }
 
 .stats-table thead {
@@ -15,7 +15,7 @@
 }
 
 .stats-table th {
-  padding: 12px 15px;
+  padding: 0.75rem 0.9375rem;
   text-align: left;
   color: #FFD700; /* Tennessee Tech Gold */
   font-weight: 600; /* Making headers bold */
@@ -30,9 +30,9 @@
 }
 
 .stats-table td {
-  padding: 12px 15px;
+  padding: 0.75rem 0.9375rem;
   color: var(--text-color-dark); /* Darker text for better readability */
-  border-bottom: 1px solid #ddd; /* Separator for rows */
+  border-bottom: 0.0625rem solid #ddd; /* Separator for rows */
 }
 
 .stats-table tbody td:hover {
@@ -40,13 +40,13 @@
   cursor: pointer; /* Change cursor to indicate interactivity */
 }
 
-@media (max-width: 768px) {
+@media (max-width: 48rem) {
   .stats-table th,
   .stats-table td {
-    padding: 8px; /* Smaller padding for smaller screens */
+    padding: .5rem; /* Smaller padding for smaller screens */
   }
 
   .stats-table {
-    font-size: 14px; /* Smaller font size for better readability on small screens */
+    font-size: 0.875rem; /* Smaller font size for better readability on small screens */
   }
 }
