@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const GameSelection = ({ onSelectGame }) => {
+const GameSelection = ({ onSelectGame, onBack }) => {
     const [games, setGames] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [SeasonData, setSeasonData] = useState([]);
@@ -52,7 +52,14 @@ const GameSelection = ({ onSelectGame }) => {
 
     return (
         <div className="game-selection-container">
-            <h3 style={{ color: '#503291', fontWeight: 'bold' }}> Select Game To Load </h3>
+            <h3 style={{ color: '#503291', fontWeight: 'bold' }}>
+                <button className="back-arrow" onClick={onBack}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M15 18L9 12L15 6" stroke="#503291" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                </button> 
+                Select Game To Load
+            </h3>
                 {isLoading ? <p style={{ color: '#503291', fontWeight: 'bold' }}> Loading Games </p> : (
                     games.length > 0 ? (
                         <ul>

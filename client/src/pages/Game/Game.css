@@ -133,6 +133,41 @@
     padding-left: 50px;
 }
 
+.game-selection-header {
+    display: flex;
+    align-items: center;
+}
+
+.back-arrow {
+    background: none;
+    border: none;
+    font-size: 1.5rem;  /* adjust size as needed */
+    cursor: pointer;
+    color: #503291;
+    /* You can add padding or margin to separate the arrow from the text */
+    margin-right: 10px;
+}
+
+.new-game-header {
+    display: flex;
+    align-items: center;
+    margin-top: 10%;
+}
+
+.new-game-overlay .back-arrow {
+    all: unset;   /* Remove all inherited styles */
+    cursor: pointer;  /* Add back any properties you need */
+    display: inline-flex;
+    align-items: center;
+    margin-right: 30px;
+    margin-top: -10%;
+}
+
+.new-game-overlay .back-arrow:hover {
+    background-color: transparent;
+    border: none;
+}
+
 .tempo-timer {
     display: flex;
     justify-content: space-around;

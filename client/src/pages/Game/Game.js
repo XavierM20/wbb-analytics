@@ -110,6 +110,9 @@ const Game = () => {
         let image_id = await uploadImage();
         console.log('Image ID:', imageID);
 
+        // setGameMode back to '' to prevent re-creating the game
+        setGameMode('');
+
         const game = {
             season_id: seasonData._id,
             date: date,
@@ -726,6 +729,12 @@ const Game = () => {
         End Tempo Functions
     */
 
+    const goBack = () => {
+        setLoadGameOverlayVisible(false);
+        setNewGameOverlay(false);
+        setGameModeOverlayVisible(true);
+    };
+
     return (
         <>
             {gameModeOverlayVisible && (
@@ -742,13 +751,57 @@ const Game = () => {
             {newGameOverlay && gameMode === 'new' && (
                 <div className="new-game-overlay">
                     <div className="new-game-overlay-content">
-                        <h3>Opponent Team Name</h3>
-                        <input id="opponent-team-input" aria-label="input for opponent team name" type="text" value={opponentTeamValue} onChange={(e) => setOpponentTeamValue(e.target.value)}/>
-                        <ImagePicker setSelectedFile={setSelectedFile} setFilePreview={setFilePreview} buttonText='Upload Team Logo' displayFileName/>
-                        <h3>Location</h3>
-                        <button onClick={() => handleLocationClick('home')} className={tempLocation === 'home' ? '' : 'disabled'} disabled={tempLocation === 'home'}>Home</button>
-                        <button onClick={() => handleLocationClick('away')} className={tempLocation === 'away' ? '' : 'disabled'} disabled={tempLocation === 'away'}>Away</button>
-                        <div className='submit-button'>
+                        <div className="new-game-header">
+                            <button className="back-arrow" onClick={goBack}>
+                                <svg
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        d="M15 18L9 12L15 6"
+                                        stroke="#503291"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    />
+                                </svg>
+                            </button>
+                            <h3 style={{ color: '#503291', fontWeight: 'bold', margin: 0 }}>
+                                Opponent Team Name
+                            </h3>
+                        </div>
+                        <input
+                            id="opponent-team-input"
+                            aria-label="input for opponent team name"
+                            type="text"
+                            value={opponentTeamValue}
+                            onChange={(e) => setOpponentTeamValue(e.target.value)}
+                        />
+                        <ImagePicker
+                            setSelectedFile={setSelectedFile}
+                            setFilePreview={setFilePreview}
+                            buttonText="Upload Team Logo"
+                            displayFileName
+                        />
+                        <h3 style={{ color: '#503291', fontWeight: 'bold' }}>Location</h3>
+                        <button
+                            onClick={() => handleLocationClick('home')}
+                            className={tempLocation === 'home' ? '' : 'disabled'}
+                            disabled={tempLocation === 'home'}
+                        >
+                            Home
+                        </button>
+                        <button
+                            onClick={() => handleLocationClick('away')}
+                            className={tempLocation === 'away' ? '' : 'disabled'}
+                            disabled={tempLocation === 'away'}
+                        >
+                            Away
+                        </button>
+                        <div className="submit-button">
                             <button onClick={handleInputSubmission}>Submit</button>
                         </div>
                     </div>
@@ -757,7 +810,11 @@ const Game = () => {
             {loadGameOverlayVisible && gameMode === 'load' && (
                 <div className="load-game-overlay">
                     <div className="load-game-overlay-content">
-                        <GameSelection className="game-selection" onSelectGame={handleSelectGame}/>
+                        <GameSelection 
+                            className="game-selection" 
+                            onSelectGame={handleSelectGame}
+                            onBack={goBack}
+                        />
                     </div>
                 </div>
             )}
