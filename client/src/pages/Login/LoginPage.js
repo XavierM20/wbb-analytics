@@ -25,8 +25,7 @@ const LoginPage = () => {
     const [isRegistering, setIsRegistering] = useState(false);
     const [city, setCity] = useState('');
     const [state, setState] = useState('');
-    const [incorrect,setIncorrect] = useState(false);
-    
+    const [incorrect, setIncorrect] = useState(false);
 
     const serverUrl = process.env.REACT_APP_SERVER_URL;
 
@@ -35,14 +34,12 @@ const LoginPage = () => {
             navigate('/homepage');
         }
     }, [auth.token, navigate]);
-    
+
     useEffect(() => {
-        // Fetch existing schools from the server
         const fetchSchools = async () => {
             try {
                 const response = await fetch(`${serverUrl}/api/schools`);
                 const data = await response.json();
-                console.log(data);
                 setSchools(data);
             } catch (error) {
                 console.error("Error fetching schools:", error);
@@ -64,18 +61,33 @@ const LoginPage = () => {
         setIsRegistering(false);
     };
 
+    const checkSeasonAndRedirect = async (schoolId) => {
+        try {
+            const response = await fetch(`${serverUrl}/api/seasons/${schoolId}`);
+            const data = await response.json();
+            if (data.exists) {
+                navigate('/homepage');
+            } else {
+                navigate('/create-season');
+            }
+        } catch (error) {
+            console.error("Error checking season:", error);
+            navigate('/homepage');
+        }
+    };
+
     const handleRegister = async (event) => {
         event.preventDefault();
         let error = false;
         setErrorUser('');
         setErrorPass('');
         setErrorConfirmPass('');
-    
+
         if (username.length < 8) {
             setErrorUser('Username is too short!');
             error = true;
         }
-    
+
         const regex = /[!?@#$%^&*()]/;
         const cap = /[A-Z]/;
         const low = /[a-z]/;
@@ -83,103 +95,86 @@ const LoginPage = () => {
             setErrorPass('Password must be at least 8 characters and include a special character, uppercase, and lowercase letters.');
             error = true;
         }
-    
+
         if (password !== confirmPassword) {
             setErrorConfirmPass('Passwords do not match!');
             error = true;
         }
-    
+
         if (!schoolId) {
             alert('Please select or add a school.');
             error = true;
         }
-    
+
         if (!error) {
             try {
-                const userData = {
-                    username,
-                    password,
-                    schoolId  // Send school with the request
-                };
+                const userData = { username, password, schoolId };
                 const userResponse = await fetch(`${serverUrl}/api/users`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(userData),
                 });
-    
+
                 const newUser = await userResponse.json();
                 if (!newUser.message) {
                     auth.loginAction({
                         username: newUser.username,
                         token: newUser.role,
+                        schoolId: schoolId,
                     });
-                    navigate('/homepage');
+                    checkSeasonAndRedirect(newUser.schoolId);
                 } else {
                     setErrorUser(newUser.message);
                 }
             } catch (error) {
-                console.error(error);
+                console.error("Error registering user:", error);
             }
         }
     };
-    
+
     const handleLogin = async (event) => {
-        const saltRounds = 10;
         event.preventDefault();
 
-        /*
-        loginResponse:
-            This is a fetch request to check if the user exist and if the password is correct
-        */
-        const loginResponse = await fetch(serverUrl + '/api/users/userCheck',
-    {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({username: username, password: password}),
+        try {
+            const loginResponse = await fetch(`${serverUrl}/api/users/userCheck`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password }),
+            });
 
-    })
-
-        const loginData = await loginResponse.json();
-        // If the user does not exist or the password is incorrect, return an error
-        if(loginData.message){
-            setIncorrect(true);
-        } else {
-            auth.loginAction({username: loginData.username, password: loginData.password, token: loginData.role});
-            navigate('/homepage');
+            const loginData = await loginResponse.json();
+            if (loginData.message) {
+                setIncorrect(true);
+            } else {
+                auth.loginAction({username: loginData.username, password: loginData.password, token: loginData.role, schoolId: loginData.schoolId});
+                navigate('/homepage');
+            }
+        } catch (error) {
+            console.error("Error logging in:", error);
         }
-        };
-
+    };
 
     const handleAddSchool = async () => {
         if (!newSchool || !city || !state) {
             alert("All fields (name, city, state) are required");
             return;
         }
-    
+
         try {
             const response = await fetch(`${serverUrl}/api/schools`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ name: newSchool, city: city, state: state }),
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: newSchool, city, state }),
             });
-    
+
             const result = await response.json();
-    
-            console.log('API Response:', result); // Log the result for debugging
-    
             if (response.ok) {
-                setSchools([...schools, result]); // Update school list
-                setSchoolId(result._id); // Set selected school to newly added school
-                setNewSchool(''); // Clear input
-                setCity(''); // Clear city input
-                setState(''); // Clear state input
-                setIsAddingSchool(false); // Hide input field
+                setSchools([...schools, result]);
+                setSchoolId(result._id);
+                setNewSchool('');
+                setCity('');
+                setState('');
+                setIsAddingSchool(false);
             } else {
                 alert(result.message || "Error adding school");
             }
@@ -188,14 +183,11 @@ const LoginPage = () => {
             alert("An unexpected error occurred. Please try again.");
         }
     };
-    
-    
 
     const handleSchoolChange = (value) => {
         if (value === "add-new") {
             setIsAddingSchool(true);
         } else {
-            console.log(value);
             setSchoolId(value);
             setIsAddingSchool(false);
         }
@@ -206,44 +198,32 @@ const LoginPage = () => {
             <div className="login-form">
                 {!isRegistering ? (
                     <form onSubmit={handleLogin}>
-                    {/* Login card */}
-                    <h2>Login</h2>
-                    <label><input type="text" placeholder="Username" aria-label="input for username" value={username} onChange={(e) => setUsername(e.target.value)}/></label>
-                    <label><input type="password" placeholder="Password" aria-label="input for password" value={password} onChange={(e) => setPassword(e.target.value)} /></label>
-                    {incorrect === true && (
-                        <a className='error'>Incorrect Username or Password</a>
-                    )}
-                    <button type="submit">Submit</button>
-                    <a className='switch' onClick={() => moveToRegister()}>
-                        <span className="regular-text">Don't have an account? </span>
-                        <span className="bold-text">Register </span>
-                    </a>
-                </form>
+                        <h2>Login</h2>
+                        <label>
+                            <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
+                        </label>
+                        <label>
+                            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                        </label>
+                        {incorrect && <p className='error'>Incorrect Username or Password</p>}
+                        <button type="submit">Submit</button>
+                        <p className='switch' onClick={moveToRegister}>Don't have an account? <b>Register</b></p>
+                    </form>
                 ) : (
                     <form onSubmit={handleRegister}>
                         <h2>Register</h2>
-                        <label><input type="text" placeholder="Username" aria-label="input for username" value={username} onChange={(e) => setUsername(e.target.value)} />{errorUser && <p className="error">{errorUser}</p>}</label>
-                        <label><input type="password" placeholder="Password" aria-label="input for password" value={password} onChange={(e) => setPassword(e.target.value)} />{errorPass && <p className="error">{errorPass}</p>}</label>
-                        <label><input type="password" placeholder="Confirm Password" aria-label="input for confirming password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />{errorConfirmPass && <p className="error">{errorConfirmPass}</p>}</label>
                         <label>
-                            <select value={schoolId} onChange={(e) => handleSchoolChange(e.target.value)}>
-                                <option value="">Select a school</option>
-                                {schools.map((s) => (
-                                    <option key={s.id} value={s._id}> {/* Use s.id as the value */}
-                                        {s.name}
-                                    </option>
-                                ))}
-                                <option value="add-new">Add School</option>
-                            </select>
+                            <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
+                            {errorUser && <p className="error">{errorUser}</p>}
                         </label>
-                        {isAddingSchool && (
-                            <div>
-                                <label><input type="text" placeholder="Enter new school name" aria-label="input for new school name" value={newSchool} onChange={(e) => setNewSchool(e.target.value)}/></label>
-                                <label><input type="text" placeholder="Enter City" aria-label="input for city" value={city} onChange={(e) => setCity(e.target.value)}/></label>
-                                <label><input type="text" placeholder="Enter State" aria-label="input for state" value={state} onChange={(e) => setState(e.target.value)}/></label>
-                                <button type="button" onClick={handleAddSchool}>Add</button>
-                            </div>
-                        )}
+                        <label>
+                            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                            {errorPass && <p className="error">{errorPass}</p>}
+                        </label>
+                        <label>
+                            <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+                            {errorConfirmPass && <p className="error">{errorConfirmPass}</p>}
+                        </label>
                         <button type="submit">Submit</button>
                         <p className="switch" onClick={moveToLogin}>Already have an account? <b>Login</b></p>
                     </form>
@@ -254,4 +234,3 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-

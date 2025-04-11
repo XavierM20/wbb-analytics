@@ -11,6 +11,7 @@
  const playerSchema = new mongoose.Schema({
      name: { type: String, required: true },
      jersey_number: { type: Number, required: true },
+     position: { type: String, required: true },
      seasons: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Season' }] // References seasons
  });
  
