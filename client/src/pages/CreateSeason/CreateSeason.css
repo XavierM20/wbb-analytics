@@ -15,6 +15,19 @@
   box-shadow: 0 0.25rem 0.375rem rgba(0,0,0,0.1);
 }
 
+.create-season-container {
+  height: calc(100vh);
+  width: calc(100vw);
+  z-index: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.25rem;
+  border-radius: .5rem;
+  box-shadow: 0 0.25rem 0.375rem rgba(0,0,0,0.1);
+}
+
 .create-season .btn-home {
   padding: 0.625rem 1.25rem;
   background-color: rgba(200,157,70, 1) !important; /* Bootstrap blue */

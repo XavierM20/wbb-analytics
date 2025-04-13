@@ -20,7 +20,7 @@ const isAuthenticated = (req, res, next) => {
     // Your authentication check goes here
     next();
 };
-
+/*
 const authenticateCoach = async (req, res, next) => {
     try {
         const user = await authenticateUser(req);
@@ -40,7 +40,7 @@ router.post('/', authenticateCoach, async (req, res) => {
 router.put('/:id', authenticateCoach, async (req, res) => {
     // Coach can edit a season
 });
-
+*/
 
 // GET all seasons without pagination
 router.get('/', async (req, res) => {
