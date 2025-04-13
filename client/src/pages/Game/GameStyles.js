@@ -197,34 +197,58 @@ export default StyleSheet.create({
     /*
         End Styles for bottom container
     */
-    overlay: {
-        flex: 1,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent overlay
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    popup: {
-        // Transparent container (no background)
-        backgroundColor: 'transparent',
-        width: '90%',
-    },
-    buttonRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-    },
-    button: {
-        flex: 1,
-        paddingVertical: 20,
-        marginHorizontal: 10,
-        backgroundColor: '#007bff',
-        borderRadius: 5,
-        alignItems: 'center',
-    },
-    buttonText: {
-        color: 'white',
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
+        overlay: {
+            flex: 1,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent overlay
+            justifyContent: 'center',
+            alignItems: 'center',
+        },
+        popup: {
+            backgroundColor: 'transparent',
+            width: '90%',
+        },
+        buttonRow: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+        },
+        madeButton: {
+            flex: 1,
+            width: 100,       // Fixed width; adjust according to your layout
+            height: 100,       // Fixed height for a larger tap area
+            marginHorizontal: 50,
+            backgroundColor: '#28a745',
+            borderRadius: 5,
+            justifyContent: 'center',
+            alignItems: 'center',
+        },
+        missedButton: {
+            flex: 1,
+            width: 100,       // Fixed width; adjust according to your layout
+            height: 100,       // Fixed height for a larger tap area
+            marginHorizontal: 50,
+            backgroundColor: '#dc3545',
+            borderRadius: 5,
+            justifyContent: 'center',
+            alignItems: 'center',
+        },
+        cancelRow: {
+            marginTop: 20,       // adds space between the two rows
+            alignItems: 'center',
+        },
+        cancelButton: {
+            width: 200,       // Fixed width for the cancel button
+            height: 60,       // Fixed height for consistency
+            marginTop: 20,    // separates it from the row above
+            backgroundColor: '#6c757d',  // red, often used for cancel actions
+            borderRadius: 5,
+            justifyContent: 'center',
+            alignItems: 'center',
+        },
+        buttonText: {
+            color: 'white',
+            fontSize: 18,
+            fontWeight: 'bold',
+        },          
     // Styles for the team logos
     teamLogo: {
         width: 50,

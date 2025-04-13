@@ -24,7 +24,7 @@ const gameSchema = Joi.object({
     location: Joi.string().required(),
     tempo_events: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
     shot_events: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
-    team_logo: Joi.string().optional(),
+    team_logo: Joi.string().allow(null).optional(),
     score: Joi.object({
         team: Joi.number().required(),
         opponent: Joi.number().required()

@@ -33,7 +33,7 @@ const Game = () => {
     const [selectedFile, setSelectedFile] = useState(null);
     const [filePreview, setFilePreview] = useState(null);
     const [schoolID, setSchoolID] = useState(sessionStorage.getItem("schoolID"));
-    const [imageID, setImageID] = useState('');
+    const [imageID, setImageID] = useState(null);
 
     /* Player Selection  */
     const [playersOnCourt, setPlayersOnCourt] = useState([]);
@@ -76,12 +76,14 @@ const Game = () => {
     const date = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
 
     // Sets an overlay for the input, can't interact outside until submission
+    /*
     useEffect(() => {
         if (gameMode === 'new' && location !== '' && opponentTeam !== '' && submitClicked === false) {
             createGame();
             setNewGameOverlay(false); // Close the overlay here after creating the game
         }
     }, [opponentTeam, location, gameMode, submitClicked]);
+    */
 
     // Creates a new game if conditions are met
     useEffect(() => {
@@ -107,6 +109,9 @@ const Game = () => {
     const createGame = async () => {
         let image_id = await uploadImage();
         console.log('Image ID:', imageID);
+
+        // setGameMode back to '' to prevent re-creating the game
+        setGameMode('');
 
         const game = {
             season_id: seasonData._id,
@@ -194,14 +199,30 @@ const Game = () => {
     };
 
     const handleInputSubmission = () => {
-        if (opponentTeamValue !== '' && tempLocation !== '') {
+        let strErrorMsg = '';
+        let blnError = false;
+
+        if (opponentTeamValue === '') {
+            strErrorMsg += 'Opponent name is required.\n';
+            blnError = true;
+        }
+        if (tempLocation === '') {
+            strErrorMsg += 'Location is required.\n';
+            blnError = true;
+        }
+        if (selectedFile === null) {
+            //strErrorMsg += 'Image is required.\n';
+            //blnError = true;
+        }
+
+        if (blnError) {
+            alert(strErrorMsg);
+            return;
+        } else {
             setOpponentTeam(opponentTeamValue);
             setLocation(tempLocation);
             setSubmitClicked(true);
             setNewGameOverlay(false);
-            
-        } else {
-            alert('Please enter both opponent name and location.');
         }
     };
 
@@ -218,7 +239,17 @@ const Game = () => {
             console.log(gameDetails);
 
             const teamLogo = await fetch(`${serverUrl}/api/games/image/${gameDetails.team_logo}`);
+            console.log('Team Logo:');
             console.log(teamLogo);
+            console.log('Game Details Team Logo')
+            console.log(gameDetails.team_logo);
+
+            if(gameDetails.team_logo === null) {
+                setImageID(null);
+            } else {
+                setImageID(gameDetails.team_logo);
+            }
+
             setGameData(gameDetails._id);
             setOpponentTeam(gameDetails.opponent);
             setLocation(gameDetails.location);
@@ -226,7 +257,7 @@ const Game = () => {
             setShotEvents(gameDetails.shot_events || []);
             setLoadGameOverlayVisible(false);
             setFilePreview(teamLogo.url);
-            setImageID(gameDetails.team_logo);
+            //setImageID(gameDetails.team_logo);
             setMyScore(gameDetails.score.team)
             setOpponentScore(gameDetails.score.opponent)
 
@@ -276,6 +307,7 @@ const Game = () => {
                 coords: [25, 1.5, 26, 20, 29, 40, 105, 40, 105, 1.5].map(n => n * scaleFactor),
                 fillColor: "#4f2984",
                 preFillColor: "rgba(52, 52, 52, 0.2)",
+                fillColor: "rgba(23, 43, 79, .6)",
                 strokeColor: "green"
             },
             {
@@ -284,6 +316,7 @@ const Game = () => {
                 coords: [193, 1.5, 193, 40, 270, 40, 273, 20, 275, 1.5].map(n => n * scaleFactor),
                 fillColor: "#4f2984",
                 preFillColor: "rgba(52, 52, 52, 0.2)",
+                fillColor: "rgba(23, 43, 79, .6)",
                 strokeColor: "green"
             },
             {
@@ -292,6 +325,7 @@ const Game = () => {
                 coords: [108, 1.5, 108, 102, 190, 102, 190, 1.5].map(n => n * scaleFactor),
                 fillColor: "#4f2984",
                 preFillColor: "rgba(52, 52, 52, 0.2)",
+                fillColor: "rgba(23, 43, 79, .6)",
                 strokeColor: "purple"
             },
             {
@@ -300,6 +334,7 @@ const Game = () => {
                 coords: [30, 45, 103, 45, 103, 107, 150, 107, 150, 141, 126, 138, 115, 135, 110, 134, 100, 131, 95, 129, 90, 127, 85, 125, 74, 117, 65, 110, 40, 78, 38, 70].map(n => n * scaleFactor),
                 fillColor: "#4f2984",
                 preFillColor: "rgba(52, 52, 52, 0.2)",
+                fillColor: "rgba(23, 43, 79, .6)",
                 strokeColor: "red"
             },
             {
@@ -311,6 +346,7 @@ const Game = () => {
                     .map(n => n * scaleFactor),
                 fillColor: "#4f2984",
                 preFillColor: "rgba(52, 52, 52, 0.2)",
+                fillColor: "rgba(23, 43, 79, .6)",
                 strokeColor: "red"
             },
             {
@@ -319,6 +355,7 @@ const Game = () => {
                 coords: [80, 127, 0, 250, 300, 250, 220, 127, 205, 134, 180, 141, 150, 145, 122, 142, 98, 135].map(n => n * scaleFactor),
                 fillColor: "#4f2984",
                 preFillColor: "rgba(52, 52, 52, 0.2)",
+                fillColor: "rgba(23, 43, 79, .6)",
                 strokeColor: "blue"
             },
             {
@@ -327,6 +364,7 @@ const Game = () => {
                 coords: [0, 1.5, 20, 1.5, 23, 34, 35, 75, 40, 85, 45, 92, 50, 99, 55, 105, 60, 110, 65, 116, 70, 120, 79, 127, 0, 250].map(n => n * scaleFactor),
                 fillColor: "#4f2984",
                 preFillColor: "rgba(52, 52, 52, 0.2)",
+                fillColor: "rgba(23, 43, 79, .6)",
                 strokeColor: "blue"
             },
             {
@@ -335,8 +373,9 @@ const Game = () => {
                 coords: [300, 1.5, 278, 1.5, 275, 34, 265, 75, 260, 85, 255, 92, 250, 99, 245, 105, 240, 110, 235, 116, 230, 120, 221, 127, 300, 250].map(n => n * scaleFactor),
                 fillColor: "#4f2984",
                 preFillColor: "rgba(52, 52, 52, 0.2)",
+                fillColor: "rgba(23, 43, 79, .6)",
                 strokeColor: "blue"
-                }
+            }
         ]
     };
 
@@ -405,11 +444,11 @@ const Game = () => {
         };
       
         await fetch(`${serverUrl}/api/games/${gameData}`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(updatedScore)
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedScore)
         });
       };      
       
@@ -463,7 +502,7 @@ const Game = () => {
         ...MAP2,
         areas: MAP2.areas.map(area =>
         selectedZone && area.name === selectedZone.name
-            ? { ...area, preFillColor: "rgba(255, 0, 0, 0.5)" } // Highlight color
+            ? { ...area, preFillColor: "rgba(23, 43, 79, .5)" } // Highlight color
             : { ...area, preFillColor: "rgba(52, 52, 52, 0.2)" } // Default color
         ),
     };
@@ -690,6 +729,12 @@ const Game = () => {
         End Tempo Functions
     */
 
+    const goBack = () => {
+        setLoadGameOverlayVisible(false);
+        setNewGameOverlay(false);
+        setGameModeOverlayVisible(true);
+    };
+
     return (
         <>
             {gameModeOverlayVisible && (
@@ -706,13 +751,57 @@ const Game = () => {
             {newGameOverlay && gameMode === 'new' && (
                 <div className="new-game-overlay">
                     <div className="new-game-overlay-content">
-                        <h3>Opponent Team Name</h3>
-                        <input id="opponent-team-input" aria-label="input for opponent team name" type="text" value={opponentTeamValue} onChange={(e) => setOpponentTeamValue(e.target.value)}/>
-                        <ImagePicker setSelectedFile={setSelectedFile} setFilePreview={setFilePreview} buttonText='Upload Team Logo' displayFileName/>
-                        <h3>Location</h3>
-                        <button onClick={() => handleLocationClick('home')} className={tempLocation === 'home' ? '' : 'disabled'} disabled={tempLocation === 'home'}>Home</button>
-                        <button onClick={() => handleLocationClick('away')} className={tempLocation === 'away' ? '' : 'disabled'} disabled={tempLocation === 'away'}>Away</button>
-                        <div className='submit-button'>
+                        <div className="new-game-header">
+                            <button className="back-arrow" onClick={goBack}>
+                                <svg
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        d="M15 18L9 12L15 6"
+                                        stroke="#503291"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    />
+                                </svg>
+                            </button>
+                            <h3 style={{ color: '#503291', fontWeight: 'bold', margin: 0 }}>
+                                Opponent Team Name
+                            </h3>
+                        </div>
+                        <input
+                            id="opponent-team-input"
+                            aria-label="input for opponent team name"
+                            type="text"
+                            value={opponentTeamValue}
+                            onChange={(e) => setOpponentTeamValue(e.target.value)}
+                        />
+                        <ImagePicker
+                            setSelectedFile={setSelectedFile}
+                            setFilePreview={setFilePreview}
+                            buttonText="Upload Team Logo"
+                            displayFileName
+                        />
+                        <h3 style={{ color: '#503291', fontWeight: 'bold' }}>Location</h3>
+                        <button
+                            onClick={() => handleLocationClick('home')}
+                            className={tempLocation === 'home' ? '' : 'disabled'}
+                            disabled={tempLocation === 'home'}
+                        >
+                            Home
+                        </button>
+                        <button
+                            onClick={() => handleLocationClick('away')}
+                            className={tempLocation === 'away' ? '' : 'disabled'}
+                            disabled={tempLocation === 'away'}
+                        >
+                            Away
+                        </button>
+                        <div className="submit-button">
                             <button onClick={handleInputSubmission}>Submit</button>
                         </div>
                     </div>
@@ -721,7 +810,11 @@ const Game = () => {
             {loadGameOverlayVisible && gameMode === 'load' && (
                 <div className="load-game-overlay">
                     <div className="load-game-overlay-content">
-                        <GameSelection className="game-selection" onSelectGame={handleSelectGame}/>
+                        <GameSelection 
+                            className="game-selection" 
+                            onSelectGame={handleSelectGame}
+                            onBack={goBack}
+                        />
                     </div>
                 </div>
             )}
@@ -982,24 +1075,31 @@ const Game = () => {
             {/* Shot Outcome Popup */}
             {isShotPopupOpen && (
                 <Modal
-                transparent={true}
-                animationType="fade"
-                visible={isShotPopupOpen}
-                onRequestClose={() => setIsShotPopupOpen(false)}
-              >
-                <View style={styles.overlay}>
-                    <View style={styles.popup}>
-                        <View style={styles.buttonRow}>
-                        <TouchableOpacity style={styles.button} onPress={handleMadeShot}>
-                            <Text style={styles.buttonText}>Made</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.button} onPress={handleMissedShot}>
-                            <Text style={styles.buttonText}>Missed</Text>
-                        </TouchableOpacity>
+                    transparent={true}
+                    animationType="fade"
+                    visible={isShotPopupOpen}
+                    onRequestClose={() => setIsShotPopupOpen(false)}
+                >
+                    <View style={styles.overlay}>
+                        <View style={styles.popup}>
+                        {/* Row with Made and Missed buttons */}
+                            <View style={styles.buttonRow}>
+                                <TouchableOpacity style={styles.madeButton} onPress={handleMadeShot}>
+                                <Text style={styles.buttonText}>Made</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.missedButton} onPress={handleMissedShot}>
+                                <Text style={styles.buttonText}>Missed</Text>
+                                </TouchableOpacity>
+                            </View>
+                            {/* Separate row for Cancel button */}
+                            <View style={styles.cancelRow}>
+                                <TouchableOpacity style={styles.cancelButton} onPress={() => setIsShotPopupOpen(false)}>
+                                <Text style={styles.buttonText}>Cancel</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
-                </View>
-              </Modal>
+                </Modal>              
             )}
         </>
     );
