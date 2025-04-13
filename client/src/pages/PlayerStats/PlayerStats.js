@@ -74,25 +74,28 @@ function PlayerStats() {
 useEffect(() => {
   const fetchInitialData = async () => {
     try {
-      const playerResponse = await fetch(serverUrl + '/api/players/'); //Note to self: feetches as an ARRAY // Also should switch this to player ID at some point
+      const playerResponse = await fetch(serverUrl + '/api/players/'); 
       const playerData = await playerResponse.json();
-      //console.log(playerData[0]); //Array
-      setAllPlayers(playerData.map(player => ({
-      label: `${player.name}`,
-      position: `${player.position}`,
-      value: player._id.toString(),
-    })));
+      
+      const formattedPlayers = playerData.map(player => ({
+        label: `${player.name}`,
+        position: `${player.position}`,
+        value: player._id.toString(),
+      }));
+
+      setAllPlayers(formattedPlayers);
+
       if (playerID) {
-        //Find the player with the matching ID
-        setSelectedPlayer(playerData.find(player => player._id === playerID))
-        fetchPlayerData(playerData.find(player => player._id === playerID)._id);
+        const selected = playerData.find(player => player._id === playerID);
+        setSelectedPlayer(selected);
+        fetchPlayerData(selected._id);
       } else if (playerData.length > 0) {
-        setSelectedPlayer(playerData[0]); //What about jersey number that no exis?
-        fetchPlayerData(playerData[0]._id);
+        const firstPlayer = formattedPlayers[0];
+        setSelectedPlayer(firstPlayer);
+        fetchPlayerData(firstPlayer.value);
       }
-      //console.log(selectedPlayer);
-    } catch (error){
-      console.error("Failed to player data: ", error);
+    } catch (error) {
+      console.error("Failed to fetch player data: ", error);
     }
     try{
       const sessionResponse = await fetch(serverUrl + '/api/practices');
@@ -177,27 +180,31 @@ useEffect(() => {
   const handleSessionChange = (event) => {
     const newSessionId = event.target.value;
     setSelectedSession(newSessionId);
-
-    // Update the URL with the new session ID
+  
     const urlParams = new URLSearchParams(window.location.search);
     urlParams.set('sessionId', newSessionId);
     window.history.pushState(null, '', `${window.location.pathname}?${urlParams}`);
-
-    // Immediately filter drills for the newly selected session and set the first drill as selected
-    // This assumes allDrills has been previously populated with all available drills
+  
+    if (!Array.isArray(allDrills)) {
+      console.error("Expected allDrills to be an array, but got:", allDrills);
+      setFilteredDrills([]); // Fallback to an empty array
+      return;
+    }
+  
+    // Proceed with filtering
     const sessionDrills = allDrills.filter(drill => drill.practice_id === newSessionId);
+    
     if (sessionDrills.length > 0) {
       const firstDrillId = sessionDrills[0]._id.toString();
       setSelectedDrill(firstDrillId);
-      handleDrillChange({ target: { value: firstDrillId } }); //An attempt?
-
-      // Optionally, update the URL with the new drill ID as well
+      handleDrillChange({ target: { value: firstDrillId } });
+  
+      // Update the URL with the new drill ID
       urlParams.set('drillId', firstDrillId);
       window.history.pushState(null, '', `${window.location.pathname}?${urlParams}`);
     } else {
-      // If no drills are found for the selected session, clear the selected drill
+      // If no drills are found, clear the selected drill
       setSelectedDrill('');
-      console.log("This is where the code went")
     }
   };
 
@@ -392,14 +399,14 @@ useEffect(() => {
   let MAP2 = {
     name: "my-map",
     areas: [
-    {name: "3", shape: "poly", coords: [25, 1.5, 26, 20, 29, 40, 105, 40, 105, 1.5].map((n, i) => i % 2 === 0 ? n * 1.3333 : n * 1.2245), fillColor: "#4f2984", preFillColor: "rgba(52, 52, 52, 0.2)", strokeColor: "green"},
-    {name: "2", shape: "poly", coords: [193, 1.5, 193, 40, 270, 40, 273, 20, 275, 1.5].map((n, i) => i % 2 === 0 ? n * 1.3333 : n * 1.2245), fillColor: "#4f2984", preFillColor: "rgba(52, 52, 52, 0.2)", strokeColor: "green"},
-    {name: "1", shape: "poly", coords: [108, 1.5, 108, 102, 190, 102, 190, 1.5].map((n, i) => i % 2 === 0 ? n * 1.3333 : n * 1.2245), fillColor: "#4f2984", preFillColor: "rgba(52, 52, 52, 0.2)", strokeColor: "purple"},
-    {name: "5", shape: "poly", coords: [30, 45, 103, 45, 103, 107, 150, 107, 150, 141, 126, 138, 115, 135, 110, 134, 100, 131, 95, 129, 90, 127, 85, 125, 74, 117, 65, 110, 40, 78, 38, 70].map((n, i) => i % 2 === 0 ? n * 1.3333 : n * 1.2245), fillColor: "#4f2984", preFillColor: "rgba(52, 52, 52, 0.2)", strokeColor: "red"},
-    {name: "4", shape: "poly", coords: [30, 45, 108, 45, 108, 107, 150, 107, 150, 141, 126, 138, 115, 135, 110, 134, 100, 131, 95, 129, 90, 127, 85, 125, 74, 117, 65, 110, 40, 78, 38, 70].map((n, i) => i % 2 === 0 ? (300 - n) * 1.3333 : n * 1.2245), fillColor: "#4f2984", preFillColor: "rgba(52, 52, 52, 0.2)", strokeColor: "red"},
-    {name: "8", shape: "poly", coords: [80, 127, 0, 250, 300, 250, 220, 127, 205, 134, 180, 141, 150, 145, 122, 142, 98, 135].map((n, i) => i % 2 === 0 ? n * 1.3333 : n * 1.2245), fillColor: "#4f2984", preFillColor: "rgba(52, 52, 52, 0.2)", strokeColor: "blue"},
-    {name: "7", shape: "poly", coords: [0, 1.5, 20, 1.5, 23, 34, 35, 75, 40, 85, 45, 92, 50, 99, 55, 105, 60, 110, 65, 116, 70, 120, 79, 127, 0, 250].map((n, i) => i % 2 === 0 ? n * 1.3333 : n * 1.2245), fillColor: "#4f2984", preFillColor: "rgba(52, 52, 52, 0.2)", strokeColor: "blue"},
-    {name: "6", shape: "poly", coords: [300, 1.5, 278, 1.5, 275, 34, 265, 75, 260, 85, 255, 92, 250, 99, 245, 105, 240, 110, 235, 116, 230, 120, 221, 127, 300, 250].map((n, i) => i % 2 === 0 ? n * 1.3333 : n * 1.2245), fillColor: "#4f2984", preFillColor: "rgba(52, 52, 52, 0.2)", strokeColor: "blue"}
+    {name: "3", shape: "poly", coords: [25, 1.5, 26, 20, 29, 40, 105, 40, 105, 1.5].map((n, i) => i % 2 === 0 ? n * 1.3333 : n * 1.2245), fillColor: "rgba(23, 43, 79, .8)", preFillColor: "rgba(52, 52, 52, 0.2)", strokeColor: "green"},
+    {name: "2", shape: "poly", coords: [193, 1.5, 193, 40, 270, 40, 273, 20, 275, 1.5].map((n, i) => i % 2 === 0 ? n * 1.3333 : n * 1.2245), fillColor: "rgba(23, 43, 79, .8)", preFillColor: "rgba(52, 52, 52, 0.2)", strokeColor: "green"},
+    {name: "1", shape: "poly", coords: [108, 1.5, 108, 102, 190, 102, 190, 1.5].map((n, i) => i % 2 === 0 ? n * 1.3333 : n * 1.2245), fillColor: "rgba(23, 43, 79, .8)", preFillColor: "rgba(52, 52, 52, 0.2)", strokeColor: "purple"},
+    {name: "5", shape: "poly", coords: [30, 45, 103, 45, 103, 107, 150, 107, 150, 141, 126, 138, 115, 135, 110, 134, 100, 131, 95, 129, 90, 127, 85, 125, 74, 117, 65, 110, 40, 78, 38, 70].map((n, i) => i % 2 === 0 ? n * 1.3333 : n * 1.2245), fillColor: "rgba(23, 43, 79, .8)", preFillColor: "rgba(52, 52, 52, 0.2)", strokeColor: "red"},
+    {name: "4", shape: "poly", coords: [30, 45, 108, 45, 108, 107, 150, 107, 150, 141, 126, 138, 115, 135, 110, 134, 100, 131, 95, 129, 90, 127, 85, 125, 74, 117, 65, 110, 40, 78, 38, 70].map((n, i) => i % 2 === 0 ? (300 - n) * 1.3333 : n * 1.2245), fillColor: "rgba(23, 43, 79, .8)", preFillColor: "rgba(52, 52, 52, 0.2)", strokeColor: "red"},
+    {name: "8", shape: "poly", coords: [80, 127, 0, 250, 300, 250, 220, 127, 205, 134, 180, 141, 150, 145, 122, 142, 98, 135].map((n, i) => i % 2 === 0 ? n * 1.3333 : n * 1.2245), fillColor: "rgba(23, 43, 79, .8)", preFillColor: "rgba(52, 52, 52, 0.2)", strokeColor: "blue"},
+    {name: "7", shape: "poly", coords: [0, 1.5, 20, 1.5, 23, 34, 35, 75, 40, 85, 45, 92, 50, 99, 55, 105, 60, 110, 65, 116, 70, 120, 79, 127, 0, 250].map((n, i) => i % 2 === 0 ? n * 1.3333 : n * 1.2245), fillColor: "rgba(23, 43, 79, .8)", preFillColor: "rgba(52, 52, 52, 0.2)", strokeColor: "blue"},
+    {name: "6", shape: "poly", coords: [300, 1.5, 278, 1.5, 275, 34, 265, 75, 260, 85, 255, 92, 250, 99, 245, 105, 240, 110, 235, 116, 230, 120, 221, 127, 300, 250].map((n, i) => i % 2 === 0 ? n * 1.3333 : n * 1.2245), fillColor: "rgba(23, 43, 79, .8)", preFillColor: "rgba(52, 52, 52, 0.2)", strokeColor: "blue"}
     ]
 };
 
@@ -509,9 +516,14 @@ const handleCourtClick = (area) => {
         </div>
         <div className='layout-container'>
           <div className="player-headshot">
-          <img src={selectedPlayer && selectedPlayer.label ? require(`../../images/${(selectedPlayer.label || "").toLowerCase().replace(/ /g, "_")}.png`): require('../../images/default.png')}
-            alt={selectedPlayer ? selectedPlayer.label : "Default Player"} 
-            onError={(e) => e.target.src = require('../../images/default.png')} 
+          <img src={(() => {
+            try{
+              return require(`../../images/${(selectedPlayer?.label || "").toLowerCase().replace(/ /g, "_")}.png`);
+            } 
+            catch (error) {
+              return require('../../images/default.png');
+            }
+            })()} alt={selectedPlayer ? selectedPlayer.label : "Default Player"} onError={(e) => e.target.src = require('../../images/default.png')} 
           />
           </div>
           <div className="bio-text">

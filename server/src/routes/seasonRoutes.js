@@ -21,6 +21,27 @@ const isAuthenticated = (req, res, next) => {
     next();
 };
 
+const authenticateCoach = async (req, res, next) => {
+    try {
+        const user = await authenticateUser(req);
+        if (user.role !== 'Coach') {
+            return res.status(403).json({ message: 'Only coaches can modify seasons' });
+        }
+        next();
+    } catch (error) {
+        res.status(401).json({ message: 'Unauthorized' });
+    }
+};
+
+router.post('/', authenticateCoach, async (req, res) => {
+    // Coach can add a season
+});
+
+router.put('/:id', authenticateCoach, async (req, res) => {
+    // Coach can edit a season
+});
+
+
 // GET all seasons without pagination
 router.get('/', async (req, res) => {
     try {
