@@ -42,7 +42,7 @@ This will also delete the key in the database
 */
 router.post('/', async (req, res) => {
   const saltRounds = 10;
-  const { username, password, key, schoolId } = req.body; // Include schoolId
+  const { username, password, key, schoolId, role } = req.body; // Include schoolId
   console.log(key + '!');
 
   try {
@@ -57,7 +57,7 @@ router.post('/', async (req, res) => {
       _id: new mongoose.Types.ObjectId(),
       username,
       password: hashedPassword,
-      role: 'Admin',
+      role: role,
       schoolId // Save the school
     });
 
