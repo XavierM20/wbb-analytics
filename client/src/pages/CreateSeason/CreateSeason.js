@@ -17,8 +17,7 @@ function CreateSeason() {
   const serverUrl = process.env.REACT_APP_SERVER_URL;
 
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const userRole = user?.role || 'Player';
+  const userRole = sessionStorage.getItem('site');
 
   useEffect(() => {
     if (year.length === 9) {
