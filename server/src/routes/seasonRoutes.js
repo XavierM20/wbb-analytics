@@ -262,6 +262,7 @@ router.patch('/:id/players', isAuthenticated, async (req, res) => {
     }
 });
 
+// GET seasons by school ID
 router.get('/school/:schoolID', async (req, res) => {
     try {
         const seasons = await Season.find({ schoolID: req.params.schoolID }).populate('schoolID');
