@@ -92,7 +92,8 @@ function TeamStats() {
 
   useEffect(() => {
     async function fetchData() {
-      await fetchSeasons();
+      const seasonId = await fetchSeasons();
+      await fetchGames(seasonId);
     }
     fetchData();
   }, []);
@@ -115,6 +116,7 @@ function TeamStats() {
 
         setSelectedSeason(data[0]._id); // Select the first season by default
         fetchPractices(data[0]._id); // Fetch practices for the selected season
+        return data[0]._id
       }
     } catch (error) {
       console.error('Failed to fetch seasons:', error); // Log any errors to the console
