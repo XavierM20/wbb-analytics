@@ -85,7 +85,10 @@ useEffect(() => {
       const seasonID = await getSeasonIDByDate();
       const playerResponse = await fetch(serverUrl + `/api/players/bySeason/${seasonID}`); 
       const playerData = await playerResponse.json();
+
       await fetchSeasons();
+      await fetchGames(seasonID);
+      await fetchTempos(drillID);
       
       const formattedPlayers = playerData.map(player => ({
         label: `${player.name}`,
