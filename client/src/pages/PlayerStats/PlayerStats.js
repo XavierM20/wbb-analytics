@@ -74,7 +74,8 @@ function PlayerStats() {
 useEffect(() => {
   const fetchInitialData = async () => {
     try {
-      const playerResponse = await fetch(serverUrl + '/api/players/'); 
+      const seasonID = await getSeasonIDByDate();
+      const playerResponse = await fetch(serverUrl + `/api/players/bySeason/${seasonID}`); 
       const playerData = await playerResponse.json();
       
       const formattedPlayers = playerData.map(player => ({
@@ -127,6 +128,23 @@ useEffect(() => {
   fetchInitialData();
   //submitTempo();
 }, []);
+
+const getSeasonIDByDate = async () => {
+  const currentDate = new Date();
+  const month = currentDate.getMonth() + 1;
+  const day = currentDate.getDate();
+  const year = currentDate.getFullYear();
+
+  const computedYear = (month < 8 || (month === 8 && day < 2)) ? year - 1 : year + 1;
+
+  const year1 = Math.min(year, computedYear).toString();
+  const year2 = Math.max(year, computedYear).toString();
+
+  // Get the current season for this school
+  const seasonResponse = await fetch(`${process.env.REACT_APP_SERVER_URL}/api/seasons/endYear/${year2}/${sessionStorage.getItem('schoolID')}`);
+  const seasonData = await seasonResponse.json();
+  return seasonData._id;
+};
 
 useEffect(() => {
   if (allPlayers.length > 0 && !selectedPlayer) {
