@@ -86,7 +86,10 @@ function TeamStats() {
     ],
   });
 
-
+  useEffect(async () => {
+    await fetchSeasons(); // Fetch seasons data when the component mounts
+    
+  }, []); // Empty dependency array ensures this runs only once
 
   // --- Data Fetching Functions ---
 
@@ -95,10 +98,14 @@ function TeamStats() {
    */
   const fetchSeasons = async () => {
     try {
-      const response = await fetch(`${serverUrl}/api/seasons`);// Fetch seasons from the server
+      const response = await fetch(`${serverUrl}/api/seasons/school/${sessionStorage.getItem('schoolID')}`);// Fetch seasons from the server
       const data = await response.json(); // Parse the response as JSON
-      setSeasons(data); // Update the seasons state with the fetched data
       if (data.length > 0) {
+        // Add each season to the seasons state
+        data.forEach((season) => {
+          setSeasons((prevSeasons) => [...prevSeasons, { value: season._id, label: season.year }]); // Add each season to the seasons state
+        })
+
         setSelectedSeason(data[0]._id); // Select the first season by default
         fetchPractices(data[0]._id); // Fetch practices for the selected season
       }
