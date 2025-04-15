@@ -69,7 +69,10 @@ const Players = ({ listA, setListA, listB, setListB, playerData, setPlayerData }
 
         const fetchData = async () => {
             try {
-                const response = await fetch(serverUrl + '/api/players');
+                // First get current Season ID then get players from that season
+                const seasonID = await getSeasonIDByDate()
+                console.log(seasonID);
+                const response = await fetch(serverUrl + `/api/players/bySeason/${seasonID}`);
                 const data = await response.json();
 
                 // Auto-populate the first 5 players for Team A and Team B
@@ -79,7 +82,6 @@ const Players = ({ listA, setListA, listB, setListB, playerData, setPlayerData }
                 setListA(defaultListA);
                 setListB(defaultListB);
                 setPlayerData(data); // Move this line after setting lists to ensure that playerData is set after lists
-
             } catch (error) {
                 console.error('Failed to fetch players:', error);
             }
@@ -88,7 +90,22 @@ const Players = ({ listA, setListA, listB, setListB, playerData, setPlayerData }
         fetchData();
     }, []);
 
+    const getSeasonIDByDate = async () => {
+        const currentDate = new Date();
+        const month = currentDate.getMonth() + 1;
+        const day = currentDate.getDate();
+        const year = currentDate.getFullYear();
 
+        const computedYear = (month < 8 || (month === 8 && day < 2)) ? year - 1 : year + 1;
+
+        const year1 = Math.min(year, computedYear).toString();
+        const year2 = Math.max(year, computedYear).toString();
+
+        // Get the current season for this school
+        const seasonResponse = await fetch(`${process.env.REACT_APP_SERVER_URL}/api/seasons/endYear/${year2}/${sessionStorage.getItem('schoolID')}`);
+        const seasonData = await seasonResponse.json();
+        return seasonData._id;
+    };
 
 
     return (
