@@ -66,8 +66,12 @@ function TeamStats() {
   const serverUrl = process.env.REACT_APP_SERVER_URL; // Retrieve server URL from environment variables
   const [seasons, setSeasons] = useState([]); // State for storing seasons data
   const [selectedSeason, setSelectedSeason] = useState(''); // State for storing the selected season ID
+  const [selectedGameOrPractice, setSelectedGameOrPractice] = useState('game'); // State for storing the selected game or practice
   const [practices, setPractices] = useState([]); // State for storing practices data
   const [selectedPractice, setSelectedPractice] = useState(''); // State for storing the selected practice ID
+  const [games, setGames] = useState([]); // State for storing games data
+  const [selectedGame, setSelectedGame] = useState(''); // State for storing the selected game ID
+  const [gameOrDrill, setGameOrDrill] = useState('game'); // State for storing the selected game or drill
   const [drills, setDrills] = useState([]); // State for storing drills data
   const [selectedDrill, setSelectedDrill] = useState(''); // State for storing the selected drill ID
   const [avgOffensiveTempo, setAvgOffensiveTempo] = useState(0); // State for storing the average offensive tempo
@@ -118,6 +122,26 @@ function TeamStats() {
   };
 
   /**
+   * Fetches games data for a given season ID.
+   * @param {string} seasonId - The ID of the season. 
+   */
+  const fetchGames = async (seasonId) => {
+    console.log('fetching games');
+    try {
+      const response = await fetch(`${serverUrl}/api/games/bySeason/${seasonId}`)
+      const games = await response.json();
+      if (games.length > 0) {
+        games.forEach((game) => {
+          setGames((prevGames) => [...prevGames, {value: game._id, label: `${game.opponent} - ${game.date.split("T")[0]}`}])
+        })
+      }
+      fetchShots(games[0]._id)
+    } catch (error) {
+      console.error('Failed to fetch games ', error)
+    }
+  }
+
+  /**
    * Fetches practices data for a given season ID.
    * @param {string} seasonId - The ID of the season.
    */
@@ -150,7 +174,7 @@ function TeamStats() {
       console.log(practiceId);
       const response = await fetch(`${serverUrl}/api/drills/practice/${practiceId}`); // Fetch drills for the given practice ID
       const data = await response.json(); // Parse the response as JSON
-      setDrills(data); // Update the drills state with the fetched data
+      //setDrills(data); // Update the drills state with the fetched data
       if (data.length > 0) {
         data.forEach((drill) => {
           setDrills((prevDrill) => [...prevDrill, { value: drill._id, label: drill.name }]); // Add each practice to the practices state
@@ -203,7 +227,7 @@ function TeamStats() {
    */
   const fetchShots = async (drillId) => {
     try {
-      const response = await fetch(`${serverUrl}/api/shots`);// Fetch all shots
+      const response = await fetch(`${serverUrl}/api/shots/byGameOrDrill/${drillId}`);// Fetch all shots
       const allShots = await response.json(); // Parse the response as JSON
       const filteredShots = allShots.filter((shot) => shot.gameOrDrill_id === drillId); // Filter shots by the selected drill ID
       processShotsForChart(filteredShots); // Process the filtered shots for the chart
@@ -231,7 +255,7 @@ function TeamStats() {
 
     const labels = []; // Array to store labels for the chart
     const data = []; // Array to store data for the chart
-    const backgroundColor = [] //New array for bar colors
+    const backgroundColor = ['rgba(200, 157, 70, .8)',] //New array for bar colors
 
     for (let i = 1; i <= 8; i++) {
       labels.push(`Zone ${i}`); // Add zone label
@@ -248,7 +272,7 @@ function TeamStats() {
         {
           label: '% of Shots Made by Zone', // Label for the dataset
           backgroundColor,
-          borderColor: 'rgb(0, 0, 0)', // Border color of the bars
+          borderColor: 'rgba(200, 157, 70, .8)', // Border color of the bars
           borderWidth: 1, // Border width of the bars
           data, // Data for the bars
         },
@@ -267,6 +291,27 @@ function TeamStats() {
     setSelectedSeason(newSelectedSeason); // Update the selected season state
     fetchPractices(newSelectedSeason); // Fetch practices for the selected season
   };
+
+  /**
+   * Handles the change event for the game or practice selector.
+   * @param {Event} e - The change event object.
+   * 
+   */
+  const handleGameOrPracticeChange = (e) => {
+    const newSelectedGameOrPractice = e.target.value; // Get the newly selected game or practice from the event
+    setSelectedGameOrPractice(newSelectedGameOrPractice); // Update the selected game or practice state
+    if (newSelectedGameOrPractice == 'game') {
+      setSelectedPractice('');
+      setPractices([]);
+      setSelectedDrill('');
+      setDrills([]);
+      fetchGames(selectedSeason); // Fetch games for the selected season
+    } else {
+      setSelectedGame('');
+      setGames([]);
+      fetchPractices(selectedSeason); // Fetch practices for the selected season
+    }
+  }
 
   /**
    * Handles the change event for the practice selector.
@@ -289,6 +334,13 @@ function TeamStats() {
     fetchShots(newSelectedDrill); // Fetch shots for the selected drill
   };
 
+  const handleGameChange = (e) => {
+    const newSelectedGame = e.target.value; // Get the newly selected game ID from the event
+    setSelectedGame(newSelectedGame); // Update the selected game state
+    fetchTempos(newSelectedGame)
+    fetchShots(newSelectedGame)
+  }
+
   // --- Render ---
   return (
     <div className="team-stats-container">
@@ -299,26 +351,61 @@ function TeamStats() {
 
       {/* Selectors for season, practice, and drill */}
       <div className="selectors">
-        <Selector
-          options={seasons}
-          value={selectedSeason}
-          onChange={handleSeasonChange}
-          label="Season"
-        />
-        <Selector
-          options={practices}
-          value={selectedPractice}
-          onChange={handlePracticeChange}
-          label="Practice"
-        />
-        <Selector
-          options={drills}
-          value={selectedDrill}
-          onChange={handleDrillChange}
-          label="Drill"
-        />
-      </div>
+        {/* Row 1 */}
+        <div className="row">
+          <div className="column">
+            <Selector
+              options={seasons}
+              value={selectedSeason}
+              onChange={handleSeasonChange}
+              label="Season"
+            />
+          </div>
+          <div className="column">
+            <Selector
+              options={[
+                { value: 'game', label: 'Game' },
+                { value: 'practice', label: 'Practice' }
+              ]}
+              value={selectedGameOrPractice}
+              onChange={handleGameOrPracticeChange}
+              label="Game or Practice?"
+            />
+          </div>
+        </div>
 
+        {/* Row 2 */}
+        <div className="row">
+          <div className="column">
+            {selectedGameOrPractice === 'game' ? (
+              <Selector
+                options={games}
+                value={selectedGame}
+                onChange={handleGameChange}
+                label="Game"
+              />
+            ) : (
+              <Selector
+                options={practices}
+                value={selectedPractice}
+                onChange={handlePracticeChange}
+                label="Practice"
+              />
+            )}
+          </div>
+          <div className="column">
+            {/* Only show the Drill selector if 'practice' is selected */}
+            {selectedGameOrPractice === 'practice' && (
+              <Selector
+                options={drills}
+                value={selectedDrill}
+                onChange={handleDrillChange}
+                label="Drill"
+              />
+            )}
+          </div>
+        </div>
+      </div>
       {/* Team Leaders Section */}
       <div className="team-leaders">
         <h3>Team Leaders</h3>

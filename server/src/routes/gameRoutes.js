@@ -57,7 +57,7 @@ router.get('/:seasonID', isAuthenticated, async (req, res) => {
 // Example: GET games by season_id
 router.get('/bySeason/:seasonId', isAuthenticated, async (req, res) => {
     try {
-        const games = await Game.find({ season_id: mongoose.Types.ObjectId(req.params.seasonId) });
+        const games = await Game.find({ season_id: req.params.seasonId });
         res.json(games);
     } catch (err) {
         res.status(500).json({ message: 'Internal server error', error: err.message });

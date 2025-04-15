@@ -40,6 +40,13 @@ body, html {
   font-size: 16px;
 }
 
+.top-right-button {
+  position: absolute; /* Allows precise placement */
+  top: 10px;          /* Distance from the top */
+  right: 10px;        /* Distance from the right */
+  z-index: 1000;      /* Ensures it stays on top of other elements */
+}
+
 /* Team stats container */
 .team-stats-container {
   /*background: url('../../images/HRALogo.png') no-repeat center center;*/
@@ -47,12 +54,12 @@ body, html {
   background-image: url('../../images/basketballIMG.jpg');
   background-size: cover;
   background-repeat: no-repeat;
-  height: 100vh;
-  width: 100vw;
+  height: calc(100%);
+  width: calc(100%);
   z-index: 0;
   display: flex;
   flex-direction: column;
-  padding: 150px;
+  padding: 50px;
   position: relative;
 }
 
@@ -72,7 +79,7 @@ body, html {
 .content-wrapper {
   display: flex;
   justify-content: flex-end; /* Aligns content to the right */
-  margin-bottom: 100px; /* Space for tempo cards at bottom */
+  margin-bottom: 2%; /* Space for tempo cards at bottom */
 }
 
 /* Charts container */
@@ -81,33 +88,44 @@ body, html {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-width: calc(150% - 20px);
+  max-width: calc(95%);
+  margin: auto;
   margin-top: 10px;
   background-color: rgba(63, 68, 68, .7);
   padding: 20px;
   border-radius: 8px;
-  margin-bottom: 60px; /* Reduced from 40px to bring tempo cards closer */
-  height: 340px; /* Reduced height */
 }
 
 /* Selectors section */
 .selectors {
-  padding: 10px;
+  /* You can keep this as a column container if you like,
+     but we’ll nest rows inside for clarity */
   display: flex;
-  justify-content: space-between;
-  margin-top: -90px;
-  margin-bottom: 10px;
-  background-color: rgba(63, 68, 68, .7);
-  color: var(--text-color-light);
+  flex-direction: column;
+  gap: 1rem;
+  padding: 10px;
+  background-color: rgba(63, 68, 68, 0.7);
   border-radius: 10px;
+  margin-bottom: 2%;
+}
+
+/* Each "row" is a horizontal flex container */
+.row {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+/* Each "column" represents a vertical stack for label + select */
+.column {
+  flex: 1; /* Grow/shrink equally */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Align top if needed */
 }
 
 /* Tempo stats section (fixed at the bottom) */
 .tempo-stats {
-  position: fixed;
-  bottom: 15px;
-  left: 150px;
-  right: 135px;
   display: flex;
   justify-content: space-between;
   background-color: rgba(63, 68, 68, .7);
@@ -139,10 +157,11 @@ body, html {
   justify-content: center;
   margin: auto;
   padding: 10px;
-  width: calc(200% - 1410px);
+  width: calc(95%);
   border: 0px solid #ccc;
   border-radius: 10px;
   background-color: rgba(63, 68, 68, .7);
+  margin-bottom: 2%;
 }
 
 /* Team leaders section title */
