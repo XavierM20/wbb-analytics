@@ -138,6 +138,7 @@ function TeamStats() {
         })
       }
       fetchShots(games[0]._id)
+      fetchTempos(games[0]._id)
     } catch (error) {
       console.error('Failed to fetch games ', error)
     }

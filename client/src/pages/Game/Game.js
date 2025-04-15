@@ -420,7 +420,7 @@ const Game = () => {
         setShotEvents(newShotEvents);
 
         // Submit the temp event to the database
-        const tempoData = await submitTempo((tempoType === 'offensive' ? 'defensive' : 'offensive'), playersOnCourt.map(player => player.id), currentTempo);
+        const tempoData = await submitTempo('offensive', playersOnCourt.map(player => player.id), currentTempo);
 
         // Update tempoEvents locally with the new tempo event
         const newTempoEvents = [...tempoEventIds, tempoData];
@@ -511,6 +511,8 @@ const Game = () => {
     const myTeamScore = (points) => {
         setMyScore(prevScore => prevScore + points);
 
+        // Add tempo Logic
+
         // Patch the game in the database with the new score
         const updatedScore = {
             season_id: seasonData._id,
@@ -536,8 +538,16 @@ const Game = () => {
     }
 
     // Function that adds points to the team score
-    const opposingTeamScore = (points) => {
+    const opposingTeamScore = async (points) => {
         setOpponentScore(prevScore => prevScore + points);
+
+        setIsTiming(false);
+        console.log(currentTempo);
+        const tempoData = await submitTempo('defensive', playersOnCourt.map(player => player.id), currentTempo);
+        
+        // Update tempoEvents locally with the new tempo event
+        const newTempoEvents = [...tempoEventIds, tempoData];
+        setTempoEventIds(newTempoEvents);
         
         // Patch the game in the database with the new score
         const updatedScore = {
@@ -545,7 +555,7 @@ const Game = () => {
             date: date,
             opponent: opponentTeam,
             location: location,
-            tempo_events: tempoEventIds,
+            tempo_events: newTempoEvents,
             shot_events: shotEvents,
             score: {
                 team: myScore,
@@ -665,24 +675,54 @@ const Game = () => {
         setRecordedTempo(currentTempo);
 
         // Determine if tempo is offensive or defensive
-        const isOffensive = (tempoType === 'offensive') ? true : false;
+        const isOffensive = tempoType;
 
         // Get the IDs of the players on the court
         const playersOnCourtIds = playersOnCourt.map(player => player.id);
 
         // Call submitTempo with the correct arguments
         let newTempoID = await submitTempo(isOffensive, playersOnCourtIds, currentTempo);
+
+        // Patch game with new tempoID
+        const newTempoEvents = [...tempoEventIds, newTempoID];
+        setTempoEventIds(newTempoEvents);
+
+        console.log(newTempoEvents);
+      
+        // Patch game in database using the locally computed values
+        const updatedScore = {
+          season_id: seasonData._id,
+          date: date,
+          opponent: opponentTeam,
+          location: location,
+          tempo_events: newTempoEvents,
+          shot_events: shotEvents, // Use the updated array
+          score: {
+            team: myScore, // Use the new score calculated locally
+            opponent: opponentScore
+          },
+          team_logo: imageID,
+        };
+      
+        await fetch(`${serverUrl}/api/games/${gameData}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedScore)
+        });
     };
 
     // Add functionality for submit tempo
     const submitTempo = async (isOffensive, playersOnCourtIds, tempo) => {
-        console.log(`Submitting ${isOffensive ? 'offensive' : 'defensive'} tempo`);
+        console.log(isOffensive);
+        console.log(`Submitting ${isOffensive} tempo`);
         
         const tempoEvent = {
             gameOrDrill_id: gameData,
             onModel: 'Game',
             player_ids: playersOnCourtIds,
-            tempo_type: isOffensive ? 'offensive' : 'defensive',
+            tempo_type: isOffensive,
             transition_time: tempo.toFixed(2),
             timestamp: new Date().toISOString()
         };
