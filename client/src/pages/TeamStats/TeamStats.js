@@ -86,10 +86,13 @@ function TeamStats() {
     ],
   });
 
-  useEffect(async () => {
-    await fetchSeasons(); // Fetch seasons data when the component mounts
-    
-  }, []); // Empty dependency array ensures this runs only once
+  useEffect(() => {
+    async function fetchData() {
+      await fetchSeasons();
+    }
+    fetchData();
+  }, []);
+  
 
   // --- Data Fetching Functions ---
 
@@ -122,9 +125,15 @@ function TeamStats() {
     try {
       const response = await fetch(`${serverUrl}/api/practices/bySeason/${seasonId}`);
       const data = await response.json(); // Parse the response as JSON
-      setPractices(data); // Update the practices state with the fetched data
+      //setPractices(data); // Update the practices state with the fetched data
       if (data.length > 0) {
+        // Add each practice to the practices state
+        data.forEach((practice) => {
+          setPractices((prevPractices) => [...prevPractices, { value: practice._id, label: practice.date }]); // Add each practice to the practices state
+        })
+
         setSelectedPractice(data[0]._id); // Select the first practice by default
+        console.log(data[0]._id);
         fetchDrills(data[0]._id); // Fetch drills for the selected practice
       }
     } catch (error) {
@@ -138,10 +147,14 @@ function TeamStats() {
    */
   const fetchDrills = async (practiceId) => {
     try {
+      console.log(practiceId);
       const response = await fetch(`${serverUrl}/api/drills/practice/${practiceId}`); // Fetch drills for the given practice ID
       const data = await response.json(); // Parse the response as JSON
       setDrills(data); // Update the drills state with the fetched data
       if (data.length > 0) {
+        data.forEach((drill) => {
+          setDrills((prevDrill) => [...prevDrill, { value: drill._id, label: drill.name }]); // Add each practice to the practices state
+        })
         setSelectedDrill(data[0]._id); // Select the first drill by default
         fetchTempos(data[0]._id); // Fetch tempos for the selected drill
         fetchShots(data[0]._id); // Fetch shots for the selected drill
