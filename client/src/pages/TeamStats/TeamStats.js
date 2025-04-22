@@ -4,6 +4,7 @@ import Chart from 'chart.js/auto'; // Auto-import necessary for Chart.js to func
 import { useNavigate } from 'react-router-dom'; // Hook for navigating between routes
 import './TeamStats.css'; // Import the CSS file for styling
 import Selector from './components/Selector'; // Custom component for selection dropdowns
+import TeamLeader from './components/teamLeader'; // Displays team leaders - not currently used, but kept as import
 import ShotsByClock from './components/ShotsByClock'; // Displays shots by clock - not currently used, but kept as import
 import StatCard from './components/StatsDisplay'; // Displays stat cards - not currently used, but kept as import
 import TempoCard from './components/TempoCard'; // Displays tempo stats - not currently used, but kept as import
@@ -77,6 +78,15 @@ function TeamStats() {
   const [avgOffensiveTempo, setAvgOffensiveTempo] = useState(0); // State for storing the average offensive tempo
   const [avgDefensiveTempo, setAvgDefensiveTempo] = useState(0); // State for storing the average defensive tempo
   const navigate = useNavigate(); // Hook for navigating between routes
+
+  // States for storing team leaders data
+  const [pointsLeader, setPointsLeader] = useState(null); // State for storing points leader data
+  const [reboundsLeader, setReboundsLeader] = useState(null); // State for storing rebounds leader data
+  const [assistsLeader, setAssistsLeader] = useState(null); // State for storing assists leader data
+  const [stealsLeader, setStealsLeader] = useState(null); // State for storing steals leader data
+  const [blocksLeader, setBlocksLeader] = useState(null); // State for storing blocks leader data
+
+
   const [barChartData, setBarChartData] = useState({
     // State for storing bar chart data
     labels: ['1', '2', '3', '4', '5', '6', '7', '8'], // Initial labels for the zones
@@ -115,7 +125,7 @@ function TeamStats() {
         })
 
         setSelectedSeason(data[0]._id); // Select the first season by default
-        fetchPractices(data[0]._id); // Fetch practices for the selected season
+        //fetchPractices(data[0]._id); // Fetch practices for the selected season
         return data[0]._id
       }
     } catch (error) {
@@ -139,6 +149,7 @@ function TeamStats() {
       }
       fetchShots(games[0]._id)
       fetchTempos(games[0]._id)
+      fetchTeamLeaders(games[0]._id)
     } catch (error) {
       console.error('Failed to fetch games ', error)
     }
@@ -185,11 +196,40 @@ function TeamStats() {
         setSelectedDrill(data[0]._id); // Select the first drill by default
         fetchTempos(data[0]._id); // Fetch tempos for the selected drill
         fetchShots(data[0]._id); // Fetch shots for the selected drill
+        fetchTeamLeaders(data[0]._id); // Fetch team leaders for the selected drill
       }
     } catch (error) {
       console.error('Failed to fetch drills:', error); // Log any errors to the console
     }
   };
+
+  const fetchTeamLeaders = async (gameOrDrillId) => {
+    try {
+      // Fetch team leaders for the given game or drill ID
+      const response = await fetch(`${serverUrl}/api/stats/teamLeaders/byGameOrDrillId/${gameOrDrillId}`);
+      const data = await response.json(); // Parse the response as JSON
+      console.log('fetching team leaders')
+
+      // Process the fetched data to display team leaders
+      if (data.length > 0) {
+        data.forEach((leader) => {
+          if (leader.statType === 'points') {
+            setPointsLeader(leader); // Set points leader
+          } else if (leader.statType === 'total_rebounds') {
+            setReboundsLeader(leader); // Set rebounds leader
+          } else if (leader.statType === 'assists') {
+            setAssistsLeader(leader); // Set assists leader
+          } else if (leader.statType === 'steals') {
+            setStealsLeader(leader); // Set steals leader
+          } else if (leader.statType === 'blocks') {
+            setBlocksLeader(leader); // Set blocks leader
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Failed to fetch team leaders:', error); // Log any errors to the console
+    }
+  }
 
   /**
    * Fetches tempos data for a given drill ID.
@@ -335,6 +375,7 @@ function TeamStats() {
     setSelectedDrill(newSelectedDrill); // Update the selected drill state
     fetchTempos(newSelectedDrill); // Fetch tempos for the selected drill
     fetchShots(newSelectedDrill); // Fetch shots for the selected drill
+    fetchTeamLeaders(newSelectedDrill); // Fetch team leaders for the selected drill
   };
 
   const handleGameChange = (e) => {
@@ -342,6 +383,7 @@ function TeamStats() {
     setSelectedGame(newSelectedGame); // Update the selected game state
     fetchTempos(newSelectedGame)
     fetchShots(newSelectedGame)
+    fetchTeamLeaders(newSelectedGame)
   }
 
   // --- Render ---
@@ -410,61 +452,48 @@ function TeamStats() {
         </div>
       </div>
       {/* Team Leaders Section */}
-      <div className="team-leaders">
-        <h3>Team Leaders</h3>
-        <div className="leader-container">
-          <div className="leader-category">
-            <h4>Points</h4>
-            <img src="profile-placeholder.png" alt="Player Image" />
-            <p>
-              <strong>Reghan Grimes G</strong>
-            </p>
-            <p className="stat">12.0</p>
-          </div>
-          <div className="leader-category">
-            <h4>Rebounds</h4>
-            <img src="profile-placeholder.png" alt="Player Image" />
-            <p>
-              <strong>Anna Walker F</strong>
-            </p>
-            <p className="stat">9.2</p>
-          </div>
-          <div className="leader-category">
-            <h4>Assists</h4>
-            <img src="profile-placeholder.png" alt="Player Image" />
-            <p>
-              <strong>Peyton Carter G</strong>
-            </p>
-            <p className="stat">3.2</p>
-          </div>
-          <div className="leader-category">
-            <h4>Steals</h4>
-            <img src="profile-placeholder.png" alt="Player Image" />
-            <p>
-              <strong>Reghan Grimes G</strong>
-            </p>
-            <p className="stat">2.5</p>
-          </div>
-          <div className="leader-category">
-            <h4>Blocks</h4>
-            <img src="profile-placeholder.png" alt="Player Image" />
-            <p>
-              <strong>Anna Walker F</strong>
-            </p>
-            <p className="stat">2.2</p>
+      <div className="dashboard">
+        <div className="team-leaders">
+          <h3>Team Leaders</h3>
+          <div className="leader-container">
+            {pointsLeader ? (
+              <TeamLeader leader={pointsLeader} label='Points'/>
+            ) : (
+              <div className="team-leader">No leader data available</div>
+            )}
+            {reboundsLeader ? (
+              <TeamLeader leader={reboundsLeader} label='Rebounds'/>
+            ) : (
+              <div className="team-leader">No leader data available</div>
+            )}
+            {assistsLeader ? (
+              <TeamLeader leader={assistsLeader} label='Assists'/>
+            ) : (
+              <div className="team-leader">No leader data available</div>
+            )}
+            {stealsLeader ? (
+              <TeamLeader leader={stealsLeader} label='Steals'/>
+            ) : (
+              <div className="team-leader">No leader data available</div>
+            )}
+            {blocksLeader ? (
+              <TeamLeader leader={blocksLeader} label='Blocks'/>
+            ) : (
+              <div className="team-leader">No leader data available</div>
+            )}
           </div>
         </div>
-      </div>
 
-      {/* Content wrapper for charts and other content */}
-      <div className="content-wrapper">
-        <div className="other-content">
-          {/* Add other content here if needed */}
-        </div>
+        {/* Content wrapper for charts and other content */}
+        <div className="content-wrapper">
+          <div className="other-content">
+            {/* Add other content here if needed */}
+          </div>
 
-        {/* Bar chart displaying shot percentages by zone */}
-        <div className="charts-container">
-          <Bar data={barChartData} options={chartOptions} />
+          {/* Bar chart displaying shot percentages by zone */}
+          <div className="charts-container">
+            <Bar data={barChartData} options={chartOptions} />
+          </div>
         </div>
       </div>
 

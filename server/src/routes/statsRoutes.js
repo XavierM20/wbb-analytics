@@ -542,4 +542,109 @@ router.delete('/:id', isAuthenticated, async (req, res) => {
     }
 });
 
+router.get('/teamLeaders/byGameOrDrillId/:gameOrDrillId', isAuthenticated, async (req, res) => {
+    try {
+        // First, find all shots for the given gameOrDrillId
+        const id = new mongoose.Types.ObjectId(req.params.gameOrDrillId);
+        const shots = await Shots.find({ gameOrDrill_id: id });
+        if (!shots.length) {
+            return res.status(404).json({ message: 'No shots found for the given gameOrDrillId' });
+        }
+
+        // Create a map to count points for each player
+        const playerPoints = {};
+        shots.forEach(shot => {
+            const playerId = shot.player_id;
+            if (!playerPoints[playerId]) {
+                playerPoints[playerId] = 0;
+            }
+            if (shot.made) {
+                if (shot.zone == 6 || shot.zone == 7 || shot.zone == 8) {
+                    playerPoints[playerId] += 3; // Assuming 3 points for made shots in zone 6, 7, or 8
+                } else {
+                    playerPoints[playerId] += 2; // Assuming 2 points for made shots in other zones
+                }
+            }
+        });
+
+        // Convert the map to an array of objects
+        const playerPointsArray = Object.keys(playerPoints).map(playerId => ({
+            player_id: playerId,
+            statType: 'points',
+            statValue: playerPoints[playerId]
+        }));
+
+        // Sort the array by points in descending order
+        playerPointsArray.sort((a, b) => b.points - a.points);
+
+        // Get the top player
+        const topPointsPlayer = playerPointsArray[0] || null;
+        if (topPointsPlayer) {
+            // Find the player details using player_id
+            const playerDetails = await Player.findById(topPointsPlayer.player_id); // Assuming you have a Player model
+            if (playerDetails) {
+                topPointsPlayer.player = playerDetails;
+            }
+        }
+
+        //res.json({ topPointsPlayer });
+        // Next get the leader for each stat
+        const topStats = await Stats.aggregate([
+            { $match: { gameOrDrill_id: id } },
+          
+            // Project a single "total_rebounds" instead of two separate fields
+            { $project: {
+                player_id: 1,
+                stats: [
+                  {
+                    statType: "total_rebounds",
+                    value: { $add: [ "$offensive_rebounds", "$defensive_rebounds" ] }
+                  },
+                  { statType: "assists",   value: "$assists"    },
+                  { statType: "steals",    value: "$steals"     },
+                  { statType: "blocks",    value: "$blocks"     },
+                  // …and any others you still want
+                ]
+              }
+            },
+          
+            { $unwind: "$stats" },
+            { $sort:  { "stats.statType": 1, "stats.value": -1 } },
+            { $group: {
+                _id:       "$stats.statType",
+                player_id: { $first: "$player_id" },
+                statValue: { $first: "$stats.value" }
+              }
+            },
+            { $lookup: {
+                from:         "players",
+                localField:   "player_id",
+                foreignField: "_id",
+                as:           "player"
+              }
+            },
+            { $unwind: "$player" },
+            { $project: {
+                _id:       0,
+                statType:  "$_id",
+                statValue: 1,
+                player: {
+                  _id:  "$player._id",
+                  name: "$player.name"
+                }
+              }
+            }
+          ]);
+        
+        // 3) Combine the results
+        const result = [];
+        if (topPointsPlayer) result.push(topPointsPlayer);
+        result.push(...topStats);
+
+        return res.json(result);
+    } catch (err) {
+        res.status(500).json({ message: 'Internal server error', error: err.message });
+    }
+});
+
 module.exports = router;
