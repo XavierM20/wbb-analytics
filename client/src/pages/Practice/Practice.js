@@ -61,7 +61,9 @@ const Practice = () => {
                 try {
                     const response = await fetch(serverUrl + '/api/practices', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
                         body: JSON.stringify(practiceData),
                     });
                     const data = await response.json();
@@ -88,7 +90,9 @@ const Practice = () => {
             try {
                 const response = await fetch(serverUrl + `/api/practices/${SessionData._id}`, {
                     method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
                     body: JSON.stringify(practiceData),
                 });
                 if (!response.ok) throw new Error('Network response was not ok');
@@ -110,7 +114,9 @@ const Practice = () => {
         try {
             const response = await fetch(serverUrl + '/api/drills', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                },
                 body: JSON.stringify(drillData),
             });
             if (!response.ok) throw new Error('Network response was not ok');
@@ -130,10 +136,13 @@ const Practice = () => {
                     blocks: 0,
                     turnovers: 0,
                 };
+
                 try {
                     await fetch(serverUrl + '/api/stats', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
                         body: JSON.stringify(statsData),
                     });
                 } catch (error) {
@@ -149,9 +158,15 @@ const Practice = () => {
         try {
             const response = await fetch(`${serverUrl}/api/drills/${drill._id}`, {
                 method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: drill.name, practice_id: SessionData._id }),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: drill.name,
+                    practice_id: SessionData._id,
+                }),
             });
+
             if (!response.ok) throw new Error('Network response was not ok');
 
             const updatedDrill = await response.json();
@@ -190,13 +205,15 @@ const Practice = () => {
                     <Players
                         listA={listA}
                         setListA={player => {
-                            setListA([...listA, player]);
-                            setListB(prev => prev.filter(p => p._id !== player._id));
+                            if (!listB.some(p => p._id === player._id)) {
+                                setListA([...listA, player]);
+                            }
                         }}
                         listB={listB}
                         setListB={player => {
-                            setListB([...listB, player]);
-                            setListA(prev => prev.filter(p => p._id !== player._id));
+                            if (!listA.some(p => p._id === player._id)) {
+                                setListB([...listB, player]);
+                            }
                         }}
                         playerDataA={playerData ? playerData.filter(player => !listB.some(p => p._id === player._id)) : []}
                         playerDataB={playerData ? playerData.filter(player => !listA.some(p => p._id === player._id)) : []}
@@ -210,3 +227,4 @@ const Practice = () => {
 };
 
 export default Practice;
+
