@@ -27,7 +27,9 @@ const Practice = () => {
             }
 
             const currentDate = new Date();
-            const newDate = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
+            const newDate = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1)
+                .toString()
+                .padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
             setDate(newDate);
         };
 
@@ -45,35 +47,38 @@ const Practice = () => {
         const year1 = Math.min(year, computedYear).toString();
         const year2 = Math.max(year, computedYear).toString();
 
-        const seasonResponse = await fetch(`${serverUrl}/api/seasons/endYear/${year2}/${sessionStorage.getItem('schoolID')}`);
+        // Get the current season for this school
+        const seasonResponse = await fetch(`${process.env.REACT_APP_SERVER_URL}/api/seasons/endYear/${year2}/${sessionStorage.getItem('schoolID')}`);
         const seasonData = await seasonResponse.json();
-        return seasonData;
+        return seasonData
     };
 
     useEffect(() => {
         if (SeasonData && date) {
-            const practiceData = {
-                season_id: SeasonData._id,
-                date: date,
-            };
+            if (SeasonData) {
+                const practiceData = {
+                    season_id: SeasonData._id,
+                    date: date,
+                };
 
-            const createPracticeSession = async () => {
-                try {
-                    const response = await fetch(serverUrl + '/api/practices', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(practiceData),
-                    });
-                    const data = await response.json();
-                    setSessionData(data);
-                } catch (error) {
-                    console.error('Error creating practice:', error);
-                }
-            };
+                const createPracticeSession = async () => {
+                    try {
+                        const response = await fetch(serverUrl + '/api/practices', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(practiceData),
+                        });
+                        const data = await response.json();
+                        setSessionData(data);
+                    } catch (error) {
+                        console.error('Error creating practice:', error);
+                    }
+                };
 
-            createPracticeSession();
+                createPracticeSession();
+            }
         }
     }, [SeasonData, date]);
 
@@ -104,6 +109,25 @@ const Practice = () => {
         } else {
             console.log('Please add drills to the practice');
         }
+    };
+
+    const getSeasonByDate = () => {
+        let finalYear;
+        const currentDate = new Date();
+        const month = currentDate.getMonth() + 1;
+        const day = currentDate.getDate();
+        const year = currentDate.getFullYear();
+
+        const year1 = year.toString();
+        const year2 = ((month < 8 || (month === 8 && day < 2)) ? year - 1 : year + 1).toString();
+
+        if (month >= 8) {
+            finalYear = SeasonData.find(season => season.year === year1 + '-' + year2);
+        } else {
+            finalYear = SeasonData.find(season => season.year === year2 + '-' + year1);
+        }
+
+        return finalYear;
     };
 
     const addDrill = async drill => {
@@ -138,13 +162,14 @@ const Practice = () => {
                 };
 
                 try {
-                    await fetch(serverUrl + '/api/stats', {
+                    const response = await fetch(serverUrl + '/api/stats', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                         },
                         body: JSON.stringify(statsData),
                     });
+                    if (!response.ok) throw new Error('Network response was not ok');
                 } catch (error) {
                     console.error('Failed to add stats:', error);
                 }
@@ -179,7 +204,7 @@ const Practice = () => {
     const createPractice = async () => {
         await updatePractice();
         navigate(`/drill`);
-    };
+    }
 
     return (
         <div className="practice-container">
@@ -187,44 +212,41 @@ const Practice = () => {
             <div className="create-sessions-container">
                 <div className="drills-column">
                     <div className="drill-buttons">
-                        <h2>Drills</h2>
-                        <DrillButtons
-                            drills={drills}
-                            setDrills={setDrills}
-                            onAddDrill={addDrill}
-                            onUpdateDrill={updateDrill}
-                            practiceID={SessionData._id}
-                        />
+                        <>
+                            <h2>Drills</h2>
+                            <DrillButtons
+                                drills={drills}
+                                setDrills={setDrills}
+                                onAddDrill={addDrill}
+                                onUpdateDrill={updateDrill}
+                                practiceID={SessionData._id}
+                            />
+                        </>
                     </div>
+
                     <div className="session-information">
-                        <h2>Date</h2>
-                        <SessionButtons setDate={setDate} />
+                        <>
+                            <h2>Date</h2>
+                            <SessionButtons setDate={setDate} />
+                        </>
                     </div>
                 </div>
                 <div className="lists-column">
                     <Players
                         listA={listA}
-                        setListA={player => {
-                            if (!listB.some(p => p._id === player._id)) {
-                                setListA([...listA, player]);
-                            }
-                        }}
+                        setListA={setListA}
                         listB={listB}
-                        setListB={player => {
-                            if (!listA.some(p => p._id === player._id)) {
-                                setListB([...listB, player]);
-                            }
-                        }}
-                        playerDataA={playerData ? playerData.filter(player => !listB.some(p => p._id === player._id)) : []}
-                        playerDataB={playerData ? playerData.filter(player => !listA.some(p => p._id === player._id)) : []}
+                        setListB={setListB}
+                        playerData={playerData}
                         setPlayerData={setPlayerData}
                     />
                 </div>
             </div>
             <button onClick={createPractice} className="create-session-button">Create Practice</button>
+            {/*onClick={updatePractice}>//
+            //</div>Create Practice*/}
         </div>
     );
 };
 
 export default Practice;
-
