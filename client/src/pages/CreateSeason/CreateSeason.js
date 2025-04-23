@@ -67,8 +67,24 @@ function CreateSeason() {
       return;
     }
 
+    const payload = {
+      name: activePlayer.name,
+      jersey_number: jerseyNumberInt,
+      position: activePlayer.position,
+    }
+
     const updatedPlayers = [...players];
-    if (editIndex >= 0) updatedPlayers[editIndex] = { ...activePlayer, jersey_number: jerseyNumberInt };
+    if (editIndex >= 0) {
+      updatedPlayers[editIndex] = { ...activePlayer, jersey_number: jerseyNumberInt };
+      // Update the player in the database
+      fetch(`${serverUrl}/api/players/${updatedPlayers[editIndex]._id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      })
+    }
     else updatedPlayers.push({ ...activePlayer, jersey_number: jerseyNumberInt });
 
     setPlayers(updatedPlayers);
@@ -77,7 +93,11 @@ function CreateSeason() {
   };
 
   const editPlayer = (index) => {
-    setActivePlayer(players[index]);
+    const p = players[index];
+    setActivePlayer({
+      ...p,
+      jersey_number: p.jersey_number.toString(),
+    });
     setEditIndex(index);
   };
 
