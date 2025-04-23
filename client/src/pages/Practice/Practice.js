@@ -198,8 +198,8 @@ const Practice = () => {
                             setListB([...listB, player]);
                             setListA(prev => prev.filter(p => p._id !== player._id));
                         }}
-                        playerDataA={playerData.filter(player => !listB.some(p => p._id === player._id))}
-                        playerDataB={playerData.filter(player => !listA.some(p => p._id === player._id))}
+                        playerDataA={playerData ? playerData.filter(player => !listB.some(p => p._id === player._id)) : []}
+                        playerDataB={playerData ? playerData.filter(player => !listA.some(p => p._id === player._id)) : []}
                         setPlayerData={setPlayerData}
                     />
                 </div>
