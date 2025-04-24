@@ -48,12 +48,10 @@ const Players = ({ listA, setListA, listB, setListB, playerData, setPlayerData }
             const updatedListA = [...listA];
             updatedListA.splice(index, 1);
             setListA(updatedListA);
-            console.log(`Removed player from Team A at index ${index}`);
         } else if (team === 'B') {
             const updatedListB = [...listB];
             updatedListB.splice(index, 1);
             setListB(updatedListB);
-            console.log(`Removed player from Team B at index ${index}`);
         }
     };
 
@@ -62,6 +60,7 @@ const Players = ({ listA, setListA, listB, setListB, playerData, setPlayerData }
             try {
                 const response = await fetch(serverUrl + '/api/players');
                 const data = await response.json();
+                console.log('Fetched players:', data);
 
                 const defaultListA = data.slice(0, 5).map(player => ({ _id: player._id, playerName: player.name }));
                 const defaultListB = data.slice(5, 10).map(player => ({ _id: player._id, playerName: player.name }));
@@ -70,15 +69,38 @@ const Players = ({ listA, setListA, listB, setListB, playerData, setPlayerData }
                 setListB(defaultListB);
                 setPlayerData(data);
             } catch (error) {
-                console.error('Failed to fetch players:', error);
+                console.error('Failed to fetch players, using mock data:', error);
+
+                // 🔧 Fallback to mock data
+                const mockData = [
+                    { _id: '1', name: 'Player 1' },
+                    { _id: '2', name: 'Player 2' },
+                    { _id: '3', name: 'Player 3' },
+                    { _id: '4', name: 'Player 4' },
+                    { _id: '5', name: 'Player 5' },
+                    { _id: '6', name: 'Player 6' },
+                    { _id: '7', name: 'Player 7' },
+                    { _id: '8', name: 'Player 8' },
+                    { _id: '9', name: 'Player 9' },
+                    { _id: '10', name: 'Player 10' }
+                ];
+
+                const defaultListA = mockData.slice(0, 5).map(player => ({ _id: player._id, playerName: player.name }));
+                const defaultListB = mockData.slice(5, 10).map(player => ({ _id: player._id, playerName: player.name }));
+
+                setListA(defaultListA);
+                setListB(defaultListB);
+                setPlayerData(mockData);
             }
         };
 
         fetchData();
     }, []);
 
-    // Show loading message until data is available
-    if (!playerData || !listA || !listB) return <div>Loading players...</div>;
+    // ⏳ Loading guard
+    if (!playerData?.length || !Array.isArray(listA) || !Array.isArray(listB)) {
+        return <div>Loading players...</div>;
+    }
 
     return (
         <>
