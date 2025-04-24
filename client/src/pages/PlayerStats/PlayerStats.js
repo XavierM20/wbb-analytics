@@ -178,12 +178,6 @@ useEffect(() => {
       value: drill._id.toString(),
     })));
 
-  if (selectedDrill) {
-    // Filter tempos for the selected drill
-    updateTempoData();
-    // Filter shots for the selected drill
-    updateShotData();
-  }
 }, [selectedSession, selectedDrill, allDrills, allTempos, allShots]);
 
   const pointSectionLabels = ["2 pt FG %", "3 pt FG %"]; //This is for the shot point data
@@ -253,8 +247,8 @@ useEffect(() => {
 
     //Immediately filter tempos for the newly selected drill
     updateTempoData();
-    updateShotData();
-    const drillStats = allStats.find(stats => stats.drill_id === newDrillId);
+    const drillStats = allStats.find(stats => stats.gameOrDrill_id === newDrillId);
+    console.log(statsData)
     setStatsData(drillStats);
     console.log(drillStats)
   };
@@ -476,89 +470,6 @@ useEffect(() => {
     }
     setAvgOffensiveTempo(numOffensive > 0 ? (sumOffensiveTempo / numOffensive).toFixed(2) : 0); //Checks if there are any tempos to average
     setAvgDefensiveTempo(numDefensive > 0 ? (sumDefensiveTempo / numDefensive).toFixed(2) : 0);
-  };
-
-  /*
-    This function updates the shot data for the selected drill.
-
-    It filters the shot data for a given player by the selected drill and then updates the shot clock data for the player.
-  */
-  const updateShotData = () => {
-    //var time = performance.now()
-    const shotsForDrill = allShots.filter(shot => shot.gameOrDrill_id === selectedDrill);
-    setFilteredShots(shotsForDrill);
-    //console.log(selectedDrill)
-    //console.log(shotsForDrill)
-    //FG = total # shots made over total # shots attempted
-    // 6 7 and 8 are 3-point
-    var shotClockDat = [[0, 0], [0, 0], [0, 0]]; //This is a two-dimensional array that has the third in the first index, and the number of made shots and number of total shots in the second index. So, shotDat[0][0] is the shots *made* in the first third, and shotDat[0][1] is the shots attempted.
-    var shotPointDat = [[0,0],[0,0]]; //This is a two-dimensional array that has the number of made # point shots in the first column and the total number of # point shots attempted in the second. The first row is 2-point shots and the second row is 3-point shots
-    var shotCountsByZone = {};
-    var shotPoints = 0;
-
-    for(var i = 1; i < 9; i++)
-      shotCountsByZone[i] = {made: 0, total: 0}; //This is gross and allows the bar graph to display all zones, even when no shots are made in a zone.  
-
-    for(var i = 0; i < shotsForDrill.length; i++){
-      if(shotsForDrill[i].zone < 6){
-        shotPointDat[0][1]++;
-        if(shotsForDrill[i].made){
-          shotPointDat[0][0]++;
-          shotPoints += 2;
-        }
-      }
-      else if(shotsForDrill[i].zone >= 6 && shotsForDrill[i].zone < 9){
-        shotPointDat[1][1]++;
-        if(shotsForDrill[i].made){
-          shotPointDat[1][0]++;
-          shotPoints += 3;
-        }
-      }
-      if (!shotCountsByZone[shotsForDrill[i].zone]) {
-        shotCountsByZone[shotsForDrill[i].zone] = { made: 0, total: 0 };
-      }
-      shotCountsByZone[shotsForDrill[i].zone].total += 1;
-      if (shotsForDrill[i].made) {
-        shotCountsByZone[shotsForDrill[i].zone].made += 1;
-      }
-      switch(shotsForDrill[i].shot_clock_time){ //The options are "first_third", "second_third", and "final_third" for some reason
-        case "first_third":
-          shotClockDat[0][1]++;
-          if(shotsForDrill[i].made)
-            shotClockDat[0][0]++;
-          break;
-        case "second_third":
-          shotClockDat[1][1]++;
-          if(shotsForDrill[i].made)
-            shotClockDat[1][0]++;
-          break;
-        case "final_third":
-          shotClockDat[2][1]++;
-          if(shotsForDrill[i].made)
-            shotClockDat[2][0]++;
-          break;
-        default:
-          console.log("Error: Shot clock time not recognized " + shotsForDrill[i].shot_clock_time);
-      }
-    }
-    setShotClockData(shotClockDat);
-    setShotPointData(shotPointDat);
-    setShotPoints(shotPoints);
-
-    console.log(shotCountsByZone)
-
-    const labels = [];
-    const data = [];
-
-    Object.keys(shotCountsByZone).sort().forEach(zone => {
-      labels.push(`Zone ${zone}`);
-      const { made, total } = shotCountsByZone[zone];
-      const percentage = total > 0 ? (made / total) * 100 : 0;
-      data.push(percentage.toFixed(2)); // Keep only two decimal places
-    });
-
-    //var end = performance.now()
-    //console.log("Time to update shot data: " + (end - time))
   };
 
   const fetchPlayerData = async (playerID) => {
