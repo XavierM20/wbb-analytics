@@ -6,7 +6,7 @@ const Players = ({ listA, setListA, listB, setListB, playerData, setPlayerData }
     const navigate = useNavigate();
     const location = useLocation();
 
-    let id1 = -1; // Default value so CreateSession can run normally if not directed from OpenSession
+    let id1 = -1;
     if (location.pathname === '/CreateSession') {
         id1 = location.state.ID;
     }
@@ -76,6 +76,9 @@ const Players = ({ listA, setListA, listB, setListB, playerData, setPlayerData }
 
         fetchData();
     }, []);
+
+    // Show loading message until data is available
+    if (!playerData || !listA || !listB) return <div>Loading players...</div>;
 
     return (
         <>
