@@ -1,11 +1,15 @@
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
-
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Players = ({ listA, setListA, listB, setListB, playerData, setPlayerData }) => {
-
     const serverUrl = process.env.REACT_APP_SERVER_URL;
+    const navigate = useNavigate();
+    const location = useLocation();
+
+    let id1 = -1;
+    if (location.pathname === '/CreateSession') {
+        id1 = location.state.ID;
+    }
 
     const handleAddDropdownA = () => {
         const newPlayer = playerData.length > listA.length ? playerData[listA.length].name : `New Player ${listA.length + 1}`;
@@ -16,7 +20,6 @@ const Players = ({ listA, setListA, listB, setListB, playerData, setPlayerData }
         const newPlayer = playerData.length > listB.length ? playerData[listB.length].name : `New Player ${listB.length + 1}`;
         setListB([...listB, { playerName: newPlayer }]);
     };
-
 
     const handlePlayerChange = (team, index, event) => {
         const { value } = event.target;
@@ -45,68 +48,59 @@ const Players = ({ listA, setListA, listB, setListB, playerData, setPlayerData }
             const updatedListA = [...listA];
             updatedListA.splice(index, 1);
             setListA(updatedListA);
-            console.log(`Removed player from Team A at index ${index}`);
-
-        }
-
-        else if (team === 'B') {
+        } else if (team === 'B') {
             const updatedListB = [...listB];
             updatedListB.splice(index, 1);
             setListB(updatedListB);
-            console.log(`Removed player from Team B at index ${index}`);
         }
     };
 
-    const navigate = useNavigate();
-    let id1 = -1; //Defualt value so CreateSession can run normally if not directed from OpenSession
-    const location = useLocation();
-
-    if (location.pathname === '/CreateSession') {
-        id1 = location.state.ID;
-    } // send the session ID to make paramenters for sessionData
-
     useEffect(() => {
-
         const fetchData = async () => {
             try {
-                // First get current Season ID then get players from that season
-                const seasonID = await getSeasonIDByDate()
-                console.log(seasonID);
-                const response = await fetch(serverUrl + `/api/players/bySeason/${seasonID}`);
+                const response = await fetch(serverUrl + '/api/players');
                 const data = await response.json();
+                console.log('Fetched players:', data);
 
-                // Auto-populate the first 5 players for Team A and Team B
                 const defaultListA = data.slice(0, 5).map(player => ({ _id: player._id, playerName: player.name }));
                 const defaultListB = data.slice(5, 10).map(player => ({ _id: player._id, playerName: player.name }));
 
                 setListA(defaultListA);
                 setListB(defaultListB);
-                setPlayerData(data); // Move this line after setting lists to ensure that playerData is set after lists
+                setPlayerData(data);
             } catch (error) {
-                console.error('Failed to fetch players:', error);
+                console.error('Failed to fetch players, using mock data:', error);
+
+                // 🔧 Fallback to mock data
+                const mockData = [
+                    { _id: '1', name: 'Player 1' },
+                    { _id: '2', name: 'Player 2' },
+                    { _id: '3', name: 'Player 3' },
+                    { _id: '4', name: 'Player 4' },
+                    { _id: '5', name: 'Player 5' },
+                    { _id: '6', name: 'Player 6' },
+                    { _id: '7', name: 'Player 7' },
+                    { _id: '8', name: 'Player 8' },
+                    { _id: '9', name: 'Player 9' },
+                    { _id: '10', name: 'Player 10' }
+                ];
+
+                const defaultListA = mockData.slice(0, 5).map(player => ({ _id: player._id, playerName: player.name }));
+                const defaultListB = mockData.slice(5, 10).map(player => ({ _id: player._id, playerName: player.name }));
+
+                setListA(defaultListA);
+                setListB(defaultListB);
+                setPlayerData(mockData);
             }
         };
 
         fetchData();
     }, []);
 
-    const getSeasonIDByDate = async () => {
-        const currentDate = new Date();
-        const month = currentDate.getMonth() + 1;
-        const day = currentDate.getDate();
-        const year = currentDate.getFullYear();
-
-        const computedYear = (month < 8 || (month === 8 && day < 2)) ? year - 1 : year + 1;
-
-        const year1 = Math.min(year, computedYear).toString();
-        const year2 = Math.max(year, computedYear).toString();
-
-        // Get the current season for this school
-        const seasonResponse = await fetch(`${process.env.REACT_APP_SERVER_URL}/api/seasons/endYear/${year2}/${sessionStorage.getItem('schoolID')}`);
-        const seasonData = await seasonResponse.json();
-        return seasonData._id;
-    };
-
+    // ⏳ Loading guard
+    if (!playerData?.length || !Array.isArray(listA) || !Array.isArray(listB)) {
+        return <div>Loading players...</div>;
+    }
 
     return (
         <>
@@ -116,18 +110,23 @@ const Players = ({ listA, setListA, listB, setListB, playerData, setPlayerData }
                     {listA.map((player, index) => (
                         <li key={index} className="player-selection">
                             <select
-                                className='dropdown'
+                                className="dropdown"
                                 value={player.playerName}
                                 onChange={(e) => handlePlayerChange('A', index, e)}
                             >
-                                {playerData.map((p, playerIndex) => (
-                                    <option key={playerIndex} value={p.name}>
-                                        {p.name}
-                                    </option>
-                                ))}
+                                {playerData
+                                    .filter(p =>
+                                        !listB.some(playerB => playerB.playerName === p.name) ||
+                                        player.playerName === p.name
+                                    )
+                                    .map((p, playerIndex) => (
+                                        <option key={playerIndex} value={p.name}>
+                                            {p.name}
+                                        </option>
+                                    ))}
                             </select>
                             <button className="remove-player-button" onClick={() => handleRemovePlayer('A', index)}>
-                                <i className="fas fa-trash"></i> {/* Adds the trash icon */}
+                                <i className="fas fa-trash"></i>
                             </button>
                         </li>
                     ))}
@@ -145,18 +144,23 @@ const Players = ({ listA, setListA, listB, setListB, playerData, setPlayerData }
                     {listB.map((player, index) => (
                         <li key={index} className="player-selection">
                             <select
-                                className='dropdown'
+                                className="dropdown"
                                 value={player.playerName}
                                 onChange={(e) => handlePlayerChange('B', index, e)}
                             >
-                                {playerData.map((p, playerIndex) => (
-                                    <option key={playerIndex} value={p.name}>
-                                        {p.name}
-                                    </option>
-                                ))}
+                                {playerData
+                                    .filter(p =>
+                                        !listA.some(playerA => playerA.playerName === p.name) ||
+                                        player.playerName === p.name
+                                    )
+                                    .map((p, playerIndex) => (
+                                        <option key={playerIndex} value={p.name}>
+                                            {p.name}
+                                        </option>
+                                    ))}
                             </select>
                             <button className="remove-player-button" onClick={() => handleRemovePlayer('B', index)}>
-                                <i className="fas fa-trash"></i> {/* Adds the trash icon */}
+                                <i className="fas fa-trash"></i>
                             </button>
                         </li>
                     ))}
@@ -169,6 +173,6 @@ const Players = ({ listA, setListA, listB, setListB, playerData, setPlayerData }
             </div>
         </>
     );
-}
+};
 
 export default Players;
