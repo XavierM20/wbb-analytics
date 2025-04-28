@@ -13,10 +13,16 @@ import basketballCourtVector from './components/basketball-court-vector.jpg';
 import ExtraStats from './components/ExtraStats';
 import ExtraStatPopup from './components/ExtraStatPopup';
 import { set } from 'mongoose';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 
 function DrillPage() {
+    // TeamA and TeamB state hooks
+    const location = useLocation();
+    const [teamA, setTeamA] = useState(location.state?.TeamA || []);
+    const [teamB, setTeamB] = useState(location.state?.TeamB || []);
+    const [allPlayers, setAllPlayers] = useState([]);
+
     // State hooks for timing and tempo tracking
     const [isTiming, setIsTiming] = useState(false);
     const [resetTimer, setResetTimer] = useState(false);
@@ -32,7 +38,6 @@ function DrillPage() {
     
     // State hooks for player and popup management
     const [playersOnCourt, setPlayersOnCourt] = useState([]);
-    const [allPlayers, setAllPlayers] = useState([]);
     const [isPlayerSelectedforShot, setIsPlayerSelectedforShot] = useState(false);
     const [player, setPlayer] = useState(null);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
@@ -66,20 +71,28 @@ function DrillPage() {
 
     // Fetch players from the server on component mount
     useEffect(() => {
+        console.log(teamA);
+        console.log(teamB);
+    
+        const transformedTeamA = teamA.map(player => ({
+            id: player._id,
+            name: player.playerName,
+            number: player.jersey_number
+        }));
+    
+        const transformedTeamB = teamB.map(player => ({
+            id: player._id,
+            name: player.playerName,
+            number: player.jersey_number
+        }));
+    
+        setAllPlayers([...transformedTeamA, ...transformedTeamB]);
+    }, [teamA, teamB]);
 
-        fetch(serverUrl + '/api/players')
-            .then(response => response.json())
-            .then(data => {
-                const playersData = data.map(player => ({
-                    id: player._id,
-                    name: player.name,
-                    number: player.jersey_number
-                }));
-                setAllPlayers(playersData);
-                setPlayersOnCourt(playersData.slice(0, 5)); // Example: Set the first five players as on court
-            })
-            .catch(error => console.error('Failed to fetch players:', error));
-    }, [serverUrl]);
+    useEffect(() => {
+        console.log(allPlayers);
+        setPlayersOnCourt(allPlayers.splice(0, 5));
+    }, [allPlayers]);
 
     // Function to submit tempo
     const submitTempo = async (isOffensive, playersOnCourtIds, timeValue) => {

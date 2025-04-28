@@ -103,7 +103,9 @@ const Practice = () => {
                 });
                 if (!response.ok) throw new Error('Network response was not ok');
                 const updatedPractice = await response.json();
-                navigate(`/drill?PracticeID=${updatedPractice._id}&DrillID=${drills[0]._id}`);
+                console.log(listA);
+                console.log(listB);
+                navigate(`/drill?PracticeID=${updatedPractice._id}&DrillID=${drills[0]._id}`, { state: {TeamA: listA, TeamB: listB} });
             } catch (error) {
                 console.error('Failed to update practice:', error);
             }

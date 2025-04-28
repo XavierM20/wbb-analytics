@@ -20,9 +20,10 @@ const Players = ({ listA, setListA, listB, setListB, playerData, setPlayerData }
         const { value } = event.target;
 
         if (team === 'A') {
+            console.log(playerData)
             const updatedListA = listA.map((player, i) => {
                 if (i === index) {
-                    return { ...player, playerName: value, _id: playerData.find(p => p.name === value)._id };
+                    return { ...player, playerName: value, _id: playerData.find(p => p.name === value)._id, jersey_number: playerData.find(p => p.name === value).jersey_number };
                 }
                 return player;
             });
@@ -30,7 +31,7 @@ const Players = ({ listA, setListA, listB, setListB, playerData, setPlayerData }
         } else if (team === 'B') {
             const updatedListB = listB.map((player, i) => {
                 if (i === index) {
-                    return { ...player, playerName: value, _id: playerData.find(p => p.name === value)._id };
+                    return { ...player, playerName: value, _id: playerData.find(p => p.name === value)._id, jersey_number: playerData.find(p => p.name === value).jersey_number };
                 }
                 return player;
             });
@@ -67,8 +68,8 @@ const Players = ({ listA, setListA, listB, setListB, playerData, setPlayerData }
                 const response = await fetch(`${serverUrl}/api/players/bySeason/${seasonID}`);
                 const data = await response.json();
 
-                const defaultListA = data.slice(0, 5).map(player => ({ _id: player._id, playerName: player.name }));
-                const defaultListB = data.slice(5, 10).map(player => ({ _id: player._id, playerName: player.name }));
+                const defaultListA = data.slice(0, 5).map(player => ({ _id: player._id, playerName: player.name, jersey_number: player.jersey_number }));
+                const defaultListB = data.slice(5, 10).map(player => ({ _id: player._id, playerName: player.name, jersey_number: player.jersey_number }));
 
                 setListA(defaultListA);
                 setListB(defaultListB);
