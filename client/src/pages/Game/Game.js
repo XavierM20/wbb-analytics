@@ -1122,24 +1122,35 @@ const Game = () => {
                 >
                     <View style={styles.overlay}>
                         <View style={styles.popup}>
-                        {/* Row with Made and Missed buttons */}
-                            <View style={styles.buttonRow}>
-                                <TouchableOpacity style={styles.madeButton} onPress={handleMadeShot}>
-                                <Text style={styles.buttonText}>Made</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.missedButton} onPress={handleMissedShot}>
-                                <Text style={styles.buttonText}>Missed</Text>
-                                </TouchableOpacity>
-                            </View>
-                            {/* Separate row for Cancel button */}
-                            <View style={styles.cancelRow}>
-                                <TouchableOpacity style={styles.cancelButton} onPress={() => setIsShotPopupOpen(false)}>
-                                <Text style={styles.buttonText}>Cancel</Text>
-                                </TouchableOpacity>
-                            </View>
+                            {currentPlayer ? (
+                                <>
+                                    {/* Row with Made and Missed buttons */}
+                                    <View style={styles.buttonRow}>
+                                        <TouchableOpacity style={styles.madeButton} onPress={handleMadeShot}>
+                                            <Text style={styles.buttonText}>Made</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={styles.missedButton} onPress={handleMissedShot}>
+                                            <Text style={styles.buttonText}>Missed</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                    {/* Separate row for Cancel button */}
+                                    <View style={styles.cancelRow}>
+                                        <TouchableOpacity style={styles.cancelButton} onPress={() => setIsShotPopupOpen(false)}>
+                                            <Text style={styles.buttonText}>Cancel</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </>
+                            ) : (
+                                <View style={styles.exceptionText}>
+                                    <Text style={styles.buttonText}>Select a player to record a shot.</Text>
+                                    <TouchableOpacity style={styles.cancelButton} onPress={() => setIsShotPopupOpen(false)}>
+                                        <Text style={styles.buttonText}>Cancel</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            )}
                         </View>
                     </View>
-                </Modal>              
+                </Modal>
             )}
         </>
     );

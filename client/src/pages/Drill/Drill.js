@@ -513,38 +513,93 @@ function DrillPage() {
     };
 
     const handleMadeShot = async () => {
-        // Determine shot points based on zone name
-        const shotPoints = (selectedZone.name == 6 || selectedZone.name == 7 || selectedZone.name == 8) ? 3 : 2;
-        console.log(currentPlayerRef.current);
-        console.log(`${shotPoints} point shot made by ${currentPlayerRef.current.name}`);
+        if (!currentPlayerRef.current) {
+            if (selectedZone.name == 6 || selectedZone.name == 7 || selectedZone.name == 8) {
+                updateTeamAScore(3);
+            } else {
+                updateTeamAScore(2);
+            }
+            setIsShotPopupOpen(false);
+            setIsTiming(false);
+        } else {
+            // Determine shot points based on zone name
+            const shotPoints = (selectedZone.name == 6 || selectedZone.name == 7 || selectedZone.name == 8) ? 3 : 2;
+            console.log(currentPlayerRef.current);
+            console.log(`${shotPoints} point shot made by ${currentPlayerRef.current.name}`);
+            
+            // Calculate the new score locally
+            const newScore = teamAScore + shotPoints;
+            setTeamAScore(newScore);
+            
+            setIsShotPopupOpen(false);
+            setIsTiming(false);
+            console.log(`Tempo recorded: ${currentTempo.toFixed(2)} seconds`);
         
-        // Calculate the new score locally
-        const newScore = teamAScore + shotPoints;
-        setTeamAScore(newScore);
+            // Determine shot clock time based on current tempo
+            let shotClockTime = null;
+            if (currentTempo.toFixed(2) <= 20) {
+                shotClockTime = 'first_third';
+            } else if (currentTempo.toFixed(2) <= 40) {
+                shotClockTime = 'second_third';
+            } else {
+                shotClockTime = 'final_third';
+            }
+
+            const currentTime = new Date().toISOString()
+
+            // Submit the shot event to the server
+            const shotData = await handleShotEvent(true, selectedZone.name, shotClockTime);
+
+            // Update shotEvents locally with the new shot event
+            const newShotEvents = [...shotEvents, shotData];
+            
+            setShotEvents(newShotEvents);
+
+            // Submit the temp event to the database
+            const tempoData = await submitTempo('offensive', playersOnCourt.map(player => player.id), currentTempo);
+
+            // Update tempoEvents locally with the new tempo event
+            const newTempoEvents = [...tempoEventIds, tempoData];
+            setTempoEventIds(newTempoEvents);
+
+            console.log(newTempoEvents);
         
+            // Patch game in database using the locally computed values
+            const updatedDrill = {
+                practice_id: practiceID,
+                name: drillName,
+                tempo_events: newTempoEvents,
+                shot_events: newShotEvents,
+            };
+        
+            await fetch(`${serverUrl}/api/drills/${drillID}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updatedDrill)
+            });
+        }
+    };
+
+    const handleMissedShot = async () => {
         setIsShotPopupOpen(false);
-        setIsTiming(false);
-        console.log(`Tempo recorded: ${currentTempo.toFixed(2)} seconds`);
-      
-        // Determine shot clock time based on current tempo
-        let shotClockTime = null;
-        if (currentTempo.toFixed(2) <= 20) {
+
+        // Find the shot clock time based on the current tempo
+        var shotClockTime = null;
+        if(currentTempo.toFixed(2) <= 20) {
             shotClockTime = 'first_third';
         } else if (currentTempo.toFixed(2) <= 40) {
             shotClockTime = 'second_third';
         } else {
             shotClockTime = 'final_third';
         }
-
-        const currentTime = new Date().toISOString()
-
+        
         // Submit the shot event to the server
-        const shotData = await handleShotEvent(true, selectedZone.name, shotClockTime);
+        const shotData = await handleShotEvent(false, selectedZone.name, shotClockTime);
 
         // Update shotEvents locally with the new shot event
         const newShotEvents = [...shotEvents, shotData];
-        
-        setShotEvents(newShotEvents);
 
         // Submit the temp event to the database
         const tempoData = await submitTempo('offensive', playersOnCourt.map(player => player.id), currentTempo);
@@ -553,8 +608,6 @@ function DrillPage() {
         const newTempoEvents = [...tempoEventIds, tempoData];
         setTempoEventIds(newTempoEvents);
 
-        console.log(newTempoEvents);
-      
         // Patch game in database using the locally computed values
         const updatedDrill = {
             practice_id: practiceID,
@@ -562,7 +615,7 @@ function DrillPage() {
             tempo_events: newTempoEvents,
             shot_events: newShotEvents,
         };
-      
+    
         await fetch(`${serverUrl}/api/drills/${drillID}`, {
             method: 'PATCH',
             headers: {
@@ -571,11 +624,6 @@ function DrillPage() {
             body: JSON.stringify(updatedDrill)
         });
     };
-
-    const handleMissedShot = () => {
-        console.log('Shot missed!');
-        setIsShotPopupOpen(false);
-    }
 
     return (
         <div className="background-container">
@@ -809,7 +857,7 @@ function DrillPage() {
                         tempoType="Offensive"
                         className={`TempoButton ${isTiming && tempoType === 'offensive' ? 'stop' : 'start'} ${isTiming && tempoType !== 'offensive' ? 'disabled' : ''}`}
                         isTiming={isTiming && tempoType === 'offensive'}
-                        onClick={() => isTiming && tempoType === 'offensive' ? handleStopTempo('offensive') : startTempo('offensive')}
+                        onPress={() => isTiming && tempoType === 'offensive' ? handleStopTempo('offensive') : startTempo('offensive')}
                         disabled={isTiming && tempoType !== 'offensive'}
                     />
                     <TempoTimer
@@ -837,24 +885,35 @@ function DrillPage() {
                     >
                         <View style={styles.overlay}>
                             <View style={styles.popup}>
-                            {/* Row with Made and Missed buttons */}
-                                <View style={styles.buttonRow}>
-                                    <TouchableOpacity style={styles.madeButton} onPress={handleMadeShot}>
-                                    <Text style={styles.buttonText}>Made</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity style={styles.missedButton} onPress={handleMissedShot}>
-                                    <Text style={styles.buttonText}>Missed</Text>
-                                    </TouchableOpacity>
-                                </View>
-                                {/* Separate row for Cancel button */}
-                                <View style={styles.cancelRow}>
-                                    <TouchableOpacity style={styles.cancelButton} onPress={() => setIsShotPopupOpen(false)}>
-                                    <Text style={styles.buttonText}>Cancel</Text>
-                                    </TouchableOpacity>
-                                </View>
+                                {currentPlayer ? (
+                                    <>
+                                        {/* Row with Made and Missed buttons */}
+                                        <View style={styles.buttonRow}>
+                                            <TouchableOpacity style={styles.madeButton} onPress={handleMadeShot}>
+                                                <Text style={styles.buttonText}>Made</Text>
+                                            </TouchableOpacity>
+                                            <TouchableOpacity style={styles.missedButton} onPress={handleMissedShot}>
+                                                <Text style={styles.buttonText}>Missed</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                        {/* Separate row for Cancel button */}
+                                        <View style={styles.cancelRow}>
+                                            <TouchableOpacity style={styles.cancelButton} onPress={() => setIsShotPopupOpen(false)}>
+                                                <Text style={styles.buttonText}>Cancel</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    </>
+                                ) : (
+                                    <View style={styles.exceptionText}>
+                                        <Text style={styles.buttonText}>Select a player to record a shot.</Text>
+                                        <TouchableOpacity style={styles.cancelButton} onPress={() => setIsShotPopupOpen(false)}>
+                                            <Text style={styles.buttonText}>Cancel</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                )}
                             </View>
                         </View>
-                    </Modal>              
+                    </Modal>
                 )}
             </div>
         </div>
@@ -1065,7 +1124,11 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 18,
         fontWeight: 'bold',
-    },          
+    },
+    exceptionText: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 })
 
 export default DrillPage;
