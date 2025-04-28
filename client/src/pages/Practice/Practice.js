@@ -204,7 +204,6 @@ const Practice = () => {
 
     const createPractice = async () => {
         await updatePractice();
-        navigate(`/drill`);
     }
 
     return (

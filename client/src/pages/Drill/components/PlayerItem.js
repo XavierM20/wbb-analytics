@@ -1,12 +1,19 @@
 import React from 'react';
-import './PlayerWrapper.css'; // Assuming your CSS for .player-inverted is here
+import { View, Text, TouchableOpacity } from 'react-native';
+import styles from './PlayerListStyles';
 
 function PlayerItem({ player, isSelected, ...props }) {
   return (
-    <div {...props} className={`PlayerContainer ${isSelected ? 'player-inverted' : ''}`}>
-      <span className="PlayerCircle">{player.number}</span>
-      <span className="PlayerName">{player.name}</span>
-    </div>
+    <TouchableOpacity {...props} style={styles.playerContainer}>
+      <View style={[ styles.playerCircle, isSelected && styles.playerCircleInverted, ]}>
+        <Text style={{ fontSize: 24, color: isSelected ? '#8766b4' : '#ffd700' }}>
+          {player.number}
+        </Text>
+      </View>
+      <Text style={[styles.playerName, isSelected && styles.playerNameInverted]}>
+        {player.name}
+      </Text>
+    </TouchableOpacity>
   );
 }
 
