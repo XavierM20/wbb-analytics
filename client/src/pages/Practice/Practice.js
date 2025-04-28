@@ -134,9 +134,11 @@ const Practice = () => {
     };
 
     const addDrill = async drill => {
+        const playersInvolved = [...listA, ...listB].map(player => player._id);
         const drillData = {
             name: drill.name,
             practice_id: SessionData._id,
+            players_involved: playersInvolved,
         };
         try {
             const response = await fetch(serverUrl + '/api/drills', {
@@ -154,14 +156,15 @@ const Practice = () => {
             const players = listA.concat(listB);
             players.forEach(async player => {
                 const statsData = {
-                    drill_id: newDrill._id,
+                    gameOrDrill_id: newDrill._id,
+                    onModel: 'Drill',
                     player_id: player._id,
                     offensive_rebounds: 0,
                     defensive_rebounds: 0,
                     assists: 0,
                     steals: 0,
                     blocks: 0,
-                    turnovers: 0,
+                    turnovers: 0, 
                 };
 
                 try {

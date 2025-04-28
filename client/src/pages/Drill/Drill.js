@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Modal } from 'react-native';
 import './Drill.css';
 import CancelButton from './components/CancelButton';
 import LastTempoDisplay from './components/LastTempoDisplay';
@@ -13,7 +13,7 @@ import basketballCourtVector from './components/basketball-court-vector.jpg';
 import ExtraStats from './components/ExtraStats';
 import ExtraStatPopup from './components/ExtraStatPopup';
 import { set } from 'mongoose';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation} from 'react-router-dom';
 
 
 function DrillPage() {
@@ -304,7 +304,7 @@ function DrillPage() {
 
 
     const handleCourtClick = (area) => {
-        console.log(`Player ${area} clicked for shot`);
+        console.log(`Zone ${area} clicked for shot`);
         setSelectedZone(area);
         setIsShotPopupOpen(true);
     }
@@ -335,47 +335,19 @@ function DrillPage() {
         setIsESOpen(false);
     }
 
-    const recordStats = async (player, route) => {
-        if (isPlayerSelectedforShot) {
+    const recordStats = async (player, stat) => {
+        console.log(`Recording ${stat} for player ${player.name}`);
+        
+        const statsResponse = await fetch(`${serverUrl}/api/stats/${stat}/${drillID}/${player.id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
 
-            setIsESOpen(true);
-
-            // Fetch the player's stats from the server
-            const statResponse = await fetch(`${serverUrl}/api/stats/byPlayer/${player.id}`);
-            if (!statResponse.ok) {
-                console.error(`Failed to fetch player stats: HTTP Error: ${statResponse.status}`);
-                return;
-            }
-            const playerStatsArray = await statResponse.json();
-
-            if (!playerStatsArray.length) {
-                console.error('No stats found for player:', player.id);
-                return; // Exit if no stats found
-            }
-
-            // Assuming the first object is the one we want to update
-            const filteredPlayerStatsArray = playerStatsArray.filter(array => array.drill_id === drillID);
-
-            const playerStats = filteredPlayerStatsArray[0];
-
-            // Submit the updated stats to the server
-            try {
-                const response = await fetch(`${serverUrl}/api/stats/${route}/${playerStats._id}`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-                if (!response.ok) {
-                    throw new Error(`HTTP Error: ${response.status}`);
-                }
-                const updatedStats = await response.json();
-                console.log('Stats updated:', updatedStats);
-            } catch (error) {
-                console.error('Error updating stats:', error);
-            }
-        }
-    };
+        const response = await statsResponse.json();
+        console.log('Stats recorded:', response);
+    }
 
     const updateTeamAScore = (points) => {
         setTeamAScore(prevScore => prevScore + points);
@@ -437,6 +409,16 @@ function DrillPage() {
             body: JSON.stringify(updatedScore)
         })
         */
+    }
+
+    const handleMadeShot = () => {
+        console.log('Shot made!');
+        setIsShotPopupOpen(false);
+    }
+
+    const handleMissedShot = () => {
+        console.log('Shot missed!');
+        setIsShotPopupOpen(false);
     }
 
     return (
@@ -631,32 +613,32 @@ function DrillPage() {
                     <ExtraStats
                         setStatName={"Offensive Rebound"}
                         className="Offensive Rebound"
-                        onClick={() => recordStats(player, 'offensiveRebound')}
+                        onPress={() => recordStats(player, 'offensiveRebound')}
                     />
                     <ExtraStats
                         setStatName={"Assist"}
                         className="Assist"
-                        onClick={() => recordStats(player, 'assist')}
+                        onPress={() => recordStats(player, 'assist')}
                     />
                     <ExtraStats
                         setStatName={"Steal"}
                         className="Steal"
-                        onClick={() => recordStats(player, 'steal')}
+                        onPress={() => recordStats(player, 'steal')}
                     />
                     <ExtraStats
                         setStatName={"Defensive Rebound"}
                         className="Defensive Rebound"
-                        onClick={() => recordStats(player, 'defensiveRebound')}
+                        onPress={() => recordStats(player, 'defensiveRebound')}
                     />
                     <ExtraStats
                         setStatName={"Block"}
                         className="Block"
-                        onClick={() => recordStats(player, 'block')}
+                        onPress={() => recordStats(player, 'block')}
                     />
                     <ExtraStats
                         setStatName={"Turnover"}
                         className="Turnover"
-                        onClick={() => recordStats(player, 'turnover')}
+                        onPress={() => recordStats(player, 'turnover')}
                     />
                     {isESOpen && (
                         <ExtraStatPopup
@@ -689,6 +671,35 @@ function DrillPage() {
                         disabled={isTiming && tempoType !== 'offensive'}
                     />
                 </div>
+                {/* Shot Outcome Popup */}
+                {isShotPopupOpen && (
+                    <Modal
+                        transparent={true}
+                        animationType="fade"
+                        visible={isShotPopupOpen}
+                        onRequestClose={() => setIsShotPopupOpen(false)}
+                    >
+                        <View style={styles.overlay}>
+                            <View style={styles.popup}>
+                            {/* Row with Made and Missed buttons */}
+                                <View style={styles.buttonRow}>
+                                    <TouchableOpacity style={styles.madeButton} onPress={handleMadeShot}>
+                                    <Text style={styles.buttonText}>Made</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={styles.missedButton} onPress={handleMissedShot}>
+                                    <Text style={styles.buttonText}>Missed</Text>
+                                    </TouchableOpacity>
+                                </View>
+                                {/* Separate row for Cancel button */}
+                                <View style={styles.cancelRow}>
+                                    <TouchableOpacity style={styles.cancelButton} onPress={() => setIsShotPopupOpen(false)}>
+                                    <Text style={styles.buttonText}>Cancel</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </View>
+                    </Modal>              
+                )}
             </div>
         </div>
     );
@@ -846,6 +857,59 @@ const styles = StyleSheet.create({
         width: '100%',
         marginVertical: 10,
     },
+    /* Shot Pop Up Styling */
+    overlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent overlay
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    popup: {
+        backgroundColor: 'transparent',
+        width: '90%',
+    },
+    buttonRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    madeButton: {
+        flex: 1,
+        width: 100,       // Fixed width; adjust according to your layout
+        height: 100,       // Fixed height for a larger tap area
+        marginHorizontal: 50,
+        backgroundColor: '#28a745',
+        borderRadius: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    missedButton: {
+        flex: 1,
+        width: 100,       // Fixed width; adjust according to your layout
+        height: 100,       // Fixed height for a larger tap area
+        marginHorizontal: 50,
+        backgroundColor: '#dc3545',
+        borderRadius: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    cancelRow: {
+        marginTop: 20,       // adds space between the two rows
+        alignItems: 'center',
+    },
+    cancelButton: {
+        width: 200,       // Fixed width for the cancel button
+        height: 60,       // Fixed height for consistency
+        marginTop: 20,    // separates it from the row above
+        backgroundColor: '#6c757d',  // red, often used for cancel actions
+        borderRadius: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    buttonText: {
+        color: 'white',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },          
 })
 
 export default DrillPage;
