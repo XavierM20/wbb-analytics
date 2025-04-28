@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Modal } from 'react-native';
 import './Drill.css';
 import CancelButton from './components/CancelButton';
@@ -17,6 +17,11 @@ import { useNavigate, useLocation} from 'react-router-dom';
 
 
 function DrillPage() {
+    const [seasonData, setSeasonData] = useState([]);
+    const [schoolID, setSchoolID] = useState(sessionStorage.getItem("schoolID"));
+    const [drillName, setDrillName] = useState('');
+    const [drillData, setDrillData] = useState([]);
+    
     // TeamA and TeamB state hooks
     const location = useLocation();
     const [teamA, setTeamA] = useState(location.state?.TeamA || []);
@@ -46,6 +51,11 @@ function DrillPage() {
     const [selectedZone, setSelectedZone] = useState(null);
     const [isESOpen, setIsESOpen] = useState(false);
     const [statName, setStatName] = useState("");
+    const [currentPlayer, setCurrentPlayer] = useState(null);
+    const currentPlayerRef = useRef(null);
+    useEffect(() => {
+        currentPlayerRef.current = currentPlayer;
+    }, [currentPlayer]);
 
     // Server URL from environment variables for API requests
     const serverUrl = process.env.REACT_APP_SERVER_URL;
@@ -61,6 +71,8 @@ function DrillPage() {
 
     /* Court shot handling */
     const [selectedMode, setSelectedMode] = useState(null);
+    const [tempoEventIds, setTempoEventIds] = useState([]);
+    const [shotEvents, setShotEvents] = useState([]);
 
     /* For Styling */
     const [leftWidth, setLeftWidth] = useState(0);
@@ -68,6 +80,9 @@ function DrillPage() {
     const maxWidth = Math.max(leftWidth, rightWidth);
     const { width: viewportWidth } = Dimensions.get('window');
     const isSmallScreen = viewportWidth < 600; // adjust breakpoint as needed
+
+    const currentDate = new Date();
+    const date = `${currentDate.getFullYear()}-${(currentDate.getMonth() + 1).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
 
     // Fetch players from the server on component mount
     useEffect(() => {
@@ -94,57 +109,93 @@ function DrillPage() {
         setPlayersOnCourt(allPlayers.splice(0, 5));
     }, [allPlayers]);
 
-    // Function to submit tempo
-    const submitTempo = async (isOffensive, playersOnCourtIds, timeValue) => {
-        const tempoData = {
-            gameOrDrill_id: drillID,
-            player_ids: playersOnCourtIds,
-            onModel: 'Drill',
-            tempo_type: isOffensive,
-            transition_time: timeValue.toFixed(2),
-            timestamp: new Date()
+    useEffect(() => {
+        const fetchSeasonId = async () => {
+            try {
+                const season = await getSeasonByDate(); // Wait for the function to complete
+                setSeasonData(season); // Store the result in state
+            } catch (error) {
+                console.error("Error fetching season ID:", error);
+            }
         };
 
+        const fetchDrillData = async () => {
+            try {
+                const response = await fetch(`${serverUrl}/api/drills/${drillID}`);
+                const data = await response.json();
+                console.log('Drill Data:', data);
+                setDrillName(data.name);
+                setDrillData(data._id);
+            } catch (error) {
+                console.error('Error fetching drill data:', error);
+            }
+        }; 
+
+        fetchSeasonId();
+        fetchDrillData();
+    }, []); // Runs only once when the component mounts
+
+    const getSeasonByDate = async () => {
+        const currentDate = new Date();
+        const month = currentDate.getMonth() + 1;
+        const day = currentDate.getDate();
+        const year = currentDate.getFullYear();
+
+        const computedYear = (month < 8 || (month === 8 && day < 2)) ? year - 1 : year + 1;
+
+        const year1 = Math.min(year, computedYear).toString();
+        const year2 = Math.max(year, computedYear).toString();
+
+        console.log(year1, year2);
+
+        // Get the current season for this school
+        const seasonResponse = await fetch(`${process.env.REACT_APP_SERVER_URL}/api/seasons/endYear/${year2}/${schoolID}`);
+        const seasonData = await seasonResponse.json();
+        console.log('Season Data:');
+        console.log(seasonData);
+
+        // Get the school name from schoolID
+        const schoolResponse = await fetch(`${process.env.REACT_APP_SERVER_URL}/api/schools/${schoolID}`);
+        const schoolData = await schoolResponse.json();
+        console.log('School Data:');
+        console.log(schoolData);
+
+        return seasonData;
+    };
+
+    // Function to submit tempo
+    const submitTempo = async (isOffensive, playersOnCourtIds, tempo) => {
+        console.log(isOffensive);
+        console.log(`Submitting ${isOffensive} tempo`);
+        
+        const tempoEvent = {
+            gameOrDrill_id: drillID,
+            onModel: 'Drill',
+            player_ids: playersOnCourtIds,
+            tempo_type: isOffensive,
+            transition_time: tempo.toFixed(2),
+            timestamp: new Date().toISOString()
+        };
+
+        // Send the tempo event to the server
         try {
-            // Add 'await' here to wait for the fetch call to resolve
-            const response = await fetch(serverUrl + '/api/tempos', {
+            const response = await fetch(`${serverUrl}/api/tempos`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(tempoData)
+                body: JSON.stringify(tempoEvent)
             });
-            const submitTempo = await response.json();
-            console.log('Tempo submitted:', submitTempo);
 
-            try {
-
-                // Fetch drill to get data to update
-                console.log('Drill ID:', drillID);
-                const drillResponse = await fetch(serverUrl + `/api/drills/${drillID}`);
-                const drillData = await drillResponse.json();
-                drillData.tempo_events.push(submitTempo._id);
-
-                // Remove _id and __v from drillData
-                delete drillData._id;
-                delete drillData.__v;
-
-                // Update the drill with the new tempo event
-                const response = await fetch(serverUrl + `/api/drills/${drillID}`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(drillData)
-                });
-                const updatedDrill = await response.json();
-                console.log('Drill updated:', updatedDrill);
-
-            } catch (error) {
-                console.error('Error updating drill:', error);
+            if (!response.ok) {
+                throw new Error('Failed to submit tempo event');
             }
+
+            const data = await response.json();
+            console.log('Tempo event submitted:', data);
+            return data._id; // Return the ID of the submitted tempo event  
         } catch (error) {
-            console.error('Error submitting tempo:', error);
+            console.error('Error submitting tempo event:', error);
         }
     };
 
@@ -165,19 +216,41 @@ function DrillPage() {
     };
 
     // Stop the current tempo
-    const handleStopTempo = (type) => {
+    const handleStopTempo = async (type) => {
         console.log(`Stopping ${tempoType} tempo`);
         setIsTiming(false);
         setRecordedTempo(currentTempo);
 
         // Determine if tempo is offensive or defensive
-        const isOffensive = type;
+        const isOffensive = tempoType;
 
         // Get the IDs of the players on the court
         const playersOnCourtIds = playersOnCourt.map(player => player.id);
 
         // Call submitTempo with the correct arguments
-        submitTempo(isOffensive, playersOnCourtIds, currentTempo);
+        let newTempoID = await submitTempo(isOffensive, playersOnCourtIds, currentTempo);
+
+        // Patch game with new tempoID
+        const newTempoEvents = [...tempoEventIds, newTempoID];
+        setTempoEventIds(newTempoEvents);
+
+        console.log(newTempoEvents);
+      
+        // Patch game in database using the locally computed values
+        const updatedDrill = {
+            practice_id: practiceID,
+            name: drillName,
+            tempo_events: newTempoEvents,
+            shot_events: shotEvents,
+        };
+      
+        await fetch(`${serverUrl}/api/drills/${drillID}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedDrill)
+        });
     };
 
     // Cancel the current timing
@@ -302,29 +375,17 @@ function DrillPage() {
         setIsShotPopupOpen(false);
     };
 
-
-    const handleCourtClick = (area) => {
+    const courtClicked = (area) => {
         console.log(`Zone ${area} clicked for shot`);
+        console.log(area);
         setSelectedZone(area);
         setIsShotPopupOpen(true);
-    }
-
-    const courtClicked = (area) => {
-        console.log(area);
-        handleCourtClick(area.name);
     }
 
     const handleShotPopupClose = () => {
         setIsShotPopupOpen(false);
         setIsPlayerSelectedforShot(false);
     }
-
-
-    // Example method signatures in the TempoPage component
-    const onPlayerSelectForShot = (player) => {
-        setIsPlayerSelectedforShot(true);
-        setPlayer(player);
-    };
 
     const onPlayerSelectForSub = (player) => {
         setSelectedPlayerForSub(player); // Set the player selected for substitution
@@ -411,10 +472,105 @@ function DrillPage() {
         */
     }
 
-    const handleMadeShot = () => {
-        console.log('Shot made!');
-        setIsShotPopupOpen(false);
+    const handleShotEvent = async (made, zone, shotClockTime, ) => {
+        const shotEvent = {
+            gameOrDrill_id: drillID,
+            onModel: 'Drill',
+            player_id: currentPlayerRef.current.id,
+            made: made,
+            zone: zone,
+            shot_clock_time: shotClockTime,
+            timestamp: new Date().toISOString()
+        };
+        
+        let shotResponse = await fetch(`${serverUrl}/api/shots`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(shotEvent)
+        });
+      
+        // Parse the response (assuming the response returns the created shot event data)
+        const shotData = await shotResponse.json();
+
+        return shotData._id;
     }
+
+    const onPlayerSelectForShot = (player) => {
+        // If the currently selected player is the same as the clicked player, deselect
+        if (currentPlayer && currentPlayer.id === player.id) {
+            console.log('Deselecting player:');
+            console.log(player);
+            setIsPlayerSelectedforShot(false);
+            setCurrentPlayer(null);
+        } else {
+            console.log('Player selected for shot:');
+            console.log(player);
+            setIsPlayerSelectedforShot(true);
+            setCurrentPlayer(player);
+        }
+    };
+
+    const handleMadeShot = async () => {
+        // Determine shot points based on zone name
+        const shotPoints = (selectedZone.name == 6 || selectedZone.name == 7 || selectedZone.name == 8) ? 3 : 2;
+        console.log(currentPlayerRef.current);
+        console.log(`${shotPoints} point shot made by ${currentPlayerRef.current.name}`);
+        
+        // Calculate the new score locally
+        const newScore = teamAScore + shotPoints;
+        setTeamAScore(newScore);
+        
+        setIsShotPopupOpen(false);
+        setIsTiming(false);
+        console.log(`Tempo recorded: ${currentTempo.toFixed(2)} seconds`);
+      
+        // Determine shot clock time based on current tempo
+        let shotClockTime = null;
+        if (currentTempo.toFixed(2) <= 20) {
+            shotClockTime = 'first_third';
+        } else if (currentTempo.toFixed(2) <= 40) {
+            shotClockTime = 'second_third';
+        } else {
+            shotClockTime = 'final_third';
+        }
+
+        const currentTime = new Date().toISOString()
+
+        // Submit the shot event to the server
+        const shotData = await handleShotEvent(true, selectedZone.name, shotClockTime);
+
+        // Update shotEvents locally with the new shot event
+        const newShotEvents = [...shotEvents, shotData];
+        
+        setShotEvents(newShotEvents);
+
+        // Submit the temp event to the database
+        const tempoData = await submitTempo('offensive', playersOnCourt.map(player => player.id), currentTempo);
+
+        // Update tempoEvents locally with the new tempo event
+        const newTempoEvents = [...tempoEventIds, tempoData];
+        setTempoEventIds(newTempoEvents);
+
+        console.log(newTempoEvents);
+      
+        // Patch game in database using the locally computed values
+        const updatedDrill = {
+            practice_id: practiceID,
+            name: drillName,
+            tempo_events: newTempoEvents,
+            shot_events: newShotEvents,
+        };
+      
+        await fetch(`${serverUrl}/api/drills/${drillID}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedDrill)
+        });
+    };
 
     const handleMissedShot = () => {
         console.log('Shot missed!');
@@ -650,11 +806,11 @@ function DrillPage() {
                 </div>
                 <div className="tempo-container">
                     <TempoButton
-                        tempoType="Defensive"
-                        className={`TempoButton ${isTiming && tempoType !== 'defensive' ? 'disabled' : ''} ${isTiming && tempoType === 'defensive' ? 'stop' : 'start'}`}
-                        isTiming={isTiming && tempoType === 'defensive'}
-                        onPress={() => isTiming && tempoType === 'defensive' ? handleStopTempo('defensive') : startTempo('defensive')}
-                        disabled={isTiming && tempoType !== 'defensive'}
+                        tempoType="Offensive"
+                        className={`TempoButton ${isTiming && tempoType === 'offensive' ? 'stop' : 'start'} ${isTiming && tempoType !== 'offensive' ? 'disabled' : ''}`}
+                        isTiming={isTiming && tempoType === 'offensive'}
+                        onClick={() => isTiming && tempoType === 'offensive' ? handleStopTempo('offensive') : startTempo('offensive')}
+                        disabled={isTiming && tempoType !== 'offensive'}
                     />
                     <TempoTimer
                         isTiming={isTiming}
@@ -664,11 +820,11 @@ function DrillPage() {
                         setCurrentTime={setCurrentTempo}
                     />
                     <TempoButton
-                        tempoType="Offensive"
-                        className={`TempoButton ${isTiming && tempoType === 'offensive' ? 'stop' : 'start'} ${isTiming && tempoType !== 'offensive' ? 'disabled' : ''}`}
-                        isTiming={isTiming && tempoType === 'offensive'}
-                        onClick={() => isTiming && tempoType === 'offensive' ? handleStopTempo('offensive') : startTempo('offensive')}
-                        disabled={isTiming && tempoType !== 'offensive'}
+                        tempoType="Defensive"
+                        className={`TempoButton ${isTiming && tempoType !== 'defensive' ? 'disabled' : ''} ${isTiming && tempoType === 'defensive' ? 'stop' : 'start'}`}
+                        isTiming={isTiming && tempoType === 'defensive'}
+                        onPress={() => isTiming && tempoType === 'defensive' ? handleStopTempo('defensive') : startTempo('defensive')}
+                        disabled={isTiming && tempoType !== 'defensive'}
                     />
                 </div>
                 {/* Shot Outcome Popup */}
