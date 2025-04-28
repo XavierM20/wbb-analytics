@@ -513,73 +513,68 @@ function DrillPage() {
     };
 
     const handleMadeShot = async () => {
-        if (!currentPlayerRef.current) {
-            if (selectedZone.name == 6 || selectedZone.name == 7 || selectedZone.name == 8) {
-                updateTeamAScore(3);
-            } else {
-                updateTeamAScore(2);
-            }
-            setIsShotPopupOpen(false);
-            setIsTiming(false);
-        } else {
-            // Determine shot points based on zone name
-            const shotPoints = (selectedZone.name == 6 || selectedZone.name == 7 || selectedZone.name == 8) ? 3 : 2;
-            console.log(currentPlayerRef.current);
-            console.log(`${shotPoints} point shot made by ${currentPlayerRef.current.name}`);
-            
-            // Calculate the new score locally
-            const newScore = teamAScore + shotPoints;
+        // Determine shot points based on zone name
+        const shotPoints = (selectedZone.name == 6 || selectedZone.name == 7 || selectedZone.name == 8) ? 3 : 2;
+        console.log(currentPlayerRef.current);
+        console.log(`${shotPoints} point shot made by ${currentPlayerRef.current.name}`);
+        let newScore;
+
+        if(selectedMode == 'Team A') {
+            newScore = teamAScore + shotPoints;
             setTeamAScore(newScore);
-            
-            setIsShotPopupOpen(false);
-            setIsTiming(false);
-            console.log(`Tempo recorded: ${currentTempo.toFixed(2)} seconds`);
-        
-            // Determine shot clock time based on current tempo
-            let shotClockTime = null;
-            if (currentTempo.toFixed(2) <= 20) {
-                shotClockTime = 'first_third';
-            } else if (currentTempo.toFixed(2) <= 40) {
-                shotClockTime = 'second_third';
-            } else {
-                shotClockTime = 'final_third';
-            }
-
-            const currentTime = new Date().toISOString()
-
-            // Submit the shot event to the server
-            const shotData = await handleShotEvent(true, selectedZone.name, shotClockTime);
-
-            // Update shotEvents locally with the new shot event
-            const newShotEvents = [...shotEvents, shotData];
-            
-            setShotEvents(newShotEvents);
-
-            // Submit the temp event to the database
-            const tempoData = await submitTempo('offensive', playersOnCourt.map(player => player.id), currentTempo);
-
-            // Update tempoEvents locally with the new tempo event
-            const newTempoEvents = [...tempoEventIds, tempoData];
-            setTempoEventIds(newTempoEvents);
-
-            console.log(newTempoEvents);
-        
-            // Patch game in database using the locally computed values
-            const updatedDrill = {
-                practice_id: practiceID,
-                name: drillName,
-                tempo_events: newTempoEvents,
-                shot_events: newShotEvents,
-            };
-        
-            await fetch(`${serverUrl}/api/drills/${drillID}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(updatedDrill)
-            });
+        } else if(selectedMode == 'Team B') {
+            newScore = teamBScore + shotPoints;
+            setTeamBScore(newScore);
         }
+        
+        setIsShotPopupOpen(false);
+        setIsTiming(false);
+        console.log(`Tempo recorded: ${currentTempo.toFixed(2)} seconds`);
+    
+        // Determine shot clock time based on current tempo
+        let shotClockTime = null;
+        if (currentTempo.toFixed(2) <= 20) {
+            shotClockTime = 'first_third';
+        } else if (currentTempo.toFixed(2) <= 40) {
+            shotClockTime = 'second_third';
+        } else {
+            shotClockTime = 'final_third';
+        }
+
+        const currentTime = new Date().toISOString()
+
+        // Submit the shot event to the server
+        const shotData = await handleShotEvent(true, selectedZone.name, shotClockTime);
+
+        // Update shotEvents locally with the new shot event
+        const newShotEvents = [...shotEvents, shotData];
+        
+        setShotEvents(newShotEvents);
+
+        // Submit the temp event to the database
+        const tempoData = await submitTempo('offensive', playersOnCourt.map(player => player.id), currentTempo);
+
+        // Update tempoEvents locally with the new tempo event
+        const newTempoEvents = [...tempoEventIds, tempoData];
+        setTempoEventIds(newTempoEvents);
+
+        console.log(newTempoEvents);
+    
+        // Patch game in database using the locally computed values
+        const updatedDrill = {
+            practice_id: practiceID,
+            name: drillName,
+            tempo_events: newTempoEvents,
+            shot_events: newShotEvents,
+        };
+    
+        await fetch(`${serverUrl}/api/drills/${drillID}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedDrill)
+        });
     };
 
     const handleMissedShot = async () => {
@@ -682,9 +677,9 @@ function DrillPage() {
                                     <TouchableOpacity
                                         style={[
                                             styles.courtButton,
-                                            selectedMode === 'offense' && styles.selectedButton,
+                                            selectedMode === 'Team A' && styles.selectedButton,
                                         ]}
-                                        onPress={() => setSelectedMode('offense')}
+                                        onPress={() => setSelectedMode('Team A')}
                                     >
                                         <Text style={styles.buttonText}>Team A</Text>
                                     </TouchableOpacity>
@@ -722,9 +717,9 @@ function DrillPage() {
                                     <TouchableOpacity
                                         style={[
                                             styles.courtButton,
-                                            selectedMode === 'defense' && styles.selectedButton,
+                                            selectedMode === 'Team B' && styles.selectedButton,
                                         ]}
-                                        onPress={() => setSelectedMode('defense')}
+                                        onPress={() => setSelectedMode('Team B')}
                                     >
                                         <Text style={styles.buttonText}>Team B</Text>
                                     </TouchableOpacity>
@@ -752,9 +747,9 @@ function DrillPage() {
                                     <TouchableOpacity
                                         style={[
                                             styles.courtButton,
-                                            selectedMode === 'offense' && styles.selectedButton,
+                                            selectedMode === 'Team A' && styles.selectedButton,
                                         ]}
-                                        onPress={() => setSelectedMode('offense')}
+                                        onPress={() => setSelectedMode('Team A')}
                                     >
                                         <Text style={styles.buttonText}>Team A</Text>
                                     </TouchableOpacity>
@@ -790,9 +785,9 @@ function DrillPage() {
                                     <TouchableOpacity
                                         style={[
                                             styles.courtButton,
-                                            selectedMode === 'defense' && styles.selectedButton,
+                                            selectedMode === 'Team B' && styles.selectedButton,
                                         ]}
-                                        onPress={() => setSelectedMode('defense')}
+                                        onPress={() => setSelectedMode('Team B')}
                                     >
                                         <Text style={styles.buttonText}>Team B</Text>
                                     </TouchableOpacity>
