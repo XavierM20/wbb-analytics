@@ -17,48 +17,20 @@ function PlayerStats() {
   */
   const urlParams = new URLSearchParams(window.location.search);
 
-  // State hooks for timing and tempo tracking
-  const [isTiming, setIsTiming] = useState(false);
-  const [resetTimer, setResetTimer] = useState(false);
-  const [currentTempo, setCurrentTempo] = useState(0);
-  const [recordedTempo, setRecordedTempo] = useState(null);
-  const [lastTempo, setLastTempo] = useState(0);
-  const [tempoType, setTempoType] = useState(null);
-  const [avgTempo, setAvgTempo] = useState(0);
-  const [tempoCount, setTempoCount] = useState(1);
-  const [totalTempo, setTotalTempo] = useState(0);
-
   // State hooks for player and popup management
-  const [playersOnCourt, setPlayersOnCourt] = useState([]);
-  const [isPlayerSelectedforShot, setIsPlayerSelectedforShot] = useState(false);
-  const [player, setPlayer] = useState(null);
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [selectedPlayerForSub, setSelectedPlayerForSub] = useState(null);
-  const [isShotPopupOpen, setIsShotPopupOpen] = useState(false);
-  const [selectedZone, setSelectedZone] = useState(null);
-  const [isESOpen, setIsESOpen] = useState(false);
-  const [statName, setStatName] = useState("");
   const drillID = urlParams.get('DrillID');
   const navigate = useNavigate();
 
 
-  const [sessions, setSessions] = useState([]);
   const [allPlayers, setAllPlayers] = useState([]);
-  const [allDrills, setAllDrills] = useState([]);
-  const [filteredDrills, setFilteredDrills] = useState([]);
-  const [allTempos, setAllTempos] = useState([]);
-  const [filteredTempos, setFilteredTempos] = useState([]);
-  const [allShots, setAllShots] = useState([]);
-  const [filteredShots, setFilteredShots] = useState([]);
   const [avgOffensiveTempo, setAvgOffensiveTempo] = useState(0);
   const [avgDefensiveTempo, setAvgDefensiveTempo] = useState(0);
-  const [shotClockData, setShotClockData] = useState([]); //
-  const [shotPointData, setShotPointData] = useState([]); //[2][2] array where the first index is the number of made shots and the second index is the total number of shots attempted
-  const [shotPoints, setShotPoints] = useState(0); //This is the total number of points scored in the drill
-  const [allStats, setAllStats] = useState([]); //This is the data for the player's stats
   const [statsData, setStatsData] = useState([]); //This is the data for the player's stats
-  const [selectedSession, setSelectedSession] = useState('');
   const [selectedDrill, setSelectedDrill] = useState(''); //This is a numerical ID, not an object
+  const [allDrills, setAllDrills] = useState([]); // State for storing all drills data
+  const [filteredDrills, setFilteredDrills] = useState([]); // State for storing filtered drills data
+  const [selectedSession, setSelectedSession] = useState(''); // State for storing the selected session ID
+
 
   const [seasons, setSeasons] = useState([]); // State for storing seasons data
   const [selectedSeason, setSelectedSeason] = useState(''); // State for storing the selected season ID
@@ -69,6 +41,7 @@ function PlayerStats() {
   const [drills, setDrills] = useState([]); // State for storing drills data
   const [selectedGame, setSelectedGame] = useState(''); // State for storing the selected game ID
 
+
   const sessionIdParam  = urlParams.get('seasonId');
   const session = urlParams.get('session');
   const drillIdParam = urlParams.get('drillId');
@@ -78,67 +51,81 @@ function PlayerStats() {
   });
   const serverUrl = process.env.REACT_APP_SERVER_URL;
 
-
-useEffect(() => {
-  const fetchInitialData = async () => {
-    try {
-      const seasonID = await getSeasonIDByDate();
-      const playerResponse = await fetch(serverUrl + `/api/players/bySeason/${seasonID}`); 
-      const playerData = await playerResponse.json();
-
-      await fetchSeasons();
-      await fetchGames(seasonID);
-      
-      const formattedPlayers = playerData.map(player => ({
-        label: `${player.name}`,
-        position: `${player.position}`,
-        value: player._id.toString(),
-      }));
-
-      setAllPlayers(formattedPlayers);
-
-      if (playerID) {
-        const selected = playerData.find(player => player._id === playerID);
-        setSelectedPlayer(selected);
-        fetchPlayerData(selected._id);
-      } else if (playerData.length > 0) {
-        const firstPlayer = formattedPlayers[0];
-        setSelectedPlayer(firstPlayer);
-        fetchPlayerData(firstPlayer.value);
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      try {
+        const seasonID = await getSeasonIDByDate();
+  
+        const [playerResponse, seasonsResponse] = await Promise.all([
+          fetch(`${serverUrl}/api/players/bySeason/${seasonID}`),
+          fetch(`${serverUrl}/api/seasons/school/${sessionStorage.getItem('schoolID')}`)
+        ]);
+  
+        const playersData = await playerResponse.json();
+        const seasonsData = await seasonsResponse.json();
+  
+        const formattedPlayers = playersData.map(player => ({
+          label: `${player.name}`,
+          position: `${player.position}`,
+          value: player._id.toString(),
+        }));
+  
+        const formattedSeasons = seasonsData.map(season => ({
+          value: season._id,
+          label: season.year,
+        }));
+  
+        setAllPlayers(formattedPlayers);
+        setSeasons(formattedSeasons);
+  
+        if (playerID) {
+          const selected = formattedPlayers.find(p => p.value === playerID);
+          setSelectedPlayer(selected);
+        } else {
+          setSelectedPlayer(formattedPlayers[0]);
+        }
+  
+        setSelectedSeason(seasonsData[0]._id);
+  
+        if (selectedGameOrPractice === 'game') {
+          await fetchGames(seasonsData[0]._id);
+        } else {
+          await fetchPractices(seasonsData[0]._id);
+        }
+  
+      } catch (error) {
+        console.error("Failed to fetch initial data:", error);
       }
-    } catch (error) {
-      console.error("Failed to fetch player data: ", error);
-    }
-    try{
-      const sessionResponse = await fetch(serverUrl + '/api/practices');
-      const sessionData = await sessionResponse.json();
-      //console.log(sessionData)
-      const formattedSessions = sessionData.map(session => {
-        const date = new Date(session.date); // Create a date object
-        // Format the date as MM/dd/yyyy
-        const formattedDate = ((date.getMonth() + 1) + '').padStart(2, '0') + '/' + 
-                              (date.getDate() + '').padStart(2, '0') + '/' + 
-                              date.getFullYear();
-        return {
-          label: `Session: ${formattedDate}`,
-          value: session._id.toString(),
-        };
-      });
-      //console.log("These are sessions: ")
-      //console.log(sessionData);
-      setSessions(formattedSessions);
-      if (sessionIdParam) {
-        setSelectedSession(sessionIdParam);
-      } else if (formattedSessions.length > 0) {
-        setSelectedSession(formattedSessions[0].value);
+    };
+  
+    fetchInitialData();
+  }, []);
+
+  useEffect(() => {
+    const updatePlayerData = async () => {
+      if (
+        selectedPlayer &&
+        (
+          (selectedGameOrPractice === 'game' && selectedGame) ||
+          (selectedGameOrPractice === 'practice' && selectedDrill) ||
+          (selectedGameOrPractice === 'total')
+        )
+      ) {
+        await fetchFullPlayerStats();
       }
-    } catch (error){
-      console.error("Failed to fetch session data: ", error);
-    }
-  };
-  fetchInitialData();
-  //submitTempo();
-}, []);
+  
+      if (selectedGameOrPractice === 'game' && selectedGame) {
+        fetchTempos(selectedGame);
+      } else if (selectedGameOrPractice === 'practice' && selectedDrill) {
+        fetchTempos(selectedDrill);
+      } else if (selectedGameOrPractice === 'total') {
+        setAvgOffensiveTempo(0);
+        setAvgDefensiveTempo(0);
+      }
+    };
+  
+    updatePlayerData();
+  }, [selectedPlayer, selectedGame, selectedDrill, selectedGameOrPractice]);
 
 const getSeasonIDByDate = async () => {
   const currentDate = new Date();
@@ -157,48 +144,19 @@ const getSeasonIDByDate = async () => {
   return seasonData._id;
 };
 
-useEffect(() => {
-  if (allPlayers.length > 0 && !selectedPlayer) {
-    const firstPlayer = allPlayers[0];
-    setSelectedPlayer(firstPlayer);
-    fetchPlayerData(firstPlayer.value); // Ensure stats load for first player
-  }
-}, [allPlayers]);
-
-useEffect(() => {
-  if (!Array.isArray(allDrills)) {
-    console.error("allDrills is not an array:", allDrills);
-    setFilteredDrills([]); // Fallback to an empty array
-    return;
-  }
-
-  setFilteredDrills(allDrills.filter(drill => drill.practice_id === selectedSession)
-    .map(drill => ({
-      label: `${drill.name}`,
-      value: drill._id.toString(),
-    })));
-
-}, [selectedSession, selectedDrill, allDrills, allTempos, allShots]);
-
-  const pointSectionLabels = ["2 pt FG %", "3 pt FG %"]; //This is for the shot point data
-  const sectionLabels = ["30-20", "20-10", "10-0"]; //This is for the shot clock data
-
   const handlePlayerChange = (event) => {
     const newPlayerID = event.target.value;
     const newSelectedPlayer = allPlayers.find(player => player.value === newPlayerID); 
-
+  
     if (newSelectedPlayer) {
       setSelectedPlayer(newSelectedPlayer);
+      setStatsData({}); // Reset stats while new stats are loading
     }
   
     const urlParams = new URLSearchParams(window.location.search);
     urlParams.set('playerID', newPlayerID);
     window.history.pushState(null, '', `${window.location.pathname}?${urlParams}`);
-
-    // Immediately filter drills for the newly selected session and set the first drill as selected
-    // This assumes allDrills has been previously populated with all available drills
-    fetchPlayerData(newPlayerID);
-  }
+  };
 
   const handleSessionChange = (event) => {
     const newSessionId = event.target.value;
@@ -244,13 +202,6 @@ useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     urlParams.set('drillId', newDrillId);
     window.history.pushState(null, '', `${window.location.pathname}?${urlParams}`);
-
-    //Immediately filter tempos for the newly selected drill
-    updateTempoData();
-    const drillStats = allStats.find(stats => stats.gameOrDrill_id === newDrillId);
-    console.log(statsData)
-    setStatsData(drillStats);
-    console.log(drillStats)
   };
 
   /**
@@ -279,21 +230,22 @@ useEffect(() => {
    * @param {string} seasonId - The ID of the season. 
    */
     const fetchGames = async (seasonId) => {
-      console.log('fetching games');
       try {
-        const response = await fetch(`${serverUrl}/api/games/bySeason/${seasonId}`)
-        const games = await response.json();
-        if (games.length > 0) {
-          games.forEach((game) => {
-            setGames((prevGames) => [...prevGames, {value: game._id, label: `${game.opponent} - ${game.date.split("T")[0]}`}])
-          })
+        const response = await fetch(`${serverUrl}/api/games/bySeason/${seasonId}`);
+        const gamesData = await response.json();
+        if (gamesData.length > 0) {
+          const formattedGames = gamesData.map((game) => ({
+            value: game._id,
+            label: `${game.opponent} - ${game.date.split("T")[0]}`
+          }));
+    
+          setGames(formattedGames);
+          setSelectedGame(formattedGames[0].value); // Set game only
         }
-        fetchShots(games[0]._id)
-        fetchTempos(games[0]._id)
       } catch (error) {
-        console.error('Failed to fetch games ', error)
+        console.error('Failed to fetch games', error);
       }
-    }
+    };
 
    /**
    * Fetches practices data for a given season ID.
@@ -302,20 +254,18 @@ useEffect(() => {
    const fetchPractices = async (seasonId) => {
     try {
       const response = await fetch(`${serverUrl}/api/practices/bySeason/${seasonId}`);
-      const data = await response.json(); // Parse the response as JSON
-      //setPractices(data); // Update the practices state with the fetched data
+      const data = await response.json();
       if (data.length > 0) {
-        // Add each practice to the practices state
-        data.forEach((practice) => {
-          setPractices((prevPractices) => [...prevPractices, { value: practice._id, label: practice.date }]); // Add each practice to the practices state
-        })
-
-        setSelectedPractice(data[0]._id); // Select the first practice by default
-        console.log(data[0]._id);
-        fetchDrills(data[0]._id); // Fetch drills for the selected practice
+        const formattedPractices = data.map((practice) => ({
+          value: practice._id,
+          label: practice.date
+        }));
+  
+        setPractices(formattedPractices);
+        setSelectedPractice(formattedPractices[0].value); // Set practice only
       }
     } catch (error) {
-      console.error('Failed to fetch practices:', error); // Log any errors to the console
+      console.error('Failed to fetch practices', error);
     }
   };
 
@@ -335,10 +285,74 @@ useEffect(() => {
           })
           setSelectedDrill(data[0]._id); // Select the first drill by default
           fetchTempos(data[0]._id); // Fetch tempos for the selected drill
-          fetchShots(data[0]._id); // Fetch shots for the selected drill
         }
       } catch (error) {
         console.error('Failed to fetch drills:', error); // Log any errors to the console
+      }
+    };
+
+    const fetchFullPlayerStats = async () => {
+      if (!selectedPlayer) return;
+    
+      try {
+        // Fetch player stats
+        const statsResponse = await fetch(`${serverUrl}/api/stats/byPlayer/${selectedPlayer.value}`);
+        const statsDataRaw = await statsResponse.json();
+    
+        let selectedStat = {};
+    
+        if (statsDataRaw.length > 0) {
+          if (selectedGameOrPractice === 'total') {
+            selectedStat = statsDataRaw.reduce((acc, stat) => {
+              if (stat.onModel === "Game") {
+                acc.assists = (acc.assists || 0) + (stat.assists || 0);
+                acc.blocks = (acc.blocks || 0) + (stat.blocks || 0);
+                acc.steals = (acc.steals || 0) + (stat.steals || 0);
+                acc.turnovers = (acc.turnovers || 0) + (stat.turnovers || 0);
+                acc.offensive_rebounds = (acc.offensive_rebounds || 0) + (stat.offensive_rebounds || 0);
+                acc.defensive_rebounds = (acc.defensive_rebounds || 0) + (stat.defensive_rebounds || 0);
+              }
+              return acc;
+            }, {});
+          } else {
+            const selection = selectedGameOrPractice === 'game' ? selectedGame : selectedDrill;
+            const stat = statsDataRaw.find(stat => stat.gameOrDrill_id === selection);
+            if (stat) {
+              selectedStat = stat;
+            }
+          }
+        }
+    
+        // Fetch FG% (shots)
+        let shotsResponse;
+        let shotsData = [];
+    
+        if (selectedGameOrPractice === 'game' && selectedGame) {
+          shotsResponse = await fetch(`${serverUrl}/api/shots/byGameOrDrill/${selectedGame}`);
+          shotsData = await shotsResponse.json();
+          shotsData = shotsData.filter(shot => shot.player_id === selectedPlayer.value && shot.onModel === "Game");
+        } else if (selectedGameOrPractice === 'practice' && selectedDrill) {
+          shotsResponse = await fetch(`${serverUrl}/api/shots/byGameOrDrill/${selectedDrill}`);
+          shotsData = await shotsResponse.json();
+          shotsData = shotsData.filter(shot => shot.player_id === selectedPlayer.value && shot.onModel === "Drill");
+        } else if (selectedGameOrPractice === 'total') {
+          shotsResponse = await fetch(`${serverUrl}/api/shots`);
+          shotsData = await shotsResponse.json();
+          shotsData = shotsData.filter(shot => shot.player_id === selectedPlayer.value && shot.onModel === "Game");
+        }
+    
+        const totalShots = shotsData.length;
+        const madeShots = shotsData.filter(shot => shot.made === true).length;
+    
+        const fgPercentage = totalShots > 0 ? ((madeShots / totalShots) * 100).toFixed(2) : 0;
+    
+        selectedStat.fg_percentage = fgPercentage;
+    
+        // Finally set everything
+        setStatsData(selectedStat);
+    
+      } catch (error) {
+        console.error("Failed to fetch full player stats:", error);
       }
     };
 
@@ -353,21 +367,6 @@ useEffect(() => {
       calculateAvgTempo(tempoData); // Calculate the average tempo from the fetched data
     } catch (error) {
       console.error('Failed to fetch tempos:', error); // Log any errors to the console
-    }
-  };
-
-  /**
-   * Fetches shots data for a given drill ID.
-   * @param {string} drillId - The ID of the drill.
-   */
-  const fetchShots = async (drillId) => {
-    try {
-      const response = await fetch(`${serverUrl}/api/shots/byGameOrDrill/${drillId}`);// Fetch all shots
-      const allShots = await response.json(); // Parse the response as JSON
-      const filteredShots = allShots.filter((shot) => shot.gameOrDrill_id === drillId); // Filter shots by the selected drill ID
-      //processShotsForChart(filteredShots); // Process the filtered shots for the chart
-    } catch (error) {
-      console.error('Failed to fetch shots:', error); // Log any errors to the console
     }
   };
 
@@ -437,91 +436,7 @@ useEffect(() => {
     const newSelectedGame = e.target.value; // Get the newly selected game ID from the event
     setSelectedGame(newSelectedGame); // Update the selected game state
     fetchTempos(newSelectedGame)
-    fetchShots(newSelectedGame)
   }
-
-  /*
-    This function updates the average offensive and defensive tempos for the selected drill
-
-    It filters the tempos for the selected drill (taken from above) and sets the average offensive and defensive tempos to 0 before doing its calculations so that no data is contaminated (hopefully)
-  */
-  const updateTempoData = () => {
-    // Filter tempos for the selected drill
-    const temposForDrill = allTempos.filter(tempo => tempo.gameOrDrill_id === selectedDrill);
-    setAvgOffensiveTempo(0);
-    setAvgDefensiveTempo(0);
-    setFilteredTempos(temposForDrill);
-    var numOffensive = 0;
-    var numDefensive = 0;
-    var sumOffensiveTempo = 0;
-    var sumDefensiveTempo = 0;
-    for (var i = 0; i < temposForDrill.length; i++){
-        if(temposForDrill[i].tempo_type === "offensive" && !isNaN(temposForDrill[i].transition_time)){
-            sumOffensiveTempo += temposForDrill[i].transition_time;
-            numOffensive++;
-        }
-        else if(temposForDrill[i].tempo_type === "defensive" && !isNaN(temposForDrill[i].transition_time)){
-            sumDefensiveTempo += temposForDrill[i].transition_time;
-            numDefensive++;
-        }
-        else{
-            console.log("Error: Tempo type not recognized or transition time is not a number " + temposForDrill[i].tempo_type)
-        }
-    }
-    setAvgOffensiveTempo(numOffensive > 0 ? (sumOffensiveTempo / numOffensive).toFixed(2) : 0); //Checks if there are any tempos to average
-    setAvgDefensiveTempo(numDefensive > 0 ? (sumDefensiveTempo / numDefensive).toFixed(2) : 0);
-  };
-
-  const fetchPlayerData = async (playerID) => {
-    try {
-      const drillResponse = await fetch(serverUrl + '/api/drills/players/'+ playerID);
-      const drillData = await drillResponse.json();
-      //console.log("These are the drills Maddie is in: ")
-      //console.log(drillData);
-      if(drillData.length)
-        setAllDrills(drillData);
-      else{
-        var temp = {  }
-        setAllDrills(temp)
-      }
-      if (drillIdParam) {
-        setSelectedDrill(drillIdParam);
-      } else if (drillData.length > 0) {
-        setSelectedDrill(drillData[0]._id.toString());
-      }
-    } catch (error) {
-      console.error("Failed to fetch drill data:", error);
-    }
-    try {
-      const tempoResponse = await fetch(serverUrl + '/api/tempos/byPlayer/' + playerID);
-      const tempoData = await tempoResponse.json();
-      //console.log("These are tempos:")
-      //console.log(tempoData);
-      setAllTempos(tempoData);
-    } catch (error){
-      console.error("Failed to fetch tempos from drill data:", error);
-    }
-    try {
-      const shotsResponse = await fetch(serverUrl + '/api/shots/');//byPlayer/' + playerID);
-      const shotsData = await shotsResponse.json(); //This is not programmed to get shots by player yet; the route does not cooperate
-      const filteredShotsData = shotsData.filter(shot => shot.player_ids === playerID);
-      //console.log("These are shots:")
-      //console.log(filteredShotsData);
-      setAllShots(filteredShotsData);
-    } catch (error) {
-      console.error("Failed to fetch shot data:", error);
-    }
-    try {
-      const statsResponse = await fetch(serverUrl + '/api/stats/byPlayer/' + playerID);
-      const statsData = await statsResponse.json();
-      //console.log("These are stats:")
-      //console.log(statsData);
-      setAllStats(statsData);
-      //console.log(statsData)
-    } catch (error) {
-      console.error("Failed to fetch stats data:", error);
-    }
-  };
 
   let MAP2 = {
     name: "my-map",
@@ -535,87 +450,8 @@ useEffect(() => {
     {name: "7", shape: "poly", coords: [0, 1.5, 20, 1.5, 23, 34, 35, 75, 40, 85, 45, 92, 50, 99, 55, 105, 60, 110, 65, 116, 70, 120, 79, 127, 0, 250].map((n, i) => i % 2 === 0 ? n * 1.3333 : n * 1.2245), fillColor: "rgba(23, 43, 79, .8)", preFillColor: "rgba(52, 52, 52, 0.2)", strokeColor: "blue"},
     {name: "6", shape: "poly", coords: [300, 1.5, 278, 1.5, 275, 34, 265, 75, 260, 85, 255, 92, 250, 99, 245, 105, 240, 110, 235, 116, 230, 120, 221, 127, 300, 250].map((n, i) => i % 2 === 0 ? n * 1.3333 : n * 1.2245), fillColor: "rgba(23, 43, 79, .8)", preFillColor: "rgba(52, 52, 52, 0.2)", strokeColor: "blue"}
     ]
-};
-
-const handleCourtOverlayClick = () => {
-  //setIsShotPopupOpen(false);
-  setIsPlayerSelectedforShot(false);
-  setIsShotPopupOpen(false);
-};
-
-const courtClicked = (area) => {
-  console.log(area);
-  handleCourtClick(area.name);
-}
-
-const handleCourtClick = (area) => {
-  console.log(`Player ${area} clicked for shot`);
-  setSelectedZone(area);
-  setIsShotPopupOpen(true);
-}
-
-    // Example method signatures in the TempoPage component
-    const onPlayerSelectForShot = (player) => {
-      setIsPlayerSelectedforShot(true);
-      setPlayer(player);
   };
 
-  const onPlayerSelectForSub = (player) => {
-      setSelectedPlayerForSub(player); // Set the player selected for substitution
-      setIsPopupOpen(true); // Open the substitution popup
-  };
-
-  const handleESClose = () => {
-      setIsESOpen(false);
-  }
-
-  const handleShotPopupClose = () => {
-    setIsShotPopupOpen(false);
-    setIsPlayerSelectedforShot(false);
-}
-
-  const recordStats = async (player, route) => {
-      if (isPlayerSelectedforShot) {
-
-          setIsESOpen(true);
-
-          // Fetch the player's stats from the server
-          const statResponse = await fetch(`${serverUrl}/api/stats/byPlayer/${player.id}`);
-          if (!statResponse.ok) {
-              console.error(`Failed to fetch player stats: HTTP Error: ${statResponse.status}`);
-              return;
-          }
-          const playerStatsArray = await statResponse.json();
-
-          if (!playerStatsArray.length) {
-              console.error('No stats found for player:', player.id);
-              return; // Exit if no stats found
-          }
-
-          // Assuming the first object is the one we want to update
-          const filteredPlayerStatsArray = playerStatsArray.filter(array => array.drill_id === drillID);
-
-          const playerStats = filteredPlayerStatsArray[0];
-
-          // Submit the updated stats to the server
-          try {
-              const response = await fetch(`${serverUrl}/api/stats/${route}/${playerStats._id}`, {
-                  method: 'PATCH',
-                  headers: {
-                      'Content-Type': 'application/json'
-                  }
-              });
-              if (!response.ok) {
-                  throw new Error(`HTTP Error: ${response.status}`);
-              }
-              const updatedStats = await response.json();
-              console.log('Stats updated:', updatedStats);
-          } catch (error) {
-              console.error('Error updating stats:', error);
-          }
-      }
-  };
-  
   return (
     <div className="main-container">
       <button className='btn-home top-right-button' onClick={() => navigate('/homepage')}>Home</button>
@@ -630,35 +466,37 @@ const handleCourtClick = (area) => {
               <Selector
                 options={[
                   { value: 'game', label: 'Game' },
-                  { value: 'practice', label: 'Practice' }
+                  { value: 'practice', label: 'Practice' },
+                  { value: 'total', label: 'Total' }
                 ]}
                 value={selectedGameOrPractice}
                 onChange={handleGameOrPracticeChange}
-                label="Game or Practice?"
+                label="Game/Practice/Total"
               />
-              {selectedGameOrPractice === 'game' ? (
+            {selectedGameOrPractice === 'game' && (
               <Selector
                 options={games}
                 value={selectedGame}
                 onChange={handleGameChange}
                 label="Game"
               />
-            ) : (
-              <Selector
-                options={practices}
-                value={selectedPractice}
-                onChange={handlePracticeChange}
-                label="Practice"
-              />
             )}
             {/* Only show the Drill selector if 'practice' is selected */}
             {selectedGameOrPractice === 'practice' && (
-              <Selector
-                options={drills}
-                value={selectedDrill}
-                onChange={handleDrillChange}
-                label="Drill"
-              />
+              <>
+                <Selector
+                  options={practices}
+                  value={selectedPractice}
+                  onChange={handlePracticeChange}
+                  label="Practice"
+                />
+                <Selector
+                  options={drills}
+                  value={selectedDrill}
+                  onChange={handleDrillChange}
+                  label="Drill"
+                />
+              </>
             )}
             <Selector
               options={seasons}
@@ -691,76 +529,16 @@ const handleCourtClick = (area) => {
                 height={300}
                 lineWidth={5}
                 strokeColor={"black"}
-                onClick={courtClicked}
               />
-              {isShotPopupOpen && isPlayerSelectedforShot && (
-                <>
-                  <div className="Overlay" onClick={handleCourtOverlayClick}></div>
-                    <ShotPopup
-                      isOpen={isShotPopupOpen}
-                      onClose={() => handleShotPopupClose()}
-                      gameOrDrill_id={drillID}
-                      onModel="Drill"
-                      player_id={player.id}
-                      zone={selectedZone}
-                    />
-                </>
-              )}
           </div>
         </div>
-  {/*      <div className="detailed-stats">
-    
-          <div className="tempo-cards">
-            <TempoCard title="Avg Offensive Tempo" tempo={avgOffensiveTempo} />
-            <TempoCard title="Avg Defensive Tempo" tempo={avgDefensiveTempo} />
-          </div>
-          
-          <div className="charts-container">
-            <div classname='bar-container'>
-              <Bar
-                  data={barChartData}
-                  options={chartOptions}
-              />
-            </div>
-            <div className="shots-table-container">
-              {shotClockData.map((section, index) => (
-                <ShotsByClock key={index} section={sectionLabels[index]} made={section[0]} total={section[1]} />
-              ))}
-            </div>
-          </div>
-        </div>
-    */}
-  {/*
-        <div className="stats-overview">
-          <StatCard title="Total Points" value={shotPoints} />
-          {shotPointData.map((section, index) => (
-            <StatCard key={index} title={pointSectionLabels[index]} value={(section[0]/section[1] * 100).toFixed(2)} />
-          ))}
-        </div>
-        <div className="stat-cards">
-          <StatCard title="Total Rebounds" value={statsData.total_rebounds || 0} />
-          <StatCard title="Assists" value={statsData.assists || 0} />
-          <StatCard title="Steals" value={statsData.steals || 0} />
-          <StatCard title="Blocks" value={statsData.blocks || 0} />
-          <StatCard title="Turnovers" value={statsData.turnovers || 0} />
-          <StatCard title="Personal Fouls" value={statsData.personal_fouls || 0} />
-        </div>
-  */}
         <div className="stats-container">
           <div className="unified-stats-card">
             <div className="stat-row">
               <h2>PlayerStats: </h2>
               <div className="stat-item">
-                <span className="stat-label">MPG</span>
-                <span className="stat-value">{statsData.mpg || 0}</span>
-              </div>
-              <div className="stat-item">
                 <span className="stat-label">FG%</span>
                 <span className="stat-value">{statsData.fg_percentage || 0}</span>
-              </div>
-              <div className="stat-item">
-                <span className="stat-label">3P%</span>
-                <span className="stat-value">{statsData.three_pt_percentage || 0}</span>
               </div>
               <div className="stat-item">
                 <span className="stat-label">Assists</span>
@@ -779,8 +557,12 @@ const handleCourtClick = (area) => {
                 <span className="stat-value">{statsData.turnovers || 0}</span>
               </div>
               <div className="stat-item">
-                <span className="stat-label">Personal Fouls</span>
-                <span className="stat-value">{statsData.personal_fouls || 0}</span>
+                <span className="stat-label">Offensive Rebounds</span>
+                <span className="stat-value">{statsData.offensive_rebounds || 0}</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-label">Defensive Rebounds</span>
+                <span className="stat-value">{statsData.defensive_rebounds || 0}</span>
               </div>
             </div>
           </div>
