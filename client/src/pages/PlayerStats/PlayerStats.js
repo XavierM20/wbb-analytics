@@ -25,7 +25,7 @@ function PlayerStats() {
   const [allPlayers, setAllPlayers] = useState([]);
   const [avgOffensiveTempo, setAvgOffensiveTempo] = useState(0);
   const [avgDefensiveTempo, setAvgDefensiveTempo] = useState(0);
-  const [statsData, setStatsData] = useState([]); //This is the data for the player's stats
+  const [statsData, setStatsData] = useState({}); //This is the data for the player's stats
   const [selectedDrill, setSelectedDrill] = useState(''); //This is a numerical ID, not an object
   const [allDrills, setAllDrills] = useState([]); // State for storing all drills data
   const [filteredDrills, setFilteredDrills] = useState([]); // State for storing filtered drills data
@@ -294,28 +294,44 @@ const getSeasonIDByDate = async () => {
     const fetchFullPlayerStats = async () => {
       if (!selectedPlayer) return;
     
+      // Immediately reset stats so UI clears old values
+      setStatsData({
+        assists: 0,
+        blocks: 0,
+        steals: 0,
+        turnovers: 0,
+        offensive_rebounds: 0,
+        defensive_rebounds: 0,
+        fg_percentage: 0
+      });
+    
       try {
-        // Fetch player stats
         const statsResponse = await fetch(`${serverUrl}/api/stats/byPlayer/${selectedPlayer.value}`);
         const statsDataRaw = await statsResponse.json();
     
-        let selectedStat = {};
+        const selection = selectedGameOrPractice === 'game' ? selectedGame : selectedDrill;
+        let selectedStat = {
+          assists: 0,
+          blocks: 0,
+          steals: 0,
+          turnovers: 0,
+          offensive_rebounds: 0,
+          defensive_rebounds: 0
+        };
     
         if (statsDataRaw.length > 0) {
           if (selectedGameOrPractice === 'total') {
-            selectedStat = statsDataRaw.reduce((acc, stat) => {
+            statsDataRaw.forEach(stat => {
               if (stat.onModel === "Game") {
-                acc.assists = (acc.assists || 0) + (stat.assists || 0);
-                acc.blocks = (acc.blocks || 0) + (stat.blocks || 0);
-                acc.steals = (acc.steals || 0) + (stat.steals || 0);
-                acc.turnovers = (acc.turnovers || 0) + (stat.turnovers || 0);
-                acc.offensive_rebounds = (acc.offensive_rebounds || 0) + (stat.offensive_rebounds || 0);
-                acc.defensive_rebounds = (acc.defensive_rebounds || 0) + (stat.defensive_rebounds || 0);
+                selectedStat.assists += stat.assists || 0;
+                selectedStat.blocks += stat.blocks || 0;
+                selectedStat.steals += stat.steals || 0;
+                selectedStat.turnovers += stat.turnovers || 0;
+                selectedStat.offensive_rebounds += stat.offensive_rebounds || 0;
+                selectedStat.defensive_rebounds += stat.defensive_rebounds || 0;
               }
-              return acc;
-            }, {});
+            });
           } else {
-            const selection = selectedGameOrPractice === 'game' ? selectedGame : selectedDrill;
             const stat = statsDataRaw.find(stat => stat.gameOrDrill_id === selection);
             if (stat) {
               selectedStat = stat;
@@ -323,32 +339,28 @@ const getSeasonIDByDate = async () => {
           }
         }
     
-        // Fetch FG% (shots)
-        let shotsResponse;
+        // Now fetch FG% (shot data)
         let shotsData = [];
     
         if (selectedGameOrPractice === 'game' && selectedGame) {
-          shotsResponse = await fetch(`${serverUrl}/api/shots/byGameOrDrill/${selectedGame}`);
+          const shotsResponse = await fetch(`${serverUrl}/api/shots/byGameOrDrill/${selectedGame}`);
           shotsData = await shotsResponse.json();
           shotsData = shotsData.filter(shot => shot.player_id === selectedPlayer.value && shot.onModel === "Game");
         } else if (selectedGameOrPractice === 'practice' && selectedDrill) {
-          shotsResponse = await fetch(`${serverUrl}/api/shots/byGameOrDrill/${selectedDrill}`);
+          const shotsResponse = await fetch(`${serverUrl}/api/shots/byGameOrDrill/${selectedDrill}`);
           shotsData = await shotsResponse.json();
           shotsData = shotsData.filter(shot => shot.player_id === selectedPlayer.value && shot.onModel === "Drill");
         } else if (selectedGameOrPractice === 'total') {
-          shotsResponse = await fetch(`${serverUrl}/api/shots`);
+          const shotsResponse = await fetch(`${serverUrl}/api/shots`);
           shotsData = await shotsResponse.json();
           shotsData = shotsData.filter(shot => shot.player_id === selectedPlayer.value && shot.onModel === "Game");
         }
     
         const totalShots = shotsData.length;
-        const madeShots = shotsData.filter(shot => shot.made === true).length;
+        const madeShots = shotsData.filter(shot => shot.made).length;
+        selectedStat.fg_percentage = totalShots > 0 ? ((madeShots / totalShots) * 100).toFixed(2) : 0;
     
-        const fgPercentage = totalShots > 0 ? ((madeShots / totalShots) * 100).toFixed(2) : 0;
-    
-        selectedStat.fg_percentage = fgPercentage;
-    
-        // Finally set everything
+        // Finally update the stats
         setStatsData(selectedStat);
     
       } catch (error) {
