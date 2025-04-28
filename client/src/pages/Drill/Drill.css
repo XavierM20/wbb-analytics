@@ -40,7 +40,7 @@
 .court-container,
 .extra-stats-container,
 .PopupPlayerCircle {
-    background: rgba(200,157,70, .5);
+    background-color: rgba(63, 68, 68, 0.7);
     border-radius: 0.5rem;
     padding: 4%;
     color: cornsilk;
@@ -100,7 +100,7 @@
     padding: 2%; /* Adjust padding as needed */
     height: calc(15vw);
     width: calc(80vw); /* Allow the container to grow as needed */
-    background-color: rgba(200,157,70, .5); /* Optional background */
+    background-color: rgba(63, 68, 68, 0.7); /* Optional background */
 }
 
 /* Extra Stats */
@@ -156,7 +156,7 @@
     font-size: calc(1.3vw); /* Adjust font size to match TempoButton */
     color: cornsilk; /* Use the dark text color for readability */
     padding: 3%; /* Provide some padding */
-    background-color: rgba(200,157,70, .5); /* Use the card background color */
+    background-color: rgba(63, 68, 68, 0.7); /* Use the card background color */
     border-radius: 0.5rem; /* Round the corners to match the design */
     text-align: center;
     height: calc(5vw);
@@ -218,11 +218,11 @@
 }
 
 .TempoButton.start {
-    background-color: rgba(200,157,70, .5); /* Use a green color for starting the tempo */
+    background-color: rgba(63, 68, 68, 0.7);; /* Use a green color for starting the tempo */
 }
 
 .TempoButton.stop {
-    background-color: rgba(200,157,70, .5); /* Use a red color for stopping the tempo */
+    background-color: rgba(63, 68, 68, 0.7); /* Use a red color for stopping the tempo */
 }
 
 .TempoButton:active {

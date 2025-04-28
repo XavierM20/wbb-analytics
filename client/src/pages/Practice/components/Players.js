@@ -27,7 +27,7 @@ const Players = ({ listA, setListA, listB, setListB, playerData, setPlayerData }
         if (team === 'A') {
             const updatedListA = listA.map((player, i) => {
                 if (i === index) {
-                    return { ...player, playerName: value, _id: playerData.find(p => p.name === value)._id };
+                    return { ...player, playerName: value, _id: playerData.find(p => p.name === value)?._id };
                 }
                 return player;
             });
@@ -35,7 +35,7 @@ const Players = ({ listA, setListA, listB, setListB, playerData, setPlayerData }
         } else if (team === 'B') {
             const updatedListB = listB.map((player, i) => {
                 if (i === index) {
-                    return { ...player, playerName: value, _id: playerData.find(p => p.name === value)._id };
+                    return { ...player, playerName: value, _id: playerData.find(p => p.name === value)?._id };
                 }
                 return player;
             });
@@ -48,10 +48,12 @@ const Players = ({ listA, setListA, listB, setListB, playerData, setPlayerData }
             const updatedListA = [...listA];
             updatedListA.splice(index, 1);
             setListA(updatedListA);
+            console.log(`Removed player from Team A at index ${index}`);
         } else if (team === 'B') {
             const updatedListB = [...listB];
             updatedListB.splice(index, 1);
             setListB(updatedListB);
+            console.log(`Removed player from Team B at index ${index}`);
         }
     };
 
@@ -60,7 +62,6 @@ const Players = ({ listA, setListA, listB, setListB, playerData, setPlayerData }
             try {
                 const response = await fetch(serverUrl + '/api/players');
                 const data = await response.json();
-                console.log('Fetched players:', data);
 
                 const defaultListA = data.slice(0, 5).map(player => ({ _id: player._id, playerName: player.name }));
                 const defaultListB = data.slice(5, 10).map(player => ({ _id: player._id, playerName: player.name }));
@@ -69,38 +70,12 @@ const Players = ({ listA, setListA, listB, setListB, playerData, setPlayerData }
                 setListB(defaultListB);
                 setPlayerData(data);
             } catch (error) {
-                console.error('Failed to fetch players, using mock data:', error);
-
-                // 🔧 Fallback to mock data
-                const mockData = [
-                    { _id: '1', name: 'Player 1' },
-                    { _id: '2', name: 'Player 2' },
-                    { _id: '3', name: 'Player 3' },
-                    { _id: '4', name: 'Player 4' },
-                    { _id: '5', name: 'Player 5' },
-                    { _id: '6', name: 'Player 6' },
-                    { _id: '7', name: 'Player 7' },
-                    { _id: '8', name: 'Player 8' },
-                    { _id: '9', name: 'Player 9' },
-                    { _id: '10', name: 'Player 10' }
-                ];
-
-                const defaultListA = mockData.slice(0, 5).map(player => ({ _id: player._id, playerName: player.name }));
-                const defaultListB = mockData.slice(5, 10).map(player => ({ _id: player._id, playerName: player.name }));
-
-                setListA(defaultListA);
-                setListB(defaultListB);
-                setPlayerData(mockData);
+                console.error('Failed to fetch players:', error);
             }
         };
 
         fetchData();
     }, []);
-
-    // ⏳ Loading guard
-    if (!playerData?.length || !Array.isArray(listA) || !Array.isArray(listB)) {
-        return <div>Loading players...</div>;
-    }
 
     return (
         <>
@@ -114,16 +89,14 @@ const Players = ({ listA, setListA, listB, setListB, playerData, setPlayerData }
                                 value={player.playerName}
                                 onChange={(e) => handlePlayerChange('A', index, e)}
                             >
-                                {playerData
-                                    .filter(p =>
-                                        !listB.some(playerB => playerB.playerName === p.name) ||
-                                        player.playerName === p.name
-                                    )
-                                    .map((p, playerIndex) => (
-                                        <option key={playerIndex} value={p.name}>
-                                            {p.name}
-                                        </option>
-                                    ))}
+                                {playerData?.filter(p =>
+                                    !listB.some(playerB => playerB.playerName === p.name) ||
+                                    player.playerName === p.name
+                                ).map((p, playerIndex) => (
+                                    <option key={playerIndex} value={p.name}>
+                                        {p.name}
+                                    </option>
+                                ))}
                             </select>
                             <button className="remove-player-button" onClick={() => handleRemovePlayer('A', index)}>
                                 <i className="fas fa-trash"></i>
@@ -148,16 +121,14 @@ const Players = ({ listA, setListA, listB, setListB, playerData, setPlayerData }
                                 value={player.playerName}
                                 onChange={(e) => handlePlayerChange('B', index, e)}
                             >
-                                {playerData
-                                    .filter(p =>
-                                        !listA.some(playerA => playerA.playerName === p.name) ||
-                                        player.playerName === p.name
-                                    )
-                                    .map((p, playerIndex) => (
-                                        <option key={playerIndex} value={p.name}>
-                                            {p.name}
-                                        </option>
-                                    ))}
+                                {playerData?.filter(p =>
+                                    !listA.some(playerA => playerA.playerName === p.name) ||
+                                    player.playerName === p.name
+                                ).map((p, playerIndex) => (
+                                    <option key={playerIndex} value={p.name}>
+                                        {p.name}
+                                    </option>
+                                ))}
                             </select>
                             <button className="remove-player-button" onClick={() => handleRemovePlayer('B', index)}>
                                 <i className="fas fa-trash"></i>

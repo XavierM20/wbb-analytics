@@ -46,7 +46,7 @@ Layout containers
     flex-direction: column;
     height: calc(35vw);
     width: calc(30vw);
-    background-color: rgba(200,157,70, .5);
+    background-color: rgba(63, 68, 68, 0.7);
     padding: 0.625rem;
     border-radius: 0.625rem;
     box-shadow: 0 0 0.625rem 0 rgba(0, 0, 0, 5);
@@ -78,7 +78,7 @@ Layout containers
     justify-content: space-around;
     align-items: flex-start;
     width: calc(68vw);
-    background-color: rgba(200,157,70, .5);
+    background-color: rgba(63, 68, 68, 0.7);
     padding: 0.625rem;
     border-radius: 0.5rem;
     box-shadow: 0 0 0.625rem 0 rgba(0, 0, 0, 5);
