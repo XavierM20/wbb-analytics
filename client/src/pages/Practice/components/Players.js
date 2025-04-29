@@ -126,11 +126,9 @@ const Players = ({ listA, setListA, listB, setListB, playerData, setPlayerData }
                             </button>
                         </li>
                     ))}
-                    <li>
-                        <button className="add-dropdown-button" onClick={handleAddDropdownA}>
-                            Add Player
-                        </button>
-                    </li>
+                    <button className="add-dropdown-button" onClick={handleAddDropdownA}>
+                        Add Player
+                    </button>
                 </ul>
             </div>
 
@@ -155,11 +153,9 @@ const Players = ({ listA, setListA, listB, setListB, playerData, setPlayerData }
                             </button>
                         </li>
                     ))}
-                    <li>
-                        <button className="add-dropdown-button" onClick={handleAddDropdownB}>
-                            Add Player
-                        </button>
-                    </li>
+                    <button className="add-dropdown-button" onClick={handleAddDropdownB}>
+                        Add Player
+                    </button>
                 </ul>
             </div>
         </>

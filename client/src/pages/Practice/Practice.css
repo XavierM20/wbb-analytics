@@ -44,7 +44,6 @@ Layout containers
 .drills-column {
     display: flex;
     flex-direction: column;
-    height: calc(35vw);
     width: calc(30vw);
     background-color: rgba(63, 68, 68, 0.7);
     padding: 0.625rem;
@@ -58,7 +57,6 @@ Layout containers
     margin-right: 1%;
     display: flex;
     gap: 1.25rem;
-    height: calc(45vw);  /* Adjust based on header/footer height */
     justify-content: space-between;
     box-sizing: border-box;
     overflow: hidden;
@@ -106,7 +104,7 @@ Session Information
     border: none;
     border-radius: 0.25rem;
     font-size: 0.9em;
-    margin-bottom: 1.25rem;
+    margin-top: auto;
 }
 
 .date {
@@ -130,7 +128,6 @@ Session Information
 }
 
 .create-session-button {
-    position: fixed;
     bottom: 1.25rem;
     right: 1.25rem;
     background-color: rgba(200,157,70, .5);
@@ -245,7 +242,7 @@ Team Selection Lists
     padding: 0.4375rem;
     justify-content: center;
     height: calc(3.5vw);
-    width: calc(30vw);
+    width: calc(20vw);
     border: none;
     border-radius: 0.25rem;
     cursor: pointer;
@@ -511,9 +508,6 @@ Team Selection Lists
 
 /* Save Session Button */
 .create-session-button {
-    position: fixed;
-    width: calc(28vw);
-    height: calc(8vw);
     bottom: 2.5rem;
     right: 1.25rem; /* Adjust this if it's too far to the right */
     background-color: rgba(200,157,70, .5); /* Using primary color variable */

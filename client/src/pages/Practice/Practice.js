@@ -235,6 +235,8 @@ const Practice = () => {
                             <SessionButtons setDate={setDate} />
                         </>
                     </div>
+                    
+                    <button onClick={createPractice} className="create-session-button">Create Practice</button>
                 </div>
                 <div className="lists-column">
                     <Players
@@ -247,7 +249,6 @@ const Practice = () => {
                     />
                 </div>
             </div>
-            <button onClick={createPractice} className="create-session-button">Create Practice</button>
             {/*onClick={updatePractice}>//
             //</div>Create Practice*/}
         </div>
