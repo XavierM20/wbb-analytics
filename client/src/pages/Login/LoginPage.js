@@ -5,6 +5,7 @@ LoginPage.js:
     The user can register by entering a username, password, and a key.
 */
 import React, { useState, useEffect } from 'react';
+import { Modal, View, StyleSheet } from 'react-native';
 import { useNavigate } from "react-router-dom";
 import { useAuth } from '../../hooks/AuthProvider';
 import './LoginPage.css';
@@ -242,34 +243,38 @@ const LoginPage = () => {
                             {errorConfirmPass && <p className="error">{errorConfirmPass}</p>}
                         </label>
                         <label>
-                        <span>Role</span>
-                        <select value={role} onChange={(e) => setRole(e.target.value)}>
-                            <option value="">Select Role</option>
-                            <option value="Coach">Coach</option>
-                            <option value="Player">Player</option>
-                        </select>
-                    </label>
-
-                    <label>
-                        <span>School</span>
-                        <select value={schoolId} onChange={(e) => handleSchoolChange(e.target.value)}>
-                            <option value="">Select School</option>
-                            {schools.map((s) => (
-                                <option key={s.id} value={s._id}> {/* Use s.id as the value */}
-                                    {s.name}
-                                </option>
-                            ))}
-                            <option value="add-new">Add New School</option>
-                        </select>
-                    </label>
-                    {isAddingSchool && (
-                        <div>
-                            <input type="text" placeholder="School Name" value={newSchool} onChange={(e) => setNewSchool(e.target.value)} />
-                            <input type="text" placeholder="City" value={city} onChange={(e) => setCity(e.target.value)} />
-                            <input type="text" placeholder="State" value={state} onChange={(e) => setState(e.target.value)} />
-                            <button type="button" onClick={handleAddSchool}>Add School</button>
-                        </div>
-                    )}
+                            <select value={role} onChange={(e) => setRole(e.target.value)}>
+                                <option value="">Select Role</option>
+                                <option value="Coach">Coach</option>
+                                <option value="Player">Player</option>
+                            </select>
+                        </label>
+                        <label>
+                            <select value={schoolId} onChange={(e) => handleSchoolChange(e.target.value)}>
+                                <option value="">Select School</option>
+                                {schools.map((s) => (
+                                    <option key={s.id} value={s._id}> {/* Use s.id as the value */}
+                                        {s.name}
+                                    </option>
+                                ))}
+                                <option value="add-new">Add New School</option>
+                            </select>
+                        </label>
+                        <Modal
+                            visible={isAddingSchool}
+                            animationType="fade"
+                            transparent={true}
+                            onRequestClose={() => setIsAddingSchool(false)}
+                        >
+                            <View style={styles.modalOverlay}>
+                                    <form>
+                                        <input className='inputAddSchool' type="text" placeholder="School Name" value={newSchool} onChange={(e) => setNewSchool(e.target.value)} />
+                                        <input type="inputAddSchool" placeholder="City" value={city} onChange={(e) => setCity(e.target.value)} />
+                                        <input type="inputAddSchool" placeholder="State" value={state} onChange={(e) => setState(e.target.value)} />
+                                        <button type="button" onClick={handleAddSchool}>Add School</button>
+                                    </form>
+                            </View>
+                        </Modal>
                         <button type="submit">Submit</button>
                         <p className="switch" onClick={moveToLogin}>Already have an account? <b>Login</b></p>
                     </form>
@@ -278,5 +283,27 @@ const LoginPage = () => {
         </div>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+      marginTop: 100,
+      alignItems: 'center',
+    },
+    modalOverlay: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0,0,0,0.5)', // Dim background
+    },
+    modalContent: {
+      backgroundColor: 'white',
+      marginHorizontal: 20,
+      width: '50%',
+      padding: 20,
+      borderRadius: 10,
+      elevation: 5,
+      backgroundColor: 'rgba(200, 157, 70, .8)',
+    },
+});
 
 export default LoginPage;
