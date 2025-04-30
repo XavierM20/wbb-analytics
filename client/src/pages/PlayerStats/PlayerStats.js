@@ -255,7 +255,7 @@ function PlayerStats() {
   const fetchFullPlayerStats = async () => {
     if (!selectedPlayer) return;
   
-    // Immediately reset stats so UI clears old values
+    // Reset stats to clear previous values
     setStatsData({
       assists: 0,
       blocks: 0,
@@ -263,7 +263,8 @@ function PlayerStats() {
       turnovers: 0,
       offensive_rebounds: 0,
       defensive_rebounds: 0,
-      fg_percentage: 0
+      fg_percentage: 0,
+      points: 0,
     });
   
     try {
@@ -278,7 +279,8 @@ function PlayerStats() {
         turnovers: 0,
         offensive_rebounds: 0,
         defensive_rebounds: 0,
-        fg_percentage: 0
+        fg_percentage: 0,
+        points: 0,
       };
   
       if (statsDataRaw.length > 0) {
@@ -303,24 +305,14 @@ function PlayerStats() {
               turnovers: stat.turnovers || 0,
               offensive_rebounds: stat.offensive_rebounds || 0,
               defensive_rebounds: stat.defensive_rebounds || 0,
-              fg_percentage: 0, // FG% is calculated separately
-            };
-          } else {
-            // No stat found, keep it as zeros
-            selectedStat = {
-              assists: 0,
-              blocks: 0,
-              steals: 0,
-              turnovers: 0,
-              offensive_rebounds: 0,
-              defensive_rebounds: 0,
               fg_percentage: 0,
+              points: 0,
             };
           }
         }
       }
   
-      // Now fetch FG% (shot data) separately
+      // Fetch shot data
       let shotsData = [];
   
       if (selectedGameOrPractice === 'game' && selectedGame) {
@@ -337,13 +329,26 @@ function PlayerStats() {
         shotsData = shotsData.filter(shot => shot.player_id === selectedPlayer.value && shot.onModel === "Game");
       }
   
+      // FG% and Points calculation
       const totalShots = shotsData.length;
-      const madeShots = shotsData.filter(shot => shot.made).length;
-      selectedStat.fg_percentage = totalShots > 0 ? ((madeShots / totalShots) * 100).toFixed(2) : 0;
+      const madeShots = shotsData.filter(shot => shot.made);
+
+      console.log("Made shots for selected player:", madeShots);
+      
+      selectedStat.fg_percentage = totalShots > 0 ? ((madeShots.length / totalShots) * 100).toFixed(2) : 0;
   
-      // Finally update the stats cleanly
+      let points = 0;
+      madeShots.forEach(shot => {
+        const zone = parseInt(shot.zone);
+        if ([1, 2, 3, 4, 5].includes(zone)) {
+          points += 2;
+        } else if ([6, 7, 8].includes(zone)) {
+          points += 3;
+        }
+      });
+      selectedStat.points = points;
+  
       setStatsData(selectedStat);
-  
     } catch (error) {
       console.error("Failed to fetch full player stats:", error);
     }
@@ -645,6 +650,10 @@ function PlayerStats() {
                 <span className="stat-value">{statsData.fg_percentage || 0}</span>
               </div>
               <div className="stat-item">
+                <span className="stat-label">Points</span>
+                <span className="stat-value">{statsData.points || 0}</span>
+              </div>
+              <div className="stat-item">
                 <span className="stat-label">Assists</span>
                 <span className="stat-value">{statsData.assists || 0}</span>
               </div>
@@ -661,11 +670,11 @@ function PlayerStats() {
                 <span className="stat-value">{statsData.turnovers || 0}</span>
               </div>
               <div className="stat-item">
-                <span className="stat-label">Offensive Rebounds</span>
+                <span className="stat-label">O-Rebounds</span>
                 <span className="stat-value">{statsData.offensive_rebounds || 0}</span>
               </div>
               <div className="stat-item">
-                <span className="stat-label">Defensive Rebounds</span>
+                <span className="stat-label">D-Rebounds</span>
                 <span className="stat-value">{statsData.defensive_rebounds || 0}</span>
               </div>
             </div>
