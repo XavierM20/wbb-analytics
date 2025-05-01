@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import './Practice.css';
 import DrillButtons from './components/DrillButtons';
@@ -19,8 +20,8 @@ const Practice = () => {
     useEffect(() => {
         const handleCreatePractice = async () => {
             try {
-                const response = await fetch(serverUrl + '/api/seasons');
-                const data = await response.json();
+                const data = await getSeasonDataByDate();
+                console.log(data);
                 setSeasonData(data);
             } catch (error) {
                 console.error('Error fetching season data:', error);
@@ -36,12 +37,28 @@ const Practice = () => {
         handleCreatePractice();
     }, []);
 
+    const getSeasonDataByDate = async () => {
+        const currentDate = new Date();
+        const month = currentDate.getMonth() + 1;
+        const day = currentDate.getDate();
+        const year = currentDate.getFullYear();
+
+        const computedYear = (month < 8 || (month === 8 && day < 2)) ? year - 1 : year + 1;
+
+        const year1 = Math.min(year, computedYear).toString();
+        const year2 = Math.max(year, computedYear).toString();
+
+        // Get the current season for this school
+        const seasonResponse = await fetch(`${process.env.REACT_APP_SERVER_URL}/api/seasons/endYear/${year2}/${sessionStorage.getItem('schoolID')}`);
+        const seasonData = await seasonResponse.json();
+        return seasonData
+    };
+
     useEffect(() => {
-        if (SeasonData.length > 0 && date) {
-            const seasonByDate = getSeasonByDate(date);
-            if (seasonByDate) {
+        if (SeasonData && date) {
+            if (SeasonData) {
                 const practiceData = {
-                    season_id: seasonByDate._id,
+                    season_id: SeasonData._id,
                     date: date,
                 };
 
@@ -68,10 +85,8 @@ const Practice = () => {
 
     const updatePractice = async () => {
         if (drills.length > 0) {
-            const seasonByDate = getSeasonByDate(date);
-
             const practiceData = {
-                season_id: seasonByDate._id,
+                season_id: SeasonData._id,
                 date: date,
                 drills: drills.map(drill => drill._id),
                 team_purple: listA.map(player => player._id),
@@ -88,7 +103,9 @@ const Practice = () => {
                 });
                 if (!response.ok) throw new Error('Network response was not ok');
                 const updatedPractice = await response.json();
-                navigate(`/drill?PracticeID=${updatedPractice._id}&DrillID=${drills[0]._id}`);
+                console.log(listA);
+                console.log(listB);
+                navigate(`/drill?PracticeID=${updatedPractice._id}&DrillID=${drills[0]._id}`, { state: {TeamA: listA, TeamB: listB} });
             } catch (error) {
                 console.error('Failed to update practice:', error);
             }
@@ -117,9 +134,11 @@ const Practice = () => {
     };
 
     const addDrill = async drill => {
+        const playersInvolved = [...listA, ...listB].map(player => player._id);
         const drillData = {
             name: drill.name,
             practice_id: SessionData._id,
+            players_involved: playersInvolved,
         };
         try {
             const response = await fetch(serverUrl + '/api/drills', {
@@ -137,14 +156,15 @@ const Practice = () => {
             const players = listA.concat(listB);
             players.forEach(async player => {
                 const statsData = {
-                    drill_id: newDrill._id,
+                    gameOrDrill_id: newDrill._id,
+                    onModel: 'Drill',
                     player_id: player._id,
                     offensive_rebounds: 0,
                     defensive_rebounds: 0,
                     assists: 0,
                     steals: 0,
                     blocks: 0,
-                    turnovers: 0,
+                    turnovers: 0, 
                 };
 
                 try {
@@ -187,6 +207,10 @@ const Practice = () => {
         }
     };
 
+    const createPractice = async () => {
+        await updatePractice();
+    }
+
     return (
         <div className="practice-container">
             <button className='btn-home top-right-button' onClick={() => navigate('/homepage')}>Home</button>
@@ -211,6 +235,8 @@ const Practice = () => {
                             <SessionButtons setDate={setDate} />
                         </>
                     </div>
+                    
+                    <button onClick={createPractice} className="create-session-button">Create Practice</button>
                 </div>
                 <div className="lists-column">
                     <Players
@@ -223,7 +249,6 @@ const Practice = () => {
                     />
                 </div>
             </div>
-            <button onClick={() => navigate('/drill')} className="create-session-button">Create Practice</button>
             {/*onClick={updatePractice}>//
             //</div>Create Practice*/}
         </div>

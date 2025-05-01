@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -25,9 +26,10 @@ const Players = ({ listA, setListA, listB, setListB, playerData, setPlayerData }
         const { value } = event.target;
 
         if (team === 'A') {
+            console.log(playerData)
             const updatedListA = listA.map((player, i) => {
                 if (i === index) {
-                    return { ...player, playerName: value, _id: playerData.find(p => p.name === value)._id };
+                    return { ...player, playerName: value, _id: playerData.find(p => p.name === value)._id, jersey_number: playerData.find(p => p.name === value).jersey_number };
                 }
                 return player;
             });
@@ -35,7 +37,7 @@ const Players = ({ listA, setListA, listB, setListB, playerData, setPlayerData }
         } else if (team === 'B') {
             const updatedListB = listB.map((player, i) => {
                 if (i === index) {
-                    return { ...player, playerName: value, _id: playerData.find(p => p.name === value)._id };
+                    return { ...player, playerName: value, _id: playerData.find(p => p.name === value)._id, jersey_number: playerData.find(p => p.name === value).jersey_number };
                 }
                 return player;
             });
@@ -60,11 +62,12 @@ const Players = ({ listA, setListA, listB, setListB, playerData, setPlayerData }
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(serverUrl + '/api/players');
+                const seasonID = await getSeasonIDByDate();
+                const response = await fetch(`${serverUrl}/api/players/bySeason/${seasonID}`);
                 const data = await response.json();
 
-                const defaultListA = data.slice(0, 5).map(player => ({ _id: player._id, playerName: player.name }));
-                const defaultListB = data.slice(5, 10).map(player => ({ _id: player._id, playerName: player.name }));
+                const defaultListA = data.slice(0, 5).map(player => ({ _id: player._id, playerName: player.name, jersey_number: player.jersey_number }));
+                const defaultListB = data.slice(5, 10).map(player => ({ _id: player._id, playerName: player.name, jersey_number: player.jersey_number }));
 
                 setListA(defaultListA);
                 setListB(defaultListB);
@@ -76,6 +79,27 @@ const Players = ({ listA, setListA, listB, setListB, playerData, setPlayerData }
 
         fetchData();
     }, []);
+
+    const getSeasonIDByDate = async () => {
+        const currentDate = new Date();
+        const month = currentDate.getMonth() + 1;
+        const day = currentDate.getDate();
+        const year = currentDate.getFullYear();
+
+        const computedYear = (month < 8 || (month === 8 && day < 2)) ? year - 1 : year + 1;
+
+        const year1 = Math.min(year, computedYear).toString();
+        const year2 = Math.max(year, computedYear).toString();
+
+        const seasonResponse = await fetch(`${serverUrl}/api/seasons/endYear/${year2}/${sessionStorage.getItem('schoolID')}`);
+        const seasonData = await seasonResponse.json();
+        return seasonData._id;
+    };
+
+    // Show a loading screen until playerData is available
+    if (!Array.isArray(playerData)) {
+        return <div>Loading players...</div>;
+    }
 
     return (
         <>
@@ -105,11 +129,9 @@ const Players = ({ listA, setListA, listB, setListB, playerData, setPlayerData }
                             </button>
                         </li>
                     ))}
-                    <li>
-                        <button className="add-dropdown-button" onClick={handleAddDropdownA}>
-                            Add Player
-                        </button>
-                    </li>
+                    <button className="add-dropdown-button" onClick={handleAddDropdownA}>
+                        Add Player
+                    </button>
                 </ul>
             </div>
 
@@ -139,11 +161,9 @@ const Players = ({ listA, setListA, listB, setListB, playerData, setPlayerData }
                             </button>
                         </li>
                     ))}
-                    <li>
-                        <button className="add-dropdown-button" onClick={handleAddDropdownB}>
-                            Add Player
-                        </button>
-                    </li>
+                    <button className="add-dropdown-button" onClick={handleAddDropdownB}>
+                        Add Player
+                    </button>
                 </ul>
             </div>
         </>

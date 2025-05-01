@@ -17,7 +17,8 @@ const isAuthenticated = (req, res, next) => {
 
 // Define Joi schema for stats validation
 const statsSchema = Joi.object({
-    drill_id: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
+    gameOrDrill_id: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
+    onModel: Joi.string().required().valid('Game', 'Drill'),
     player_id: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
     offensive_rebounds: Joi.number().required(),
     defensive_rebounds: Joi.number().required(),
@@ -63,10 +64,10 @@ router.get('/exportPractice/:practiceId', async (req, res) => {
         const playerIds = [...practice.team_gray, ...practice.team_purple];
 
         const statsPipeline = [
-            { $match: { drill_id: { $in: drillIds }, player_id: { $in: playerIds } } }, // Drill IDs fetched earlier
+            { $match: { gameOrDrill_id: { $in: drillIds }, player_id: { $in: playerIds } } }, // Drill IDs fetched earlier
             {
                 $group: {
-                    _id: { drill_id: '$drill_id', player_id: '$player_id' },
+                    _id: { drill_id: '$gameOrDrill_id', player_id: '$player_id' },
                     offensiveRebounds: { $sum: '$offensive_rebounds' },
                     defensiveRebounds: { $sum: '$defensive_rebounds' },
                     assists: { $sum: '$assists' },
@@ -265,11 +266,24 @@ router.get('/byPractice/:practiceId', isAuthenticated, async (req, res) => {
 });
 
 // GET stats by drill_id
-router.get('/byDrill/:drillId', isAuthenticated, async (req, res) => {
+router.get('/byGameOrDrill/:gameOrDrillid', isAuthenticated, async (req, res) => {
     try {
-        const stats = await Stats.find({ drill_id: req.params.drillId });
+        const stats = await Stats.find({ gameOrDrill_id: req.params.gameOrDrillid });
         if (!stats.length) {
             return res.status(404).json({ message: 'No stats found for the given drill_id' });
+        }
+        res.json(stats);
+    } catch (err) {
+        res.status(500).json({ message: 'Internal server error', error: err.message });
+    }
+});
+
+// Get stats by player_id and drill_id
+router.get('/byPlayerAndGameOrDrill/:playerId/:gameOrDrillId', isAuthenticated, async (req, res) => {
+    try {
+        const stats = await Stats.findOne({ player_id: req.params.playerId, gameOrDrill_id: req.params.gameOrDrillId });
+        if (!stats) {
+            return res.status(404).json({ message: 'No stats found for the given player_id and drill_id' });
         }
         res.json(stats);
     } catch (err) {
@@ -388,15 +402,124 @@ router.patch('/turnover/:id', isAuthenticated, async (req, res) => {
     }
 });
 
+/* Patch Endpoints to update stats by player_id and gameOrDrill_id */
+// PATCH to update offensive rebounds by player_id and drill_id
+router.patch('/offensiveRebound/:gameOrDrillId/:playerId', isAuthenticated, async (req, res) => {
+    try {
+        const { gameOrDrillId, playerId } = req.params;
+        const stats = await Stats.findOneAndUpdate(
+            { gameOrDrill_id: gameOrDrillId, player_id: playerId },
+            { $inc: { offensive_rebounds: 1 } },
+            { new: true }
+        );
+        if (!stats) {
+            return res.status(404).json({ message: 'Stats not found' });
+        }
+        res.json(stats);
+    } catch (err) {
+        res.status(500).json({ message: 'Internal server error', error: err.message });
+    }
+});
+
+// PATCH to update defensive rebounds by player_id and drill_id
+router.patch('/defensiveRebound/:gameOrDrillId/:playerId', isAuthenticated, async (req, res) => {
+    try {
+        const { gameOrDrillId, playerId } = req.params;
+        const stats = await Stats.findOneAndUpdate(
+            { gameOrDrill_id: gameOrDrillId, player_id: playerId },
+            { $inc: { defensive_rebounds: 1 } },
+            { new: true }
+        );
+        if (!stats) {
+            return res.status(404).json({ message: 'Stats not found' });
+        }
+        res.json(stats);
+    } catch (err) {
+        res.status(500).json({ message: 'Internal server error', error: err.message });
+    }
+});
+
+// PATCH to update assists by player_id and drill_id
+router.patch('/assist/:gameOrDrillId/:playerId', isAuthenticated, async (req, res) => {
+    try {
+        const { gameOrDrillId, playerId } = req.params;
+        const stats = await Stats.findOneAndUpdate(
+            { gameOrDrill_id: gameOrDrillId, player_id: playerId },
+            { $inc: { assists: 1 } },
+            { new: true }
+        );
+        if (!stats) {
+            return res.status(404).json({ message: 'Stats not found' });
+        }
+        res.json(stats);
+    } catch (err) {
+        res.status(500).json({ message: 'Internal server error', error: err.message });
+    }
+});
+
+// PATCH to update steals by player_id and drill_id
+router.patch('/steal/:gameOrDrillId/:playerId', isAuthenticated, async (req, res) => {
+    try {
+        const { gameOrDrillId, playerId } = req.params;
+        const stats = await Stats.findOneAndUpdate(
+            { gameOrDrill_id: gameOrDrillId, player_id: playerId },
+            { $inc: { steals: 1 } },
+            { new: true }
+        );
+        if (!stats) {
+            return res.status(404).json({ message: 'Stats not found' });
+        }
+        res.json(stats);
+    } catch (err) {
+        res.status(500).json({ message: 'Internal server error', error: err.message });
+    }
+});
+
+// PATCH to update blocks by player_id and drill_id
+router.patch('/block/:gameOrDrillId/:playerId', isAuthenticated, async (req, res) => {
+    try {
+        const { gameOrDrillId, playerId } = req.params;
+        const stats = await Stats.findOneAndUpdate(
+            { gameOrDrill_id: gameOrDrillId, player_id: playerId },
+            { $inc: { blocks: 1 } },
+            { new: true }
+        );
+        if (!stats) {
+            return res.status(404).json({ message: 'Stats not found' });
+        }
+        res.json(stats);
+    } catch (err) {
+        res.status(500).json({ message: 'Internal server error', error: err.message });
+    }
+});
+
+// PATCH to update turnovers by player_id and drill_id
+router.patch('/turnover/:gameOrDrillId/:playerId', isAuthenticated, async (req, res) => {
+    try {
+        const { gameOrDrillId, playerId } = req.params;
+        const stats = await Stats.findOneAndUpdate(
+            { gameOrDrill_id: gameOrDrillId, player_id: playerId },
+            { $inc: { turnovers: 1 } },
+            { new: true }
+        );
+        if (!stats) {
+            return res.status(404).json({ message: 'Stats not found' });
+        }
+        res.json(stats);
+    } catch (err) {
+        res.status(500).json({ message: 'Internal server error', error: err.message });
+    }
+});
+
 // PATCH to update stats by player_id and drill_id
-router.patch('/byPlayerAndDrill/:playerId/:drillId', isAuthenticated, async (req, res) => {
+router.patch('/byPlayerAndGameOrDrill/:playerId/:gameOrDrillId', isAuthenticated, async (req, res) => {
     try {
         const stats = req.body;
         const { error } = statsSchema.validate(stats);
         if (error) {
             return res.status(400).json({ message: 'Invalid request', error: error.details });
         }
-        const updatedStats = await Stats.findOneAndUpdate({ player_id: req.params.playerId, drill_id: req.params.drillId }, stats, { new: true });
+        const updatedStats = await Stats.findOneAndUpdate({ player_id: req.params.playerId, gameOrDrill_id: req.params.gameOrDrillId }, stats, { new: true });
         if (!updatedStats) {
             return res.status(404).json({ message: 'Stats not found' });
         }
@@ -414,6 +537,111 @@ router.delete('/:id', isAuthenticated, async (req, res) => {
             return res.status(404).json({ message: 'Stats not found' });
         }
         res.json(stats);
+    } catch (err) {
+        res.status(500).json({ message: 'Internal server error', error: err.message });
+    }
+});
+
+router.get('/teamLeaders/byGameOrDrillId/:gameOrDrillId', isAuthenticated, async (req, res) => {
+    try {
+        // First, find all shots for the given gameOrDrillId
+        const id = new mongoose.Types.ObjectId(req.params.gameOrDrillId);
+        const shots = await Shots.find({ gameOrDrill_id: id });
+        if (!shots.length) {
+            return res.status(404).json({ message: 'No shots found for the given gameOrDrillId' });
+        }
+
+        // Create a map to count points for each player
+        const playerPoints = {};
+        shots.forEach(shot => {
+            const playerId = shot.player_id;
+            if (!playerPoints[playerId]) {
+                playerPoints[playerId] = 0;
+            }
+            if (shot.made) {
+                if (shot.zone == 6 || shot.zone == 7 || shot.zone == 8) {
+                    playerPoints[playerId] += 3; // Assuming 3 points for made shots in zone 6, 7, or 8
+                } else {
+                    playerPoints[playerId] += 2; // Assuming 2 points for made shots in other zones
+                }
+            }
+        });
+
+        // Convert the map to an array of objects
+        const playerPointsArray = Object.keys(playerPoints).map(playerId => ({
+            player_id: playerId,
+            statType: 'points',
+            statValue: playerPoints[playerId]
+        }));
+
+        // Sort the array by points in descending order
+        playerPointsArray.sort((a, b) => b.points - a.points);
+
+        // Get the top player
+        const topPointsPlayer = playerPointsArray[0] || null;
+        if (topPointsPlayer) {
+            // Find the player details using player_id
+            const playerDetails = await Player.findById(topPointsPlayer.player_id); // Assuming you have a Player model
+            if (playerDetails) {
+                topPointsPlayer.player = playerDetails;
+            }
+        }
+
+        //res.json({ topPointsPlayer });
+        // Next get the leader for each stat
+        const topStats = await Stats.aggregate([
+            { $match: { gameOrDrill_id: id } },
+          
+            // Project a single "total_rebounds" instead of two separate fields
+            { $project: {
+                player_id: 1,
+                stats: [
+                  {
+                    statType: "total_rebounds",
+                    value: { $add: [ "$offensive_rebounds", "$defensive_rebounds" ] }
+                  },
+                  { statType: "assists",   value: "$assists"    },
+                  { statType: "steals",    value: "$steals"     },
+                  { statType: "blocks",    value: "$blocks"     },
+                  // …and any others you still want
+                ]
+              }
+            },
+          
+            { $unwind: "$stats" },
+            { $sort:  { "stats.statType": 1, "stats.value": -1 } },
+            { $group: {
+                _id:       "$stats.statType",
+                player_id: { $first: "$player_id" },
+                statValue: { $first: "$stats.value" }
+              }
+            },
+            { $lookup: {
+                from:         "players",
+                localField:   "player_id",
+                foreignField: "_id",
+                as:           "player"
+              }
+            },
+            { $unwind: "$player" },
+            { $project: {
+                _id:       0,
+                statType:  "$_id",
+                statValue: 1,
+                player: {
+                  _id:  "$player._id",
+                  name: "$player.name"
+                }
+              }
+            }
+          ]);
+        
+        // 3) Combine the results
+        const result = [];
+        if (topPointsPlayer) result.push(topPointsPlayer);
+        result.push(...topStats);
+
+        return res.json(result);
     } catch (err) {
         res.status(500).json({ message: 'Internal server error', error: err.message });
     }

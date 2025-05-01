@@ -1,10 +1,10 @@
 import React from 'react';
 import './Selector.css';
 
-function Selector({ options, onChange, label, value }) { // Add a value prop here
+function Selector({ options, onChange, label, value }) {
   return (
-    <>
-      <label className="selector-label">{label}: </label>
+    <div className="selector-field-container">
+      <label className="selector-label">{label}:</label>
       <select className="selector-select" onChange={onChange} value={value}>
         {options.map((option, index) => (
           <option key={index} value={option.value}>
@@ -12,7 +12,7 @@ function Selector({ options, onChange, label, value }) { // Add a value prop her
           </option>
         ))}
       </select>
-    </>
+    </div>
   );
 }
 

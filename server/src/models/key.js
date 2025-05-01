@@ -8,7 +8,7 @@ const Schema = mongoose.Schema;
 
 const keySchema = new Schema({
     key: { type: String, required: true },
-    role: { type: String, required: true, enum: ['Admin', 'Moderator','User']},
+    role: { type: String, required: true, enum: ['Coach', 'Player']},
     expireAt: {
         type: Date,
         default: Date.now,

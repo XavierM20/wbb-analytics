@@ -24,7 +24,11 @@ const gameSchema = Joi.object({
     location: Joi.string().required(),
     tempo_events: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
     shot_events: Joi.array().items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
-    team_logo: Joi.string().optional(),
+    team_logo: Joi.string().allow(null).optional(),
+    score: Joi.object({
+        team: Joi.number().required(),
+        opponent: Joi.number().required()
+    }).required()
 });
 
 // GET all games for a specific school
@@ -53,7 +57,7 @@ router.get('/:seasonID', isAuthenticated, async (req, res) => {
 // Example: GET games by season_id
 router.get('/bySeason/:seasonId', isAuthenticated, async (req, res) => {
     try {
-        const games = await Game.find({ season_id: mongoose.Types.ObjectId(req.params.seasonId) });
+        const games = await Game.find({ season_id: req.params.seasonId });
         res.json(games);
     } catch (err) {
         res.status(500).json({ message: 'Internal server error', error: err.message });

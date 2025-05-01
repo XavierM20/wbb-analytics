@@ -5,6 +5,7 @@ LoginPage.js:
     The user can register by entering a username, password, and a key.
 */
 import React, { useState, useEffect } from 'react';
+import { Modal, View, StyleSheet } from 'react-native';
 import { useNavigate } from "react-router-dom";
 import { useAuth } from '../../hooks/AuthProvider';
 import './LoginPage.css';
@@ -26,7 +27,7 @@ const LoginPage = () => {
     const [city, setCity] = useState('');
     const [state, setState] = useState('');
     const [incorrect, setIncorrect] = useState(false);
-
+    const [role, setRole] = useState('');
     const serverUrl = process.env.REACT_APP_SERVER_URL;
 
     useEffect(() => {
@@ -68,7 +69,7 @@ const LoginPage = () => {
             if (data.exists) {
                 navigate('/homepage');
             } else {
-                navigate('/create-season');
+                navigate('/season');
             }
         } catch (error) {
             console.error("Error checking season:", error);
@@ -82,12 +83,12 @@ const LoginPage = () => {
         setErrorUser('');
         setErrorPass('');
         setErrorConfirmPass('');
-
+    
         if (username.length < 8) {
             setErrorUser('Username is too short!');
             error = true;
         }
-
+    
         const regex = /[!?@#$%^&*()]/;
         const cap = /[A-Z]/;
         const low = /[a-z]/;
@@ -95,26 +96,31 @@ const LoginPage = () => {
             setErrorPass('Password must be at least 8 characters and include a special character, uppercase, and lowercase letters.');
             error = true;
         }
-
+    
         if (password !== confirmPassword) {
             setErrorConfirmPass('Passwords do not match!');
             error = true;
         }
-
         if (!schoolId) {
             alert('Please select or add a school.');
             error = true;
         }
-
+    
+        if (!role) {
+            alert('Please select a role.');
+            error = true;
+        }
+    
         if (!error) {
             try {
-                const userData = { username, password, schoolId };
+                const userData = { username, password, role, schoolId };
+
                 const userResponse = await fetch(`${serverUrl}/api/users`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(userData),
                 });
-
+    
                 const newUser = await userResponse.json();
                 if (!newUser.message) {
                     auth.loginAction({
@@ -122,7 +128,13 @@ const LoginPage = () => {
                         token: newUser.role,
                         schoolId: schoolId,
                     });
-                    checkSeasonAndRedirect(newUser.schoolId);
+    
+                    // Redirect based on role
+                    if (newUser.role === "Player") {
+                        navigate('/homepage');
+                    } else if (newUser.role === "Coach") {
+                        navigate('/season');
+                    }
                 } else {
                     setErrorUser(newUser.message);
                 }
@@ -134,20 +146,26 @@ const LoginPage = () => {
 
     const handleLogin = async (event) => {
         event.preventDefault();
-
+    
         try {
             const loginResponse = await fetch(`${serverUrl}/api/users/userCheck`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password }),
             });
-
+    
             const loginData = await loginResponse.json();
             if (loginData.message) {
                 setIncorrect(true);
             } else {
                 auth.loginAction({username: loginData.username, password: loginData.password, token: loginData.role, schoolId: loginData.schoolId});
-                navigate('/homepage');
+    
+                // Redirect based on role
+                if (loginData.role === "Player") {
+                    navigate('/homepage');
+                } else if (loginData.role === "Coach") {
+                    navigate('/season');
+                }
             }
         } catch (error) {
             console.error("Error logging in:", error);
@@ -224,6 +242,39 @@ const LoginPage = () => {
                             <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
                             {errorConfirmPass && <p className="error">{errorConfirmPass}</p>}
                         </label>
+                        <label>
+                            <select value={role} onChange={(e) => setRole(e.target.value)}>
+                                <option value="">Select Role</option>
+                                <option value="Coach">Coach</option>
+                                <option value="Player">Player</option>
+                            </select>
+                        </label>
+                        <label>
+                            <select value={schoolId} onChange={(e) => handleSchoolChange(e.target.value)}>
+                                <option value="">Select School</option>
+                                {schools.map((s) => (
+                                    <option key={s.id} value={s._id}> {/* Use s.id as the value */}
+                                        {s.name}
+                                    </option>
+                                ))}
+                                <option value="add-new">Add New School</option>
+                            </select>
+                        </label>
+                        <Modal
+                            visible={isAddingSchool}
+                            animationType="fade"
+                            transparent={true}
+                            onRequestClose={() => setIsAddingSchool(false)}
+                        >
+                            <View style={styles.modalOverlay}>
+                                    <form>
+                                        <input className='inputAddSchool' type="text" placeholder="School Name" value={newSchool} onChange={(e) => setNewSchool(e.target.value)} />
+                                        <input type="inputAddSchool" placeholder="City" value={city} onChange={(e) => setCity(e.target.value)} />
+                                        <input type="inputAddSchool" placeholder="State" value={state} onChange={(e) => setState(e.target.value)} />
+                                        <button type="button" onClick={handleAddSchool}>Add School</button>
+                                    </form>
+                            </View>
+                        </Modal>
                         <button type="submit">Submit</button>
                         <p className="switch" onClick={moveToLogin}>Already have an account? <b>Login</b></p>
                     </form>
@@ -232,5 +283,27 @@ const LoginPage = () => {
         </div>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+      marginTop: 100,
+      alignItems: 'center',
+    },
+    modalOverlay: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0,0,0,0.5)', // Dim background
+    },
+    modalContent: {
+      backgroundColor: 'white',
+      marginHorizontal: 20,
+      width: '50%',
+      padding: 20,
+      borderRadius: 10,
+      elevation: 5,
+      backgroundColor: 'rgba(200, 157, 70, .8)',
+    },
+});
 
 export default LoginPage;

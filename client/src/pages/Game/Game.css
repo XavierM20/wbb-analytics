@@ -10,15 +10,15 @@
     --stat-card-text-color: #333333;
     --accent-color: #FFD700;
     --hover-color: #3d2671;
-    --box-shadow: 0 0.25rem .5rem 0 rgba(0,0,0,0.2);
+    --box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 }
 
 .main {
-    /*background: url(../../images/homepageWBB.jpeg) no-repeat center center/cover;*/
-    background-color: rgba(23, 43, 79, 1);
+    background: url(../../images/basketballIMG.jpg) no-repeat center center/cover;
     text-align: center;
-    margin-top: 0rem;
+    margin-top: 0px;
     box-sizing: border-box;     /* Added this for column definitions */
+    height: 100vh;
 }
 .main::before{
     content: "";
@@ -35,44 +35,44 @@
 }
 
 .opponent-team {
-    margin-top: 1.25rem;
+    margin-top: 20px;
     text-align: center;
-    color: cornsilk;
-    width: calc(70% - 4.6875rem);
-    padding: 0.625rem 1.25rem;
-    margin-bottom: 0.75rem;
+    color: #fff;
+    width: calc(70% - 75px);
+    padding: 10px 20px;
+    margin-bottom: 12px;
     border: none;
-    border-radius: 0.25rem;
+    border-radius: 4px;
     transition: background-color 0.3s ease;
     font-size: 1.15em;
 }
 
 .opponent-team input {
-    padding: 0.3125rem 0.625rem;
-    margin-top: 0.3125rem;
-    border-radius: 0.3125rem;
-    border: 0.0625rem solid black;
-    font-size: 1rem;
+    padding: 5px 10px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid black;
+    font-size: 16px;
 }
 
 .game-selection-container {
-    width: 21.875rem; 
-    height: 21.875rem;
-    border-radius: 0.625rem;
+    width: 350px; 
+    height: 350px;
+    border-radius: 10px;
     overflow-y: auto;
-    padding: 0.3125rem;
-    padding-right: 0.625rem;
-    background-color: cornsilk;
+    padding: 5px;
+    padding-right: 10px;
+    background-color: #f9f9f9;
     text-align: center;
     font-size: 1.15em;
 }
 
 .game-entry {
-    padding: .5rem;
-    margin-bottom: .5rem;
+    padding: 8px;
+    margin-bottom: 8px;
     background-color: #503291;
-    border: 0.1875rem solid #503291;
-    border-radius: 0.625rem;
+    border: 3px solid #503291;
+    border-radius: 10px;
     cursor: pointer;
     transition: background-color 0.3s;
 }
@@ -87,8 +87,8 @@
     left: 0;
     width: 100%;
     height: 100%;
-    padding-bottom: 6.25rem;
-    padding-left: 3.125rem;
+    padding-bottom: 100px;
+    padding-left: 50px;
     background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
@@ -97,7 +97,7 @@
 }
 
 .load-game-overlay {
-    padding-bottom: 6.25rem;
+    padding-bottom: 100px;
     overflow-y: auto;
     position: fixed;
     top: 0;
@@ -112,18 +112,18 @@
 }
 
 .load-game-overlay-content {
-    border-radius: 0.9375rem;
-    padding: 0.3125rem;
-    background-color: cornsilk;
-    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 1);
+    border-radius: 15px;
+    padding: 5px;
+    background-color: whitesmoke;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 1);
     text-align: center;
     font-size: 1.15em;
     font-style: italic;
 }
 
 .new-game-overlay {
-    padding-bottom: 6.25rem;
-    padding-left: 3.125rem;
+    padding-bottom: 100px;
+    padding-left: 50px;
 }
 
 .tempo-timer {
@@ -179,7 +179,7 @@
     display: flex;
     align-items: center;
     margin: 0 auto; /* Center the container horizontally */
-    height: 12.5rem; /* Container takes up 20% of the screen */
+    height: 200px; /* Container takes up 20% of the screen */
     width: 100%; /* Container takes up 100% of the screen */
 }
 
@@ -196,19 +196,19 @@
 }
 
 .submit-button {
-    background-color: cornsilk !important;
-    margin-top: 1.875rem;
+    background-color: whitesmoke !important;
+    margin-top: 30px;
 }
 
 .submit-button:hover {
-    background-color: cornsilk !important;
+    background-color: whitesmoke !important;
 }
 
 .ShotOutcomeSelection, 
 .ClockTimeSelection {
     display: flex;
     justify-content: center;
-    gap: 9.375rem;
+    gap: 150px;
 }
 
 .MadeButton,
@@ -219,7 +219,7 @@
     width: calc(38vw);
     height: calc(20vh); /* Height of the buttons */
     padding: 0.7%;
-    margin-bottom: 0.625rem;
+    margin-bottom: 10px;
     font-size: 1.5em;
     margin: 0 5%; /* Adds space between the two buttons */
 }
@@ -227,12 +227,12 @@
   
 .MadeButton {
     background-color: #4CAF50;
-    color: cornsilk;
+    color: white;
 }
   
 .MissedButton {
     background-color: #f44336;
-    color: cornsilk;
+    color: white;
 }
   
 .ClockButton1,
@@ -243,12 +243,12 @@
     align-items: center;
     background-color: #607d8b;
     white-space: nowrap;
-    min-width: 7.5rem;
-    color: cornsilk;
+    min-width: 120px;
+    color: white;
     display: none;
-    width: 15.625rem;
-    height: 3.125rem;
-    border-radius: 0.9375rem;
+    width: 250px;
+    height: 50px;
+    border-radius: 15px;
 }
 
 .overlay,
@@ -268,13 +268,13 @@
 .overlay-content,
 .game-mode-content,
 .new-game-overlay-content {
-    width: 21.875rem;
+    width: 350px;
     height: 90%;
-    border-radius: 0.9375rem;
-    margin-right: 3.125rem;
-    padding: 0.3125rem;
-    background-color: cornsilk;
-    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 1);
+    border-radius: 15px;
+    margin-right: 50px;
+    padding: 5px;
+    background-color: whitesmoke;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 1);
     text-align: center;
     font-size: 1.15em;
     font-style: italic;
@@ -287,42 +287,42 @@
 
 .new-game-overlay-content input {
     width: 80%;
-    padding: .5rem;
-    margin-top: 0.3125rem;
-    margin-bottom: 1.25rem;
-    border-radius: 0.1875rem;
-    border: 0.1875rem solid black;
-    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.2);
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    border-radius: 3px;
+    border: 3px solid black;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .overlay button,
 .game-mode-content button,
 .new-game-overlay-content button {
-    padding: 1.25rem;
+    padding: 20px;
     background-color: #503291;
-    color: cornsilk;
+    color: white;
     border: none;
-    border-radius: 0.4375rem;
+    border-radius: 7px;
     cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 0.625rem;
-    margin-left: 4.375rem;
-    margin-bottom: 0.625rem;
+    margin-top: 10px;
+    margin-left: 70px;
+    margin-bottom: 10px;
     width: 58.825%;
-    height: 3.125rem;
+    height: 50px;
     font-size: 1.15em;
-    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 .game-selection button {
-    height: 5rem;
-    width: 18.75rem;
-    margin-top: 2.5rem;
-    margin-bottom: 2.5rem;
-    margin-left: 1.25rem;
-    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.5);
+    height: 80px;
+    width: 300px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+    margin-left: 20px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
 }
 
 .overlay button:hover,
@@ -341,12 +341,12 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 12.5rem;
-    height: 4.6875rem; /* Height of the buttons */
+    width: 200px;
+    height: 75px; /* Height of the buttons */
     padding: 0.7%;
     font-size: 1.5em;
     margin: 0 10%; /* Adds space between the two buttons */
-    border-radius: 0.4375rem;
+    border-radius: 7px;
     border: none;
     cursor: pointer;
 }
@@ -355,11 +355,11 @@
 .submit-game-button:hover,
 .submit-game-button:focus {
     background-color: white;
-    transform: translateY(-0.75rem);
+    transform: translateY(-2px);
 }
 
 .submit-game-button:active {
-    transform: translateY(0.0625rem);
+    transform: translateY(1px);
 }
 */
 
@@ -379,8 +379,8 @@
 
 [class*="col-"] {
     float: left;
-    padding: 0.9375rem;
-    border: 0.0625rem solid red;
+    padding: 15px;
+    border: 1px solid red;
 }
 
 .offset-1 {margin-left: 8.33%;}
@@ -401,7 +401,7 @@
     justify-content: center;
     align-items: center;
     margin: 0 auto; /* Center the container horizontally */
-    height: 12.5rem; /* Container takes up 20% of the screen */
+    height: 200px; /* Container takes up 20% of the screen */
     width: 100%; /* Container takes up 100% of the screen */
 }
 
@@ -410,26 +410,26 @@
     justify-content: center;
     align-items: center;
     margin: 0 auto; /* Center the container horizontally */
-    height: 3.125rem; /* Container takes up 20% of the screen */
+    height: 50px; /* Container takes up 20% of the screen */
     width: 100%; /* Container takes up 100% of the screen */
     margin-top: 2%;
 }
 
 .submit-game-button {
     background-color: orange;
-    color: cornsilk;
+    color: white;
 }
 .submit-game-button:active {
     background-color: black;
-    color: cornsilk;
+    color: white;
 }
 .delete-game-button {
     background-color: #f44336;
-    color: cornsilk;
+    color: white;
 }
 .delete-game-button:active{
     background-color: black;
-    color: cornsilk;
+    color: white;
 }
 
 .last-tempo-container {
@@ -445,17 +445,17 @@
 
 .top-right-button {
     position: absolute; /* Allows precise placement */
-    top: 0.625rem;          /* Distance from the top */
-    right: 0.625rem;        /* Distance from the right */
+    top: 10px;          /* Distance from the top */
+    right: 10px;        /* Distance from the right */
     z-index: 1000;      /* Ensures it stays on top of other elements */
 }
 
 .btn-home {
-    padding: 0.625rem 1.25rem;
-    background-color: rgba(200,157,70, 1); /* Bootstrap blue */
-    color: cornsilk;
+    padding: 10px 20px;
+    background-color: #007bff; /* Bootstrap blue */
+    color: white;
     border: none;
-    border-radius: 0.3125rem;
+    border-radius: 5px;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 16px;
 }

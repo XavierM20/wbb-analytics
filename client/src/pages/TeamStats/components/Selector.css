@@ -1,25 +1,35 @@
-.selector-label {
-  display: block; /* Display label above the dropdown */
-  margin-bottom: 0.3125rem;
-  color: var(--header-color); /* Use the header color for consistency */
-  font-weight: bold;
-  font-size: 1rem; /* Adjusted font size for better readability */
+/* Container: Adjust to flex-start for left alignment */
+.selector-field-container {
+  display: flex;
+  flex-direction: column; /* Keeps label on top, select below */
+  align-items: flex-start; /* Left aligns children */
 }
 
+/* Label: Ensure text is left aligned */
+.selector-label {
+  margin-bottom: 0.3125rem;
+  color: var(--header-color);
+  font-weight: bold;
+  font-size: 1rem;
+  text-align: left; /* Make sure the text is left aligned */
+}
+
+/* Select: If the select box is 100% width, it will naturally align left */
 .selector-select {
   padding: 0.625rem 0.9375rem;
-  font-size: 1rem; /* Uniform font size with other elements */
-  width: 100%; /* Make width responsive */
-  max-width: 15.625rem; /* Maximum width */
-  border: none; /* Remove the border for a cleaner look */
-  border-radius: .5rem; /* Consistent border radius with cards */
+  font-size: 1rem;
+  width: 100%; /* If you want full width, otherwise adjust as needed */
+  max-width: 20rem;
+  border: none;
+  border-radius: 0.5rem;
   background-color: var(--card-bg-color);
   color: var(--text-color-dark);
-  box-shadow: var(--box-shadow); /* Add shadow for depth */
-  appearance: none; /* Removes default styling across browsers */
-  cursor: pointer; /* Indicates the dropdown is clickable */
-  position: relative; /* Position relative for custom arrow */
+  box-shadow: var(--box-shadow);
+  appearance: none;
+  cursor: pointer;
+  position: relative;
 }
+
 
 .selector-select:focus {
   outline: 0.75rem solid var(--accent-color); /* Accent color for focus state */
