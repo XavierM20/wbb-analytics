@@ -217,15 +217,17 @@ function CreateSeason() {
             <View style={styles.container}>
               <Text style={styles.title}>Season Players:</Text>
             </View>
-            {players.map((player, index) => (
-              <div key={index} className="player-list-item">
-                <div className="player-info">{player.name} - {player.jersey_number} - {player.position}</div>
-                <div className="player-actions">
-                  <button className="btnEdit" onClick={() => editPlayer(index)}>Edit</button>
-                  <button className="btnDelete" onClick={() => deletePlayer(index)}>Delete</button>
+            <div className='player-list-scrollable'>
+              {players.map((player, index) => (
+                <div key={index} className="player-list-item">
+                  <div className="player-info">{player.name} - {player.jersey_number} - {player.position}</div>
+                  <div className="player-actions">
+                    <button className="btnEdit" onClick={() => editPlayer(index)}>Edit</button>
+                    <button className="btnDelete" onClick={() => deletePlayer(index)}>Delete</button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       ) : (
