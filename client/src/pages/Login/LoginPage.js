@@ -272,6 +272,7 @@ const LoginPage = () => {
                                         <input type="inputAddSchool" placeholder="City" value={city} onChange={(e) => setCity(e.target.value)} />
                                         <input type="inputAddSchool" placeholder="State" value={state} onChange={(e) => setState(e.target.value)} />
                                         <button type="button" onClick={handleAddSchool}>Add School</button>
+                                        <button type="button" onClick={() => setIsAddingSchool(false)}>Cancel</button>
                                     </form>
                             </View>
                         </Modal>
