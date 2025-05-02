@@ -397,17 +397,19 @@ function DrillPage() {
     }
 
     const recordStats = async (player, stat) => {
-        console.log(`Recording ${stat} for player ${player.name}`);
+        if (player) {
+            console.log(`Recording ${stat} for player ${player.name}`);
         
-        const statsResponse = await fetch(`${serverUrl}/api/stats/${stat}/${drillID}/${player.id}`, {
-            method: 'PATCH',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-        })
+            const statsResponse = await fetch(`${serverUrl}/api/stats/${stat}/${drillID}/${player.id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
 
-        const response = await statsResponse.json();
-        console.log('Stats recorded:', response);
+            const response = await statsResponse.json();
+            console.log('Stats recorded:', response);
+        }
     }
 
     const updateTeamAScore = (points) => {
@@ -812,32 +814,32 @@ function DrillPage() {
                     <ExtraStats
                         setStatName={"Offensive Rebound"}
                         className="Offensive Rebound"
-                        onPress={() => recordStats(player, 'offensiveRebound')}
+                        onPress={() => recordStats(currentPlayer, 'offensiveRebound')}
                     />
                     <ExtraStats
                         setStatName={"Assist"}
                         className="Assist"
-                        onPress={() => recordStats(player, 'assist')}
+                        onPress={() => recordStats(currentPlayer, 'assist')}
                     />
                     <ExtraStats
                         setStatName={"Steal"}
                         className="Steal"
-                        onPress={() => recordStats(player, 'steal')}
+                        onPress={() => recordStats(currentPlayer, 'steal')}
                     />
                     <ExtraStats
                         setStatName={"Defensive Rebound"}
                         className="Defensive Rebound"
-                        onPress={() => recordStats(player, 'defensiveRebound')}
+                        onPress={() => recordStats(currentPlayer, 'defensiveRebound')}
                     />
                     <ExtraStats
                         setStatName={"Block"}
                         className="Block"
-                        onPress={() => recordStats(player, 'block')}
+                        onPress={() => recordStats(currentPlayer, 'block')}
                     />
                     <ExtraStats
                         setStatName={"Turnover"}
                         className="Turnover"
-                        onPress={() => recordStats(player, 'turnover')}
+                        onPress={() => recordStats(currentPlayer, 'turnover')}
                     />
                     {isESOpen && (
                         <ExtraStatPopup
